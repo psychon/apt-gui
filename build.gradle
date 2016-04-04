@@ -1,0 +1,33 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	// APT dependencies
+	compile files('../apt/classes/glue')
+	compile files('../apt/classes/io')
+	compile files('../apt/classes/lib')
+	compile files('../apt/classes/main')
+	compile files('../apt/classes/module')
+	compile 'org.apache.commons:commons-collections4:4.0'
+	
+	// Other dependencies
+	compile 'com.google.inject:guice:4.0'
+	testCompile 'junit:junit:4.12'
+}
+
+eclipse {
+	classpath {
+		downloadSources = true
+		downloadJavadoc = true
+	}
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'uniol.ape.application.Main'
+    }
+}
