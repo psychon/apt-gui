@@ -20,32 +20,25 @@
 package uniol.aptgui.gui.editor;
 
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
 
 import com.google.inject.Inject;
 
 import uniol.apt.adt.pn.PetriNet;
 import uniol.aptgui.gui.AbstractPresenter;
-import uniol.aptgui.gui.editor.features.PnRendererFeature;
 import uniol.aptgui.gui.editor.features.ViewTransformFeature;
+import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
 import uniol.aptgui.gui.editor.layout.Layout;
 
 public class PnEditorPresenterImpl extends AbstractPresenter<PnEditorPresenter, PnEditorView>
 		implements PnEditorPresenter {
 
-	private final PnRendererFeature pnRendererFeature;
+	private PnDocument doc;
+
 	private final ViewTransformFeature viewTransformFeature;
-
-	private int translationX = 0;
-	private int translationY = 0;
-	private double scale = 1.0;
-
-	private PetriNet pn;
 
 	@Inject
 	public PnEditorPresenterImpl(PnEditorView view) {
 		super(view);
-		this.pnRendererFeature = new PnRendererFeature(this);
 		this.viewTransformFeature = new ViewTransformFeature(this);
 		view.addMouseAdapter(viewTransformFeature);
 	}
@@ -57,40 +50,35 @@ public class PnEditorPresenterImpl extends AbstractPresenter<PnEditorPresenter, 
 		if (width == 0 && height == 0) {
 			throw new AssertionError("Layout can only be applied to the editor once it is visible (and its size is known).");
 		}
-		if (pn != null) {
-			layout.applyTo(pn, width, height);
+		if (doc != null) {
+			layout.applyTo(doc.getPetriNet(), width, height);
 		}
 	}
 
 	@Override
 	public void onPaint(Graphics2D graphics) {
-		AffineTransform originalTransform = graphics.getTransform();
-		graphics.translate(translationX, translationY);
-		graphics.scale(scale, scale);
-		pnRendererFeature.draw(graphics);
-		graphics.setTransform(originalTransform);
+		doc.drawDocument(graphics);
 	}
 
 	@Override
 	public void setPetriNet(PetriNet pn) {
-		this.pn = pn;
+		this.doc = new PnDocument(pn);
 	}
 
 	@Override
 	public PetriNet getPetriNet() {
-		return pn;
+		return doc.getPetriNet();
 	}
 
 	@Override
 	public void translateView(int dx, int dy) {
-		translationX += dx;
-		translationY += dy;
+		doc.translateView(dx, dy);
 		getView().repaint();
 	}
 
 	@Override
 	public void scaleView(double scale) {
-		this.scale = this.scale * scale;
+		doc.scaleView(scale);
 		getView().repaint();
 	}
 

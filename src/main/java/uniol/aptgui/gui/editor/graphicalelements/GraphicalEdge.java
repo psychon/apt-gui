@@ -19,13 +19,16 @@
 
 package uniol.aptgui.gui.editor.graphicalelements;
 
+import java.awt.BasicStroke;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class GraphicalEdge extends GraphicalElement {
 
-	private List<Point> path;
+	protected List<Point> path;
 
 	public GraphicalEdge() {
 		this.path = new ArrayList<>();
@@ -37,6 +40,56 @@ public abstract class GraphicalEdge extends GraphicalElement {
 
 	public void setPath(List<Point> path) {
 		this.path = path;
+	}
+
+	protected static void drawPathWithArrowhead(Graphics2D graphics, List<Point> path) {
+		assert path.size() >= 2;
+		drawPath(graphics, path);
+		drawArrowhead(
+			graphics,
+			path.get(path.size() - 2),
+			path.get(path.size() - 1)
+		);
+	}
+
+	protected static void drawPath(Graphics2D graphics, List<Point> path) {
+		if (path.isEmpty()) {
+			return;
+		}
+		Point previous = path.get(0);
+		for (int i = 1; i < path.size(); i++) {
+			Point current = path.get(i);
+			graphics.drawLine(previous.x, previous.y, current.x, current.y);
+			previous = current;
+		}
+	}
+
+	protected static void drawArrowhead(Graphics2D graphics, Point source, Point target) {
+		int x = target.x;
+		int y = target.y;
+		int i1 = 12;
+		int i2 = 6;
+		double aDir = Math.atan2(source.x - target.x, source.y - target.y);
+
+		Polygon arrowhead = new Polygon();
+		arrowhead.addPoint(x, y);
+		arrowhead.addPoint(x + xCor(i1, aDir + 0.5), y + yCor(i1, aDir + 0.5));
+		arrowhead.addPoint(x + xCor(i2, aDir), y + yCor(i2, aDir));
+		arrowhead.addPoint(x + xCor(i1, aDir - 0.5), y + yCor(i1, aDir - 0.5));
+		arrowhead.addPoint(x, y);
+
+		// make the arrowhead solid
+		graphics.setStroke(new BasicStroke(1f));
+		graphics.drawPolygon(arrowhead);
+		graphics.fillPolygon(arrowhead);
+	}
+
+	private static int yCor(int len, double dir) {
+		return (int) (len * Math.cos(dir));
+	}
+
+	private static int xCor(int len, double dir) {
+		return (int) (len * Math.sin(dir));
 	}
 
 }

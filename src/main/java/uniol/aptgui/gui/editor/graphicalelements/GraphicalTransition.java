@@ -19,10 +19,13 @@
 
 package uniol.aptgui.gui.editor.graphicalelements;
 
+import java.awt.Graphics2D;
+import java.awt.Point;
+
 public class GraphicalTransition extends GraphicalNode {
 
-	private String id;
-	private String label;
+	protected String id;
+	protected String label;
 
 	public GraphicalTransition(String id) {
 		this(id, id);
@@ -47,6 +50,16 @@ public class GraphicalTransition extends GraphicalNode {
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	@Override
+	public Point getBoundaryIntersection(Point point) {
+		return center; // TODO
+	}
+
+	@Override
+	public void draw(Graphics2D graphics) {
+		drawSquare(graphics, center, 20);
 	}
 
 }

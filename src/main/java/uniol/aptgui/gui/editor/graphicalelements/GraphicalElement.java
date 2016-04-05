@@ -20,12 +20,13 @@
 package uniol.aptgui.gui.editor.graphicalelements;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 
 public abstract class GraphicalElement {
 
 	public static final String EXTENSION_KEY = "uniol.ape.gui.editor.graphicalelements.GraphicalElement";
 
-	private Color color;
+	protected Color color;
 
 	public GraphicalElement() {
 		this.color = Color.BLACK;
@@ -38,6 +39,8 @@ public abstract class GraphicalElement {
 	public void setColor(Color color) {
 		this.color = color;
 	}
+
+	public abstract void draw(Graphics2D graphics);
 
 }
 

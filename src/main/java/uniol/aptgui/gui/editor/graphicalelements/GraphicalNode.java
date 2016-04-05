@@ -19,11 +19,12 @@
 
 package uniol.aptgui.gui.editor.graphicalelements;
 
+import java.awt.Graphics2D;
 import java.awt.Point;
 
 public abstract class GraphicalNode extends GraphicalElement {
 
-	private Point center;
+	protected Point center;
 
 	public Point getCenter() {
 		return center;
@@ -31,6 +32,23 @@ public abstract class GraphicalNode extends GraphicalElement {
 
 	public void setCenter(Point center) {
 		this.center = center;
+	}
+
+	/**
+	 * Returns the intersection point of this GraphicalNode's boundary with
+	 * a line from the given point to this GraphicalNode's center.
+	 *
+	 * @param point
+	 * @return
+	 */
+	public abstract Point getBoundaryIntersection(Point point);
+
+	protected static void drawCircle(Graphics2D graphics, Point center, int radius) {
+		graphics.drawOval(center.x - radius, center.y - radius, 2 * radius, 2 * radius);
+	}
+
+	protected static void drawSquare(Graphics2D graphics, Point center, int radius) {
+		graphics.drawRect(center.x - radius, center.y - radius, 2 * radius, 2 * radius);
 	}
 
 }

@@ -19,9 +19,12 @@
 
 package uniol.aptgui.gui.editor.graphicalelements;
 
+import java.awt.Graphics2D;
+import java.awt.Point;
+
 public class GraphicalPlace extends GraphicalNode {
 
-	private long tokens;
+	protected long tokens;
 
 	public GraphicalPlace(long tokens) {
 		this.tokens = tokens;
@@ -33,6 +36,16 @@ public class GraphicalPlace extends GraphicalNode {
 
 	public void setTokens(long tokens) {
 		this.tokens = tokens;
+	}
+
+	@Override
+	public Point getBoundaryIntersection(Point point) {
+		return center; // TODO
+	}
+
+	@Override
+	public void draw(Graphics2D graphics) {
+		drawCircle(graphics, center, 20);
 	}
 
 }

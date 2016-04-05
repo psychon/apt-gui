@@ -19,11 +19,16 @@
 
 package uniol.aptgui.gui.editor.graphicalelements;
 
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+
 public class GraphicalFlow extends GraphicalEdge {
 
-	private GraphicalNode source;
-	private GraphicalNode target;
-	private long multiplicity;
+	protected GraphicalNode source;
+	protected GraphicalNode target;
+	protected long multiplicity;
 
 	public GraphicalFlow(GraphicalNode source, GraphicalNode target, long multiplicity) {
 		this.source = source;
@@ -53,6 +58,26 @@ public class GraphicalFlow extends GraphicalEdge {
 
 	public void setMultiplicity(long multiplicity) {
 		this.multiplicity = multiplicity;
+	}
+
+	@Override
+	public void draw(Graphics2D graphics) {
+		List<Point> drawPath = new ArrayList<>();
+
+		Point first, last;
+		if (path.isEmpty()) {
+			first = target.getCenter();
+			last = source.getCenter();
+		} else {
+			first = drawPath.get(0);
+			last = drawPath.get(drawPath.size() - 1);
+		}
+
+		drawPath.add(source.getBoundaryIntersection(first));
+		drawPath.addAll(path);
+		drawPath.add(target.getBoundaryIntersection(last));
+
+		drawPathWithArrowhead(graphics, drawPath);
 	}
 
 }
