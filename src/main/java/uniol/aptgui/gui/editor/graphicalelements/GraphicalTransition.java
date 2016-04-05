@@ -24,6 +24,7 @@ import java.awt.Point;
 
 public class GraphicalTransition extends GraphicalNode {
 
+	private static final int RADIUS = 20;
 	protected String id;
 	protected String label;
 
@@ -59,7 +60,20 @@ public class GraphicalTransition extends GraphicalNode {
 
 	@Override
 	public void draw(Graphics2D graphics) {
+		if (!visible) {
+			return;
+		}
+		super.draw(graphics);
 		drawSquare(graphics, center, 20);
+	}
+
+	@Override
+	public boolean containsPoint(Point point) {
+		int minX = center.x - RADIUS;
+		int maxX = center.x + RADIUS;
+		int minY = center.y - RADIUS;
+		int maxY = center.y + RADIUS;
+		return minX <= point.x && point.x <= maxX && minY <= point.y && point.y <= maxY;
 	}
 
 }

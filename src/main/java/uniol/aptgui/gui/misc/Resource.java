@@ -17,19 +17,26 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.internalwindow;
+package uniol.aptgui.gui.misc;
 
-import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.net.URL;
 
-import uniol.aptgui.gui.View;
+public class Resource {
 
-public interface InternalWindowView extends View<InternalWindowPresenter> {
+	public static Cursor getCursorCreateEdge() {
+		return getCursor("/cursor_create_edge.gif");
+	}
 
-	public void setContent(Component component);
-
-	public void setTitle(String title);
-
-	public void focus();
+	private static Cursor getCursor(String path) {
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		URL url = Resource.class.getResource(path);
+		Image image = tk.getImage(url);
+		return tk.createCustomCursor(image, new Point(0, 0), path);
+	}
 
 }
 

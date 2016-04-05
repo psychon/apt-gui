@@ -17,35 +17,40 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.editor;
+package uniol.aptgui.gui.history;
 
-import com.google.inject.Inject;
-
-import uniol.apt.adt.pn.PetriNet;
-import uniol.aptgui.application.events.ToolboxEventRouter;
+import uniol.apt.adt.pn.Place;
+import uniol.aptgui.gui.editor.graphicalelements.GraphicalElement;
+import uniol.aptgui.gui.editor.graphicalelements.GraphicalPlace;
 import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
-import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
-import uniol.aptgui.gui.history.History;
 
-public class PnEditorPresenterImpl extends EditorPresenterImpl implements PnEditorPresenter {
+public class CreatePlaceCommand implements Command {
 
-	private PnDocument document;
+	private final PnDocument pnDocument;
+	private final GraphicalPlace graphicalPlace;
+	private Place pnPlace;
 
-	@Inject
-	public PnEditorPresenterImpl(EditorView view, History history, ToolboxEventRouter toolboxEventRouter) {
-		super(view, history, toolboxEventRouter);
+	public CreatePlaceCommand(PnDocument pnDocument, GraphicalPlace place) {
+		this.pnDocument = pnDocument;
+		this.graphicalPlace = place;
 	}
 
 	@Override
-	public void setPetriNet(PetriNet pn) {
-		document = new PnDocument(pn);
-		setDocument(document);
-		setToolbox(Toolbox.createPnToolbox(view, document, history));
+	public void execute() {
+		pnPlace = pnDocument.getPetriNet().createPlace();
+		pnPlace.putExtension(GraphicalElement.EXTENSION_KEY, graphicalPlace);
+		pnDocument.fireDocumentDirty();
 	}
 
 	@Override
-	public PetriNet getPetriNet() {
-		return document.getPetriNet();
+	public void undo() {
+		pnDocument.getPetriNet().removePlace(pnPlace);
+		pnDocument.fireDocumentDirty();
+	}
+
+	@Override
+	public void redo() {
+		execute();
 	}
 
 }

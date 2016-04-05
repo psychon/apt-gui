@@ -32,6 +32,8 @@ import com.google.inject.Injector;
 import uniol.aptgui.gui.JToolBarView;
 import uniol.aptgui.gui.actions.NewPetriNetAction;
 import uniol.aptgui.gui.actions.NewTransitionSystemAction;
+import uniol.aptgui.gui.actions.PnCreateFlowToolAction;
+import uniol.aptgui.gui.actions.PnCreatePlaceToolAction;
 import uniol.aptgui.gui.actions.PnSelectionToolAction;
 import uniol.aptgui.gui.editor.tools.toolbox.ToolIds;
 
@@ -49,25 +51,37 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 
 	@Inject
 	public ToolbarViewImpl(Injector injector) {
+		// Create toolbar items.
 		JButton newPn = new JButton(injector.getInstance(NewPetriNetAction.class));
 		JButton newTs = new JButton(injector.getInstance(NewTransitionSystemAction.class));
 		JToggleButton pnSelectionTool = new JToggleButton(injector.getInstance(PnSelectionToolAction.class));
+		JToggleButton pnCreatePlaceTool = new JToggleButton(injector.getInstance(PnCreatePlaceToolAction.class));
+		JToggleButton pnCreateFlowTool = new JToggleButton(injector.getInstance(PnCreateFlowToolAction.class));
 
+		// Add items to toolbar.
 		add(newPn);
 		add(newTs);
 		add(pnSelectionTool);
+		add(pnCreatePlaceTool);
+		add(pnCreateFlowTool);
 
+		// Put PN specific item in their hash map.
 		pnToolButtons = new HashMap<>();
 		pnToolButtons.put(ToolIds.SELECTION, pnSelectionTool);
+		pnToolButtons.put(ToolIds.CREATE_PLACE, pnCreatePlaceTool);
+		pnToolButtons.put(ToolIds.CREATE_FLOW, pnCreateFlowTool);
 		pnToolGroup = new ButtonGroup();
 		for (JToggleButton btn : pnToolButtons.values()) {
+			btn.setVisible(false);
 			pnToolGroup.add(btn);
 		}
 
+		// Put TS specific items in their hash map.
 		tsToolButtons = new HashMap<>();
 		tsToolButtons.put(ToolIds.SELECTION, new JToggleButton("TODO"));
 		tsToolGroup = new ButtonGroup();
 		for (JToggleButton btn : tsToolButtons.values()) {
+			btn.setVisible(false);
 			tsToolGroup.add(btn);
 		}
 

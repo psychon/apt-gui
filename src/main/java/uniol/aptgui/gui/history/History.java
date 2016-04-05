@@ -17,20 +17,29 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.internalwindow;
+package uniol.aptgui.gui.history;
 
-import java.awt.Component;
+import java.util.List;
 
-import uniol.aptgui.gui.View;
+public class History {
 
-public interface InternalWindowView extends View<InternalWindowPresenter> {
+	private List<Command> commands;
+	private int lastCommandIndex;
 
-	public void setContent(Component component);
+	public void execute(Command cmd) {
+		// TODO
+		cmd.execute();
+	}
 
-	public void setTitle(String title);
+	public void undo() {
+		// TODO
+	}
 
-	public void focus();
+	public void redo() {
+		// TODO
+	}
 
 }
+
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

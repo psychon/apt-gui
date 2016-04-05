@@ -34,6 +34,11 @@ public abstract class GraphicalNode extends GraphicalElement {
 		this.center = center;
 	}
 
+	public void translate(int dx, int dy) {
+		center.x += dx;
+		center.y += dy;
+	}
+
 	/**
 	 * Returns the intersection point of this GraphicalNode's boundary with
 	 * a line from the given point to this GraphicalNode's center.

@@ -32,6 +32,8 @@ public interface InternalWindowPresenter extends Presenter<InternalWindowView> {
 
 	public WindowId getWindowId();
 
+	public void focus();
+
 	/// VIEW EVENTS ///
 
 	public void onCloseButtonClicked();

@@ -29,6 +29,7 @@ import uniol.aptgui.gui.editor.PnEditorPresenter;
 import uniol.aptgui.gui.editor.PnEditorPresenterImpl;
 import uniol.aptgui.gui.editor.TsEditorPresenter;
 import uniol.aptgui.gui.editor.TsEditorPresenterImpl;
+import uniol.aptgui.gui.history.History;
 import uniol.aptgui.gui.internalwindow.InternalWindowPresenter;
 import uniol.aptgui.gui.internalwindow.InternalWindowPresenterImpl;
 import uniol.aptgui.gui.internalwindow.InternalWindowView;
@@ -57,6 +58,7 @@ public class DependenyModule extends AbstractModule {
 		bind(ToolbarPresenter.class).to(ToolbarPresenterImpl.class);
 		bind(ToolbarView.class).to(ToolbarViewImpl.class);
 		bind(ToolboxEventRouter.class).in(Singleton.class);
+		bind(History.class).in(Singleton.class);
 	}
 
 }

@@ -20,26 +20,53 @@
 package uniol.aptgui.gui.editor.tools;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import uniol.aptgui.gui.editor.EditorView;
+import uniol.aptgui.gui.editor.graphicalelements.GraphicalElement;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalPlace;
 import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
+import uniol.aptgui.gui.history.CreatePlaceCommand;
+import uniol.aptgui.gui.history.History;
 
 public class CreatePlaceTool extends Tool {
 
+	private final History history;
 	private final PnDocument document;
 	private GraphicalPlace place;
 
-	public CreatePlaceTool(PnDocument document, EditorView view) {
+	public CreatePlaceTool(EditorView view, PnDocument document, History history) {
 		super(view);
+		this.history = history;
 		this.document = document;
+		initPlace();
+	}
+
+	private void initPlace() {
 		this.place = new GraphicalPlace(0);
+		this.place.setVisible(false);
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+		// Use view coordinates since the Tool draw method doesn't take the Document transform into account.
 		place.setCenter(e.getPoint());
+		place.setVisible(true);
+		document.fireDocumentDirty();
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		Point modelPoint = document.transformViewToModel(e.getPoint());
+		GraphicalElement elem = document.getElementAt(modelPoint);
+		// Only add the place if the user clicked the canvas instead of
+		// an element.
+		if (elem == null) {
+			place.setCenter(modelPoint);
+			history.execute(new CreatePlaceCommand(document, place));
+			initPlace();
+		}
 	}
 
 	@Override
@@ -48,6 +75,5 @@ public class CreatePlaceTool extends Tool {
 	}
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

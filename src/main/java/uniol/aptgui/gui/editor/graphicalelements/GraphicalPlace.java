@@ -24,6 +24,7 @@ import java.awt.Point;
 
 public class GraphicalPlace extends GraphicalNode {
 
+	private static final int RADIUS = 20;
 	protected long tokens;
 
 	public GraphicalPlace(long tokens) {
@@ -45,7 +46,16 @@ public class GraphicalPlace extends GraphicalNode {
 
 	@Override
 	public void draw(Graphics2D graphics) {
-		drawCircle(graphics, center, 20);
+		if (!visible) {
+			return;
+		}
+		super.draw(graphics);
+		drawCircle(graphics, center, RADIUS);
+	}
+
+	@Override
+	public boolean containsPoint(Point point) {
+		return center.distance(point.x, point.y) < RADIUS;
 	}
 
 }

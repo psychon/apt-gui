@@ -19,6 +19,7 @@
 
 package uniol.aptgui.gui.editor.tools;
 
+import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 
@@ -26,10 +27,16 @@ import uniol.aptgui.gui.editor.EditorView;
 
 public abstract class Tool extends MouseAdapter {
 
-	protected final EditorView view;
+	private final EditorView view;
+	protected Cursor cursor;
 
 	public Tool(EditorView view) {
 		this.view = view;
+		this.cursor = Cursor.getDefaultCursor();
+	}
+
+	public Cursor getCursor() {
+		return cursor;
 	}
 
 	public void onActivated() {

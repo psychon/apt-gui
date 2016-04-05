@@ -20,6 +20,7 @@
 package uniol.aptgui.gui.editor.graphicalelements;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 
 import uniol.apt.adt.pn.Flow;
 import uniol.apt.adt.pn.PetriNet;
@@ -66,6 +67,29 @@ public class PnDocument extends Document {
 	@Override
 	public void applyLayout(Layout layout) {
 		layout.applyTo(petriNet, width, height);
+	}
+
+	@Override
+	public GraphicalElement getElementAt(Point point) {
+		for (Place place : petriNet.getPlaces()) {
+			GraphicalPlace elem = getGraphicalExtension(place);
+			if (elem.containsPoint(point)) {
+				return elem;
+			}
+		}
+		for (Transition transition : petriNet.getTransitions()) {
+			GraphicalTransition elem = getGraphicalExtension(transition);
+			if (elem.containsPoint(point)) {
+				return elem;
+			}
+		}
+		for (Flow flow : petriNet.getEdges()) {
+			GraphicalFlow elem = getGraphicalExtension(flow);
+			if (elem.containsPoint(point)) {
+				return elem;
+			}
+		}
+		return null;
 	}
 
 }

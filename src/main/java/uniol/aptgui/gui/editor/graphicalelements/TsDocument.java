@@ -20,7 +20,11 @@
 package uniol.aptgui.gui.editor.graphicalelements;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 
+import uniol.apt.adt.pn.Flow;
+import uniol.apt.adt.pn.Transition;
+import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.aptgui.gui.editor.layout.Layout;
 
@@ -38,14 +42,17 @@ public class TsDocument extends Document {
 
 	@Override
 	public void applyLayout(Layout layout) {
-		// TODO Auto-generated method stub
-
+		layout.applyTo(transitionSystem, width, height);
 	}
 
 	@Override
 	protected void draw(Graphics2D graphics) {
-		// TODO Auto-generated method stub
+	}
 
+	@Override
+	public GraphicalElement getElementAt(Point point) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

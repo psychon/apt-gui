@@ -1,0 +1,8 @@
+Most files are licensed under GPL 2, see gpl-2.0.txt.
+
+Some graphical resources have been taken from Martin Riesz's PNEditor which is
+licensed under GPL 3, see  gpl-3.0.txt. On source files it has been noted which
+license applies. The following binary files are GPL 3 licensed because they
+originate from PNEditor:
+
+/src/main/resources/*

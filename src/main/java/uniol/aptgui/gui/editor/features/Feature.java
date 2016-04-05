@@ -17,20 +17,24 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.internalwindow;
+package uniol.aptgui.gui.editor.features;
 
-import java.awt.Component;
+import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
 
-import uniol.aptgui.gui.View;
+import uniol.aptgui.gui.editor.EditorView;
 
-public interface InternalWindowView extends View<InternalWindowPresenter> {
+public abstract class Feature extends MouseAdapter {
 
-	public void setContent(Component component);
+	protected final EditorView view;
 
-	public void setTitle(String title);
+	public Feature(EditorView view) {
+		this.view = view;
+	}
 
-	public void focus();
+	public abstract void draw(Graphics2D graphics);
 
 }
+
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

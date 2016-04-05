@@ -25,21 +25,23 @@ import uniol.apt.adt.ts.TransitionSystem;
 import uniol.aptgui.application.events.ToolboxEventRouter;
 import uniol.aptgui.gui.editor.graphicalelements.TsDocument;
 import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
+import uniol.aptgui.gui.history.History;
 
 public class TsEditorPresenterImpl extends EditorPresenterImpl implements TsEditorPresenter {
 
 	private TsDocument document;
 
 	@Inject
-	public TsEditorPresenterImpl(EditorView view, ToolboxEventRouter toolboxEventRouter) {
-		super(view, toolboxEventRouter);
+	public TsEditorPresenterImpl(EditorView view, History history, ToolboxEventRouter toolboxEventRouter) {
+		super(view, history, toolboxEventRouter);
 	}
+
 
 	@Override
 	public void setTransitionSystem(TransitionSystem ts) {
 		document = new TsDocument(ts);
 		setDocument(document);
-		setToolbox(Toolbox.createTsToolbox(document, view));
+		setToolbox(Toolbox.createTsToolbox(view, document));
 	}
 
 	@Override

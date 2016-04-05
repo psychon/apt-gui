@@ -23,7 +23,7 @@ import uniol.aptgui.gui.editor.tools.toolbox.ToolIds;
 
 public interface ToolboxEventListener {
 
-	public void onToolSelected(ToolIds tool);
+	public void onToolSelected(ToolIds id);
 
 }
 

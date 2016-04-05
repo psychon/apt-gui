@@ -63,6 +63,11 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 		application.onInternalWindowActivated(id);
 	}
 
+	@Override
+	public void focus() {
+		view.focus();
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

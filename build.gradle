@@ -28,6 +28,6 @@ eclipse {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'uniol.ape.application.Main'
+        attributes 'Main-Class': 'uniol.aptgui.application.Main'
     }
 }

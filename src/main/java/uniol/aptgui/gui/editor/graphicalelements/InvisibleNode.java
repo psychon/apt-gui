@@ -17,19 +17,25 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.internalwindow;
+package uniol.aptgui.gui.editor.graphicalelements;
 
-import java.awt.Component;
+import java.awt.Point;
 
-import uniol.aptgui.gui.View;
+public class InvisibleNode extends GraphicalNode {
 
-public interface InternalWindowView extends View<InternalWindowPresenter> {
+	public InvisibleNode() {
+		setVisible(false);
+	}
 
-	public void setContent(Component component);
+	@Override
+	public Point getBoundaryIntersection(Point point) {
+		return center;
+	}
 
-	public void setTitle(String title);
-
-	public void focus();
+	@Override
+	public boolean containsPoint(Point point) {
+		throw new UnsupportedOperationException();
+	}
 
 }
 

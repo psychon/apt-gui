@@ -68,7 +68,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		PnEditorPresenter editor = injector.getInstance(PnEditorPresenter.class);
 		editor.setPetriNet(pn);
 
-		WindowId id = createInternalWindow(editor);
+		WindowId id = createInternalWindow(new WindowId(WindowType.PETRI_NET), editor);
 		editor.applyLayout(new RandomLayout());
 		return id;
 	}
@@ -78,18 +78,18 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		TsEditorPresenter editor = injector.getInstance(TsEditorPresenter.class);
 		editor.setTransitionSystem(ts);
 
-		WindowId id = createInternalWindow(editor);
+		WindowId id = createInternalWindow(new WindowId(WindowType.TRANSITION_SYSTEM), editor);
 		editor.applyLayout(new RandomLayout());
 		return id;
 	}
 
-	private WindowId createInternalWindow(Presenter<?> contentPresenter) {
-		WindowId id = getUnusedWindowId();
+	private WindowId createInternalWindow(WindowId id, Presenter<?> contentPresenter) {
 		InternalWindowPresenter window = injector.getInstance(InternalWindowPresenter.class);
 		window.setWindowId(id);
 		window.setContentPresenter(contentPresenter);
 		internalWindows.put(id, window);
 		showWindow(id);
+		window.focus();
 		return id;
 	}
 
@@ -107,10 +107,6 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	private void showWindow(WindowId id) {
 		Component component = internalWindows.get(id).getGraphicalComponent();
 		getView().addInternalWindow(component);
-	}
-
-	private WindowId getUnusedWindowId() {
-		return new WindowId();
 	}
 
 	@Override

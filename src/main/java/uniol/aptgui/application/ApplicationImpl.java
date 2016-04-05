@@ -29,6 +29,7 @@ import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.aptgui.gui.mainwindow.MainWindowPresenter;
 import uniol.aptgui.gui.mainwindow.WindowId;
+import uniol.aptgui.gui.mainwindow.WindowType;
 
 public class ApplicationImpl implements Application {
 
@@ -69,9 +70,9 @@ public class ApplicationImpl implements Application {
 	@Override
 	public void onInternalWindowActivated(WindowId id) {
 		activeWindow = id;
-		if (petriNets.containsKey(id)) {
+		if (id.getType() == WindowType.PETRI_NET) {
 			mainWindow.showPnToolbar();
-		} else if (transitionSystems.containsKey(id)) {
+		} else if (id.getType() == WindowType.TRANSITION_SYSTEM) {
 			mainWindow.showTsToolbar();
 		}
 	}

@@ -17,19 +17,32 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.internalwindow;
+package uniol.aptgui.gui.actions;
 
-import java.awt.Component;
+import java.awt.event.ActionEvent;
 
-import uniol.aptgui.gui.View;
+import javax.swing.AbstractAction;
 
-public interface InternalWindowView extends View<InternalWindowPresenter> {
+import com.google.inject.Inject;
 
-	public void setContent(Component component);
+import uniol.aptgui.application.events.ToolboxEventRouter;
+import uniol.aptgui.gui.editor.tools.toolbox.ToolIds;
 
-	public void setTitle(String title);
+@SuppressWarnings("serial")
+public class PnCreateFlowToolAction extends AbstractAction {
 
-	public void focus();
+	private final ToolboxEventRouter router;
+
+	@Inject
+	public PnCreateFlowToolAction(ToolboxEventRouter router) {
+		this.router = router;
+		putValue(NAME, "CREATE FLOW");
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		router.fireToolSelected(ToolIds.CREATE_FLOW);
+	}
 
 }
 

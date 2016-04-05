@@ -20,34 +20,52 @@
 package uniol.aptgui.gui.editor;
 
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.inject.Inject;
 
 import uniol.aptgui.application.events.ToolboxEventListener;
 import uniol.aptgui.application.events.ToolboxEventRouter;
 import uniol.aptgui.gui.AbstractPresenter;
+import uniol.aptgui.gui.editor.features.Feature;
+import uniol.aptgui.gui.editor.features.HoverFeature;
 import uniol.aptgui.gui.editor.graphicalelements.Document;
+import uniol.aptgui.gui.editor.graphicalelements.DocumentListener;
 import uniol.aptgui.gui.editor.layout.Layout;
 import uniol.aptgui.gui.editor.tools.Tool;
 import uniol.aptgui.gui.editor.tools.toolbox.ToolIds;
 import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
+import uniol.aptgui.gui.history.History;
 
-public abstract class EditorPresenterImpl
-	extends AbstractPresenter<EditorPresenter, EditorView>
-	implements EditorPresenter, ToolboxEventListener {
+public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, EditorView>
+		implements EditorPresenter, ToolboxEventListener, DocumentListener {
 
-	private Document document;
-	private Toolbox toolbox;
+	protected History history;
+	protected Document document;
+	protected Toolbox toolbox;
+	protected List<Feature> features;
 
 	@Inject
-	public EditorPresenterImpl(EditorView view, ToolboxEventRouter toolboxEventRouter) {
+	public EditorPresenterImpl(EditorView view, History history, ToolboxEventRouter toolboxEventRouter) {
 		super(view);
+		this.history = history;
+		this.features = new ArrayList<>();
 		toolboxEventRouter.addListener(this);
 	}
 
 	@Override
 	public void setDocument(Document document) {
 		this.document = document;
+		this.document.addListener(this);
+		for (Feature feature : features) {
+			view.removeMouseAdapter(feature);
+		}
+		features.clear();
+		features.add(new HoverFeature(document, view));
+		for (Feature feature : features) {
+			view.addMouseAdapter(feature);
+		}
 	}
 
 	@Override
@@ -56,8 +74,13 @@ public abstract class EditorPresenterImpl
 	}
 
 	@Override
-	public void onToolSelected(ToolIds tool) {
-		toolbox.setActiveTool(tool);
+	public void onToolSelected(ToolIds id) {
+		toolbox.setActiveTool(id);
+		Tool tool = toolbox.getActiveTool();
+		if (tool != null) {
+			view.getGraphicalComponent().setCursor(tool.getCursor());
+		}
+		view.repaint();
 	}
 
 	@Override
@@ -65,7 +88,8 @@ public abstract class EditorPresenterImpl
 		int width = getView().getCanvasWidth();
 		int height = getView().getCanvasHeight();
 		if (width == 0 && height == 0) {
-			throw new AssertionError("Layout can only be applied to the editor once it is visible (and its size is known).");
+			throw new AssertionError(
+					"Layout can only be applied to the editor once it is visible (and its size is known).");
 		}
 		if (document != null) {
 			document.setWidth(width);
@@ -77,6 +101,9 @@ public abstract class EditorPresenterImpl
 	@Override
 	public void onPaint(Graphics2D graphics) {
 		document.drawDocument(graphics);
+		for (Feature feature : features) {
+			feature.draw(graphics);
+		}
 		Tool tool = toolbox.getActiveTool();
 		if (tool != null) {
 			tool.draw(graphics);
@@ -92,6 +119,11 @@ public abstract class EditorPresenterImpl
 	@Override
 	public void scaleView(double scale) {
 		document.scaleView(scale);
+		getView().repaint();
+	}
+
+	@Override
+	public void onDocumentDirty() {
 		getView().repaint();
 	}
 

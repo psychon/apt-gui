@@ -21,6 +21,7 @@ package uniol.aptgui.gui.internalwindow;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.beans.PropertyVetoException;
 
 import javax.swing.WindowConstants;
 import javax.swing.event.InternalFrameEvent;
@@ -57,6 +58,14 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 		getContentPane().add(component, BorderLayout.CENTER);
 		pack();
 		setVisible(true);
+	}
+
+	@Override
+	public void focus() {
+		try {
+			setSelected(true);
+		} catch (PropertyVetoException e) {
+		}
 	}
 
 }

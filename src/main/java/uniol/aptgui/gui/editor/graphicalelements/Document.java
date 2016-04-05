@@ -20,13 +20,19 @@
 package uniol.aptgui.gui.editor.graphicalelements;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 import uniol.apt.adt.extension.IExtensible;
 import uniol.aptgui.gui.editor.layout.Layout;
 
 public abstract class Document {
+
+	private List<DocumentListener> listeners;
 
 	protected int width;
 	protected int height;
@@ -40,8 +46,19 @@ public abstract class Document {
 	}
 
 	public Document(int width, int height) {
+		this.listeners = new ArrayList<>();
 		this.width = width;
 		this.height = height;
+	}
+
+	public void addListener(DocumentListener listener) {
+		listeners.add(listener);
+	}
+
+	public void fireDocumentDirty() {
+		for (DocumentListener l : listeners) {
+			l.onDocumentDirty();
+		}
 	}
 
 	public abstract void applyLayout(Layout layout);
@@ -53,6 +70,46 @@ public abstract class Document {
 		graphics.scale(scale, scale);
 		draw(graphics);
 		graphics.setTransform(originalTransform);
+	}
+
+	/**
+	 * Transforms the given point (in view coordinates) into
+	 * model coordinates.
+	 *
+	 * @param point
+	 *                the original point in view coordinates
+	 * @return the transformed point in model coordinates
+	 */
+	public Point transformViewToModel(Point point) {
+		try {
+			AffineTransform tx = new AffineTransform();
+			tx.translate(translationX, translationY);
+			tx.scale(scale, scale);
+			Point2D p2d = tx.inverseTransform(point, null);
+			return point2DtoPoint(p2d);
+		} catch (Exception e) {
+			throw new AssertionError();
+		}
+	}
+
+	/**
+	 * Transforms the given point (in model coordinates) into
+	 * view coordinates.
+	 *
+	 * @param point
+	 *                the original point in model coordinates
+	 * @return the transformed point in view coordinates
+	 */
+	public Point transformModelToView(Point point) {
+		AffineTransform tx = new AffineTransform();
+		tx.translate(translationX, translationY);
+		tx.scale(scale, scale);
+		Point2D p2d = tx.transform(point, null);
+		return point2DtoPoint(p2d);
+	}
+
+	private Point point2DtoPoint(Point2D p2d) {
+		return new Point((int) p2d.getX(), (int) p2d.getY());
 	}
 
 	protected abstract void draw(Graphics2D graphics);
@@ -109,6 +166,19 @@ public abstract class Document {
 
 	public void setScale(double scale) {
 		this.scale = scale;
+	}
+
+	/**
+	 * Returns the GraphicalElement that covers the given point or null if
+	 * there is no element at that position.
+	 *
+	 * @param point point in model coordinates
+	 * @return
+	 */
+	public abstract GraphicalElement getElementAt(Point point);
+
+	public GraphicalElement getElementAtViewCoordinates(Point cursor) {
+		return getElementAt(transformViewToModel(cursor));
 	}
 
 }

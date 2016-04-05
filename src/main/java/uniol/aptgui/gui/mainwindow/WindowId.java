@@ -21,6 +21,16 @@ package uniol.aptgui.gui.mainwindow;
 
 public class WindowId {
 
+	private final WindowType type;
+
+	public WindowId(WindowType type) {
+		this.type = type;
+	}
+
+	public WindowType getType() {
+		return type;
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

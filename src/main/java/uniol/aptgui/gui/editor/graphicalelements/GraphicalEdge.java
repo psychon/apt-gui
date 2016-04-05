@@ -23,23 +23,150 @@ import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class GraphicalEdge extends GraphicalElement {
 
-	protected List<Point> path;
+	private static final double SELECTION_DISTANCE = 10;
+	protected GraphicalNode source;
+	protected GraphicalNode target;
+	protected List<Point> breakpoints;
 
-	public GraphicalEdge() {
-		this.path = new ArrayList<>();
+	public GraphicalEdge(GraphicalNode source, GraphicalNode target) {
+		assert source != null;
+		assert target != null;
+		this.source = source;
+		this.target = target;
+		this.breakpoints = new ArrayList<>();
 	}
 
-	public List<Point> getPath() {
+	public GraphicalNode getSource() {
+		return source;
+	}
+
+	public void setSource(GraphicalNode source) {
+		this.source = source;
+	}
+
+	public GraphicalNode getTarget() {
+		return target;
+	}
+
+	public void setTarget(GraphicalNode target) {
+		this.target = target;
+	}
+
+	public List<Point> getBreakpoints() {
+		return breakpoints;
+	}
+
+	public void setBreakpoints(List<Point> breakpoints) {
+		this.breakpoints = breakpoints;
+	}
+
+	@Override
+	public void draw(Graphics2D graphics) {
+		if (!visible) {
+			return;
+		}
+		super.draw(graphics);
+		drawPathWithArrowhead(graphics, getPath());
+	}
+
+	@Override
+	public boolean containsPoint(Point point) {
+		return getSegmentIndexAt(point) != -1;
+	}
+
+	/**
+	 * Returns the closest breakpoint to the given point that is within the
+	 * selection distance. Attention: A reference is returned, so any
+	 * modifications will be mirrored by the GraphicalEdge.
+	 *
+	 * @param point
+	 *                test position
+	 * @return the closest breakpoint or null if no breakpoint is close
+	 *         enough
+	 */
+	public Point getClosestBreakpoint(Point point) {
+		for (Point p : breakpoints) {
+			if (p.distance(point.x, point.y) < SELECTION_DISTANCE) {
+				return p;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Add the given breakpoint as the last breakpoint.
+	 *
+	 * @param breakpoint
+	 *                the new breakpoint in model coordinates
+	 */
+	public void addBreakpoint(Point breakpoint) {
+		breakpoints.add(breakpoint);
+	}
+
+	/**
+	 * Add the given breakpoint to the closest path segment or don't add it
+	 * at all if there is no segment close enough.
+	 *
+	 * @param breakpoint
+	 *                the new breakpoint
+	 */
+	public void addBreakpointToClosestSegment(Point breakpoint) {
+		int pathIndex = getSegmentIndexAt(breakpoint);
+		if (pathIndex != -1) {
+			// SourceNode position is also part of the path, so
+			// subtract 1.
+			int insertionIndex = pathIndex - 1;
+			breakpoints.add(insertionIndex, breakpoint);
+		}
+	}
+
+	/**
+	 * Returns a zero-based index that identifies the segment closest to the
+	 * given point. The segment ends at path[segmentId].
+	 *
+	 * @param point
+	 * @return the segment index or -1 if the point is not near a segment
+	 */
+	protected int getSegmentIndexAt(Point point) {
+		List<Point> path = getPath();
+		Point start = path.get(0);
+		for (int i = 1; i < path.size(); i++) {
+			Point end = path.get(i);
+			Line2D line = new Line2D.Float(start.x, start.y, end.x, end.y);
+			if (line.ptSegDist(point.x, point.y) < SELECTION_DISTANCE) {
+				return i;
+			}
+			start = end;
+		}
+		return -1;
+	}
+
+	protected List<Point> getPath() {
+		List<Point> path = new ArrayList<>();
+
+		// Find first and last breakpoints or valid substitutes for boundary intersection computations.
+		Point first, last;
+		if (breakpoints.isEmpty()) {
+			first = target.getCenter();
+			last = source.getCenter();
+		} else {
+			first = breakpoints.get(0);
+			last = breakpoints.get(breakpoints.size() - 1);
+		}
+
+		// Collect path Points.
+		path.add(source.getBoundaryIntersection(first));
+		path.addAll(breakpoints);
+		path.add(target.getBoundaryIntersection(last));
+
+		assert path.size() >= 2;
 		return path;
-	}
-
-	public void setPath(List<Point> path) {
-		this.path = path;
 	}
 
 	protected static void drawPathWithArrowhead(Graphics2D graphics, List<Point> path) {

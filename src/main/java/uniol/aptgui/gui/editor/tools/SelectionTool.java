@@ -26,6 +26,9 @@ import java.awt.event.MouseWheelEvent;
 
 import uniol.aptgui.gui.editor.EditorView;
 import uniol.aptgui.gui.editor.graphicalelements.Document;
+import uniol.aptgui.gui.editor.graphicalelements.GraphicalEdge;
+import uniol.aptgui.gui.editor.graphicalelements.GraphicalElement;
+import uniol.aptgui.gui.editor.graphicalelements.GraphicalNode;
 
 /**
  * Selection tool. Gives the user the ability to translate and scale the view,
@@ -34,41 +37,70 @@ import uniol.aptgui.gui.editor.graphicalelements.Document;
  */
 public class SelectionTool extends Tool {
 
+	private static enum DragType {
+		NONE, VIEWPORT, NODE, EDGE
+	}
+
 	private static final double SCALE_FACTOR = 1.1;
 
 	private final Document document;
 
-	private boolean dragging;
+	private DragType dragType;
+	private Object draggedElement;
 	private Point dragSource;
 
-	public SelectionTool(Document document, EditorView view) {
+	public SelectionTool(EditorView view, Document document) {
 		super(view);
 		this.document = document;
-		this.dragging = false;
+		this.dragType = DragType.NONE;
 		this.dragSource = null;
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1 && !dragging) {
-			dragging = true;
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			GraphicalElement elem = document.getElementAtViewCoordinates(e.getPoint());
+			if (elem instanceof GraphicalNode) {
+				dragType = DragType.NODE;
+				draggedElement = elem;
+			} else if (elem instanceof GraphicalEdge) {
+				dragType = DragType.EDGE;
+				draggedElement = getOrCreateBreakpoint(e.getPoint(), (GraphicalEdge) elem);
+			} else {
+				dragType = DragType.VIEWPORT;
+				draggedElement = null;
+			}
 			dragSource = e.getPoint();
 		}
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if (dragging) {
-			Point dragTarget = e.getPoint();
-			translateView(dragTarget.x - dragSource.x, dragTarget.y - dragSource.y);
-			dragSource = dragTarget;
+		Point dragTarget = e.getPoint();
+
+		switch (dragType) {
+		case EDGE:
+			translateBreakpoint(dragTarget);
+			break;
+		case NODE:
+			translateNode(dragTarget);
+			break;
+		case NONE:
+			break;
+		case VIEWPORT:
+			int dx = dragTarget.x - dragSource.x;
+			int dy = dragTarget.y - dragSource.y;
+			translateView(dx, dy);
+			break;
 		}
+
+		dragSource = dragTarget;
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (dragging) {
-			dragging = false;
+		if (dragType == DragType.VIEWPORT) {
+			dragType = DragType.NONE;
 		}
 	}
 
@@ -82,19 +114,55 @@ public class SelectionTool extends Tool {
 
 	}
 
+	/**
+	 * Checks if a breakpoint exists near the given cursor position on the
+	 * given edge. If it exists, it is returned. Otherwise a new breakpoint
+	 * is added at the cursor position and returned.
+	 *
+	 * @param cursor view coordinate cursor position
+	 * @param edge edge at the cursor position
+	 * @return new or existing breakpoint at cursor position
+	 */
+	private Point getOrCreateBreakpoint(Point cursor, GraphicalEdge edge) {
+		Point modelPoint = document.transformViewToModel(cursor);
+		Point breakpoint = edge.getClosestBreakpoint(modelPoint);
+		// Either move existing breakpoint or create a new one.
+		if (breakpoint != null) {
+			return breakpoint;
+		} else {
+			edge.addBreakpointToClosestSegment(modelPoint);
+			return modelPoint;
+		}
+	}
+
+	private void translateBreakpoint(Point dragTarget) {
+		Point breakpoint = (Point) draggedElement;
+		Point modelPoint = document.transformViewToModel(dragTarget);
+		breakpoint.setLocation(modelPoint);
+		document.fireDocumentDirty();
+	}
+
+	private void translateNode(Point dragTarget) {
+		// TODO encapsulate in history command
+		GraphicalNode node = (GraphicalNode) draggedElement;
+		Point modelTarget = document.transformViewToModel(dragTarget);
+		node.setCenter(modelTarget);
+		document.fireDocumentDirty();
+	}
+
 	private void translateView(int dx, int dy) {
 		document.translateView(dx, dy);
-		view.repaint();
+		document.fireDocumentDirty();
 	}
 
 	private void scaleView(double scale) {
 		document.scaleView(scale);
-		view.repaint();
+		document.fireDocumentDirty();
 	}
 
 	@Override
 	public void draw(Graphics2D graphics) {
-		// no need for drawing
+		// unnecessary
 	}
 
 }

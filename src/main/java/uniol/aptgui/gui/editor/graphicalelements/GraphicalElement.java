@@ -21,15 +21,56 @@ package uniol.aptgui.gui.editor.graphicalelements;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 
 public abstract class GraphicalElement {
 
+	private static final Color HIGHLIGHT_COLOR = Color.BLUE;
+	private static final Color HIGHLIGHT_COLOR_ERROR = Color.RED;
+	private static final Color HIGHLIGHT_COLOR_SUCCESS = Color.GREEN;
 	public static final String EXTENSION_KEY = "uniol.ape.gui.editor.graphicalelements.GraphicalElement";
 
 	protected Color color;
+	protected boolean highlighted;
+	protected boolean highlightedError;
+	protected boolean highlightedSuccess;
+	protected boolean visible;
 
 	public GraphicalElement() {
 		this.color = Color.BLACK;
+		this.visible = true;
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
+	public boolean isHighlighted() {
+		return highlighted;
+	}
+
+	public void setHighlighted(boolean highlighted) {
+		this.highlighted = highlighted;
+	}
+
+	public boolean isHighlightedError() {
+		return highlightedError;
+	}
+
+	public void setHighlightedError(boolean highlightedError) {
+		this.highlightedError = highlightedError;
+	}
+
+	public boolean isHighlightedSuccess() {
+		return highlightedSuccess;
+	}
+
+	public void setHighlightedSuccess(boolean highlightedSuccess) {
+		this.highlightedSuccess = highlightedSuccess;
 	}
 
 	public Color getColor() {
@@ -40,7 +81,23 @@ public abstract class GraphicalElement {
 		this.color = color;
 	}
 
-	public abstract void draw(Graphics2D graphics);
+	public void draw(Graphics2D graphics) {
+		if (!visible) {
+			return;
+		}
+
+		if (highlightedError) {
+			graphics.setColor(HIGHLIGHT_COLOR_ERROR);
+		} else if (highlightedSuccess) {
+			graphics.setColor(HIGHLIGHT_COLOR_SUCCESS);
+		} else if (highlighted) {
+			graphics.setColor(HIGHLIGHT_COLOR);
+		} else {
+			graphics.setColor(color);
+		}
+	}
+
+	public abstract boolean containsPoint(Point point);
 
 }
 

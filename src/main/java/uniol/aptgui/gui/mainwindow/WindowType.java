@@ -17,19 +17,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.internalwindow;
+package uniol.aptgui.gui.mainwindow;
 
-import java.awt.Component;
+public enum WindowType {
 
-import uniol.aptgui.gui.View;
-
-public interface InternalWindowView extends View<InternalWindowPresenter> {
-
-	public void setContent(Component component);
-
-	public void setTitle(String title);
-
-	public void focus();
+	PETRI_NET, TRANSITION_SYSTEM, MODULE
 
 }
 
