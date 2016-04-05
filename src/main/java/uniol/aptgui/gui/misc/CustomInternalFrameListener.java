@@ -17,34 +17,36 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.editor;
+package uniol.aptgui.gui.misc;
 
-import com.google.inject.Inject;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 
-import uniol.apt.adt.pn.PetriNet;
-import uniol.aptgui.application.events.ToolboxEventRouter;
-import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
-import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
+public abstract class CustomInternalFrameListener implements InternalFrameListener {
 
-public class PnEditorPresenterImpl extends EditorPresenterImpl implements PnEditorPresenter {
+	public abstract void internalFrameClosing(InternalFrameEvent e);
 
-	private PnDocument document;
-
-	@Inject
-	public PnEditorPresenterImpl(EditorView view, ToolboxEventRouter toolboxEventRouter) {
-		super(view, toolboxEventRouter);
+	@Override
+	public void internalFrameOpened(InternalFrameEvent e) {
 	}
 
 	@Override
-	public void setPetriNet(PetriNet pn) {
-		document = new PnDocument(pn);
-		setDocument(document);
-		setToolbox(Toolbox.createPnToolbox(document, view));
+	public void internalFrameClosed(InternalFrameEvent e) {
 	}
 
 	@Override
-	public PetriNet getPetriNet() {
-		return document.getPetriNet();
+	public void internalFrameIconified(InternalFrameEvent e) {
+	}
+
+	@Override
+	public void internalFrameDeiconified(InternalFrameEvent e) {
+	}
+
+	@Override
+	public abstract void internalFrameActivated(InternalFrameEvent e);
+
+	@Override
+	public void internalFrameDeactivated(InternalFrameEvent e) {
 	}
 
 }

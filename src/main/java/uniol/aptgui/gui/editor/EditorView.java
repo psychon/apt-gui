@@ -19,33 +19,21 @@
 
 package uniol.aptgui.gui.editor;
 
-import com.google.inject.Inject;
+import java.awt.event.MouseAdapter;
 
-import uniol.apt.adt.pn.PetriNet;
-import uniol.aptgui.application.events.ToolboxEventRouter;
-import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
-import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
+import uniol.aptgui.gui.View;
 
-public class PnEditorPresenterImpl extends EditorPresenterImpl implements PnEditorPresenter {
+public interface EditorView extends View<EditorPresenter> {
 
-	private PnDocument document;
+	public int getCanvasWidth();
 
-	@Inject
-	public PnEditorPresenterImpl(EditorView view, ToolboxEventRouter toolboxEventRouter) {
-		super(view, toolboxEventRouter);
-	}
+	public int getCanvasHeight();
 
-	@Override
-	public void setPetriNet(PetriNet pn) {
-		document = new PnDocument(pn);
-		setDocument(document);
-		setToolbox(Toolbox.createPnToolbox(document, view));
-	}
+	public void addMouseAdapter(MouseAdapter mouseAdapter);
 
-	@Override
-	public PetriNet getPetriNet() {
-		return document.getPetriNet();
-	}
+	public void removeMouseAdapter(MouseAdapter mouseAdapter);
+
+	public void repaint();
 
 }
 

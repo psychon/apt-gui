@@ -17,26 +17,35 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.editor.features;
+package uniol.aptgui.gui.editor.tools;
 
+import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-import uniol.aptgui.gui.editor.PnEditorPresenter;
+import uniol.aptgui.gui.editor.EditorView;
+import uniol.aptgui.gui.editor.graphicalelements.Document;
 
-public class ViewTransformFeature extends MouseAdapter {
+/**
+ * Selection tool. Gives the user the ability to translate and scale the view,
+ * highlight elements by hovering over them, select elements, move them and
+ * modify edge paths.
+ */
+public class SelectionTool extends Tool {
 
 	private static final double SCALE_FACTOR = 1.1;
 
-	private final PnEditorPresenter editor;
+	private final Document document;
+
 	private boolean dragging;
 	private Point dragSource;
 
-	public ViewTransformFeature(PnEditorPresenter editor) {
-		this.editor = editor;
+	public SelectionTool(Document document, EditorView view) {
+		super(view);
+		this.document = document;
 		this.dragging = false;
+		this.dragSource = null;
 	}
 
 	@Override
@@ -74,11 +83,18 @@ public class ViewTransformFeature extends MouseAdapter {
 	}
 
 	private void translateView(int dx, int dy) {
-		editor.translateView(dx, dy);
+		document.translateView(dx, dy);
+		view.repaint();
 	}
 
 	private void scaleView(double scale) {
-		editor.scaleView(scale);
+		document.scaleView(scale);
+		view.repaint();
+	}
+
+	@Override
+	public void draw(Graphics2D graphics) {
+		// no need for drawing
 	}
 
 }

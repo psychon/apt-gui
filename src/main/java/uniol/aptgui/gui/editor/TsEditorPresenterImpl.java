@@ -21,32 +21,33 @@ package uniol.aptgui.gui.editor;
 
 import com.google.inject.Inject;
 
-import uniol.apt.adt.pn.PetriNet;
+import uniol.apt.adt.ts.TransitionSystem;
 import uniol.aptgui.application.events.ToolboxEventRouter;
-import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
+import uniol.aptgui.gui.editor.graphicalelements.TsDocument;
 import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
 
-public class PnEditorPresenterImpl extends EditorPresenterImpl implements PnEditorPresenter {
+public class TsEditorPresenterImpl extends EditorPresenterImpl implements TsEditorPresenter {
 
-	private PnDocument document;
+	private TsDocument document;
 
 	@Inject
-	public PnEditorPresenterImpl(EditorView view, ToolboxEventRouter toolboxEventRouter) {
+	public TsEditorPresenterImpl(EditorView view, ToolboxEventRouter toolboxEventRouter) {
 		super(view, toolboxEventRouter);
 	}
 
 	@Override
-	public void setPetriNet(PetriNet pn) {
-		document = new PnDocument(pn);
+	public void setTransitionSystem(TransitionSystem ts) {
+		document = new TsDocument(ts);
 		setDocument(document);
-		setToolbox(Toolbox.createPnToolbox(document, view));
+		setToolbox(Toolbox.createTsToolbox(document, view));
 	}
 
 	@Override
-	public PetriNet getPetriNet() {
-		return document.getPetriNet();
+	public TransitionSystem getTransitionSystem() {
+		return document.getTransitionSystem();
 	}
 
 }
+
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

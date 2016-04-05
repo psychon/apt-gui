@@ -17,34 +17,34 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.editor;
+package uniol.aptgui.gui.actions;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.AbstractAction;
 
 import com.google.inject.Inject;
 
-import uniol.apt.adt.pn.PetriNet;
-import uniol.aptgui.application.events.ToolboxEventRouter;
-import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
-import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
+import uniol.aptgui.application.Application;
 
-public class PnEditorPresenterImpl extends EditorPresenterImpl implements PnEditorPresenter {
+@SuppressWarnings("serial")
+public class NewTransitionSystemAction extends AbstractAction {
 
-	private PnDocument document;
+	private final Application app;
 
 	@Inject
-	public PnEditorPresenterImpl(EditorView view, ToolboxEventRouter toolboxEventRouter) {
-		super(view, toolboxEventRouter);
+	public NewTransitionSystemAction(Application app) {
+		this.app = app;
+		putValue(NAME, "New Petri net");
+		// TODO: add icon
+		// putValue(SMALL_ICON, GraphicsTools.getIcon("ape/New16.gif"));
+		putValue(MNEMONIC_KEY, KeyEvent.VK_N);
 	}
 
 	@Override
-	public void setPetriNet(PetriNet pn) {
-		document = new PnDocument(pn);
-		setDocument(document);
-		setToolbox(Toolbox.createPnToolbox(document, view));
-	}
-
-	@Override
-	public PetriNet getPetriNet() {
-		return document.getPetriNet();
+	public void actionPerformed(ActionEvent e) {
+		app.newPetriNet();
 	}
 
 }

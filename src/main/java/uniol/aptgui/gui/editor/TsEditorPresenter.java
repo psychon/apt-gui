@@ -19,33 +19,15 @@
 
 package uniol.aptgui.gui.editor;
 
-import com.google.inject.Inject;
+import uniol.apt.adt.ts.TransitionSystem;
 
-import uniol.apt.adt.pn.PetriNet;
-import uniol.aptgui.application.events.ToolboxEventRouter;
-import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
-import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
+public interface TsEditorPresenter extends EditorPresenter {
 
-public class PnEditorPresenterImpl extends EditorPresenterImpl implements PnEditorPresenter {
+	/// ACTIONS ///
 
-	private PnDocument document;
+	public void setTransitionSystem(TransitionSystem ts);
 
-	@Inject
-	public PnEditorPresenterImpl(EditorView view, ToolboxEventRouter toolboxEventRouter) {
-		super(view, toolboxEventRouter);
-	}
-
-	@Override
-	public void setPetriNet(PetriNet pn) {
-		document = new PnDocument(pn);
-		setDocument(document);
-		setToolbox(Toolbox.createPnToolbox(document, view));
-	}
-
-	@Override
-	public PetriNet getPetriNet() {
-		return document.getPetriNet();
-	}
+	public TransitionSystem getTransitionSystem();
 
 }
 

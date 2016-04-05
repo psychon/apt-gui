@@ -29,21 +29,28 @@ import com.google.inject.Injector;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.aptgui.gui.AbstractPresenter;
+import uniol.aptgui.gui.Presenter;
 import uniol.aptgui.gui.editor.PnEditorPresenter;
+import uniol.aptgui.gui.editor.TsEditorPresenter;
 import uniol.aptgui.gui.editor.layout.RandomLayout;
 import uniol.aptgui.gui.internalwindow.InternalWindowPresenter;
+import uniol.aptgui.gui.mainwindow.toolbar.ToolbarContext;
+import uniol.aptgui.gui.mainwindow.toolbar.ToolbarPresenter;
 
 public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresenter, MainWindowView>
 		implements MainWindowPresenter {
 
 	private final Injector injector;
 	private final Map<WindowId, InternalWindowPresenter> internalWindows;
+	private final ToolbarPresenter toolbar;
 
 	@Inject
 	public MainWindowPresenterImpl(MainWindowView view, Injector injector) {
 		super(view);
 		this.injector = injector;
 		this.internalWindows = new HashMap<>();
+		this.toolbar = injector.getInstance(ToolbarPresenter.class);
+		view.setToolbar(toolbar.getGraphicalComponent());
 	}
 
 	@Override
@@ -61,21 +68,29 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		PnEditorPresenter editor = injector.getInstance(PnEditorPresenter.class);
 		editor.setPetriNet(pn);
 
-		WindowId id = getUnusedWindowId();
-		InternalWindowPresenter window = injector.getInstance(InternalWindowPresenter.class);
-		window.setWindowId(id);
-		window.setContentPresenter(editor);
-		internalWindows.put(id, window);
-		showWindow(id);
-
+		WindowId id = createInternalWindow(editor);
 		editor.applyLayout(new RandomLayout());
 		return id;
 	}
 
 	@Override
 	public WindowId createWindow(TransitionSystem ts) {
-		// TODO Auto-generated method stub
-		return null;
+		TsEditorPresenter editor = injector.getInstance(TsEditorPresenter.class);
+		editor.setTransitionSystem(ts);
+
+		WindowId id = createInternalWindow(editor);
+		editor.applyLayout(new RandomLayout());
+		return id;
+	}
+
+	private WindowId createInternalWindow(Presenter<?> contentPresenter) {
+		WindowId id = getUnusedWindowId();
+		InternalWindowPresenter window = injector.getInstance(InternalWindowPresenter.class);
+		window.setWindowId(id);
+		window.setContentPresenter(contentPresenter);
+		internalWindows.put(id, window);
+		showWindow(id);
+		return id;
 	}
 
 	@Override
@@ -96,6 +111,16 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 
 	private WindowId getUnusedWindowId() {
 		return new WindowId();
+	}
+
+	@Override
+	public void showPnToolbar() {
+		toolbar.setContext(ToolbarContext.PETRI_NET);
+	}
+
+	@Override
+	public void showTsToolbar() {
+		toolbar.setContext(ToolbarContext.TRANSITION_SYSTEM);
 	}
 
 }

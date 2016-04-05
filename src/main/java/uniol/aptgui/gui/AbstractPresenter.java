@@ -23,7 +23,7 @@ import java.awt.Component;
 
 public abstract class AbstractPresenter<P extends Presenter<V>, V extends View<P>> implements Presenter<V> {
 
-	private V view;
+	protected V view;
 
 	@SuppressWarnings("unchecked")
 	public AbstractPresenter(V view) {

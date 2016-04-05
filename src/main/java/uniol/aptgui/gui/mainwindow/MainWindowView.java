@@ -35,6 +35,8 @@ public interface MainWindowView extends View<MainWindowPresenter> {
 
 	public void removeInternalWindow(Component component);
 
+	public void setToolbar(Component component);
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

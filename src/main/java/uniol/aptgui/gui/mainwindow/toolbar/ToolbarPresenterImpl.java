@@ -17,50 +17,51 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.internalwindow;
+package uniol.aptgui.gui.mainwindow.toolbar;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.inject.Inject;
 
-import uniol.aptgui.application.Application;
 import uniol.aptgui.gui.AbstractPresenter;
-import uniol.aptgui.gui.Presenter;
-import uniol.aptgui.gui.mainwindow.WindowId;
+import uniol.aptgui.gui.editor.tools.toolbox.ToolIds;
 
-public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindowPresenter, InternalWindowView>
-		implements InternalWindowPresenter {
+public class ToolbarPresenterImpl
+	extends AbstractPresenter<ToolbarPresenter, ToolbarView>
+	implements ToolbarPresenter {
 
-	private final Application application;
-	private WindowId id;
+	private final Map<ToolbarContext, ToolIds> activeTools;
+	private ToolbarContext context;
 
 	@Inject
-	public InternalWindowPresenterImpl(InternalWindowView view, Application appState) {
+	public ToolbarPresenterImpl(ToolbarView view) {
 		super(view);
-		this.application = appState;
+		activeTools = new HashMap<>();
+		activeTools.put(ToolbarContext.PETRI_NET, ToolIds.SELECTION);
+		activeTools.put(ToolbarContext.TRANSITION_SYSTEM, ToolIds.SELECTION);
+		activeTools.put(ToolbarContext.NONE, ToolIds.SELECTION);
+
+		setContext(ToolbarContext.NONE);
 	}
 
 	@Override
-	public void setContentPresenter(Presenter<?> presenter) {
-		getView().setContent(presenter.getGraphicalComponent());
+	public void fireActiveToolChanged() {
+		ToolIds activeTool = activeTools.get(context);
+		view.setActiveTool(activeTool);
 	}
 
 	@Override
-	public void onCloseButtonClicked() {
-		application.closeWindow(id);
+	public void setActiveTool(ToolIds tool) {
+		activeTools.put(context, tool);
+		fireActiveToolChanged();
 	}
 
 	@Override
-	public void setWindowId(WindowId id) {
-		this.id = id;
-	}
-
-	@Override
-	public WindowId getWindowId() {
-		return id;
-	}
-
-	@Override
-	public void onActivated() {
-		application.onInternalWindowActivated(id);
+	public void setContext(ToolbarContext context) {
+		this.context = context;
+		view.setContext(context);
+		fireActiveToolChanged();
 	}
 
 }

@@ -17,34 +17,35 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.editor;
+package uniol.aptgui.gui.editor.graphicalelements;
 
-import com.google.inject.Inject;
+import java.awt.Graphics2D;
 
-import uniol.apt.adt.pn.PetriNet;
-import uniol.aptgui.application.events.ToolboxEventRouter;
-import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
-import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
+import uniol.apt.adt.ts.TransitionSystem;
+import uniol.aptgui.gui.editor.layout.Layout;
 
-public class PnEditorPresenterImpl extends EditorPresenterImpl implements PnEditorPresenter {
+public class TsDocument extends Document {
 
-	private PnDocument document;
+	private final TransitionSystem transitionSystem;
 
-	@Inject
-	public PnEditorPresenterImpl(EditorView view, ToolboxEventRouter toolboxEventRouter) {
-		super(view, toolboxEventRouter);
+	public TsDocument(TransitionSystem transitionSystem) {
+		this.transitionSystem = transitionSystem;
+	}
+
+	public TransitionSystem getTransitionSystem() {
+		return transitionSystem;
 	}
 
 	@Override
-	public void setPetriNet(PetriNet pn) {
-		document = new PnDocument(pn);
-		setDocument(document);
-		setToolbox(Toolbox.createPnToolbox(document, view));
+	public void applyLayout(Layout layout) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
-	public PetriNet getPetriNet() {
-		return document.getPetriNet();
+	protected void draw(Graphics2D graphics) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

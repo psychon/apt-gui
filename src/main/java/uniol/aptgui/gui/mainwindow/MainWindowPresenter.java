@@ -37,6 +37,10 @@ public interface MainWindowPresenter extends Presenter<MainWindowView> {
 
 	public void removeWindow(WindowId id);
 
+	public void showPnToolbar();
+
+	public void showTsToolbar();
+
 	/// VIEW EVENTS ///
 
 	public void onCloseButtonClicked();

@@ -23,15 +23,23 @@ import uniol.aptgui.gui.mainwindow.WindowId;
 
 public interface Application {
 
+	// ACTIONS
+
 	public void show();
 
 	public void newPetriNet();
 
+	public void newTransitionSystem();
+
 	public void closeWindow(WindowId id);
 
-	// getActiveWindow
+	public WindowId getActiveWindow();
 
 	// getActiveSelectedElement(s)
+
+	// EVENTS
+
+	public void onInternalWindowActivated(WindowId id);
 
 }
 

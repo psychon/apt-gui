@@ -23,19 +23,16 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.WindowEvent;
 
-import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 import uniol.aptgui.gui.JFrameView;
-import uniol.aptgui.gui.actions.NewPnAction;
 import uniol.aptgui.gui.misc.WindowClosingListener;
 
 @SuppressWarnings("serial")
@@ -43,7 +40,6 @@ public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implemen
 
 	private final Injector injector;
 	private final JMenuBar jMenuBar;
-	private final JToolBar jToolBar;
 	private final JDesktopPane jDesktopPane;
 
 	@Inject
@@ -56,9 +52,6 @@ public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implemen
 
 		jMenuBar = createMenuBar();
 		setJMenuBar(jMenuBar);
-
-		jToolBar = createToolBar();
-		add(jToolBar, BorderLayout.PAGE_START);
 
 		jDesktopPane = createDesktopPane();
 		add(jDesktopPane, BorderLayout.CENTER);
@@ -83,13 +76,6 @@ public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implemen
 		return jMenuBar;
 	}
 
-	private JToolBar createToolBar() {
-		JToolBar jToolBar = new JToolBar();
-		JButton btn = new JButton(injector.getInstance(NewPnAction.class));
-		jToolBar.add(btn);
-		return jToolBar;
-	}
-
 	private JDesktopPane createDesktopPane() {
 		JDesktopPane jDesktopPane = new JDesktopPane();
 		return jDesktopPane;
@@ -109,6 +95,12 @@ public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implemen
 	public void removeInternalWindow(Component component) {
 		jDesktopPane.remove(component);
 		jDesktopPane.repaint();
+	}
+
+	@Override
+	public void setToolbar(Component component) {
+		add(component, BorderLayout.PAGE_START);
+		revalidate();
 	}
 
 }

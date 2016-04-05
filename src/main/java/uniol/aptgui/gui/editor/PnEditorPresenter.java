@@ -19,44 +19,15 @@
 
 package uniol.aptgui.gui.editor;
 
-import java.awt.Graphics2D;
-
 import uniol.apt.adt.pn.PetriNet;
-import uniol.aptgui.gui.Presenter;
-import uniol.aptgui.gui.editor.layout.Layout;
 
-public interface PnEditorPresenter extends Presenter<PnEditorView> {
+public interface PnEditorPresenter extends EditorPresenter {
 
 	/// ACTIONS ///
-
-	public void applyLayout(Layout layout);
 
 	public void setPetriNet(PetriNet pn);
 
 	public PetriNet getPetriNet();
-
-	/**
-	 * Translates the view by dx on the x-axis and dy on the y-axis. Scale
-	 * is always applied after any translation.
-	 *
-	 * @param dx
-	 *                x translation
-	 * @param dy
-	 *                y translation
-	 */
-	public void translateView(int dx, int dy);
-
-	/**
-	 * Scales the view. Scale is always applied after any translation.
-	 *
-	 * @param scale
-	 *                scaling factor
-	 */
-	public void scaleView(double scale);
-
-	/// VIEW EVENTS ///
-
-	public void onPaint(Graphics2D graphics);
 
 }
 

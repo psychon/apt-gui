@@ -36,6 +36,8 @@ public interface InternalWindowPresenter extends Presenter<InternalWindowView> {
 
 	public void onCloseButtonClicked();
 
+	public void onActivated();
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

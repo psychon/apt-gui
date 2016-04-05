@@ -17,39 +17,37 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.misc;
+package uniol.aptgui.gui.editor.tools;
 
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.InternalFrameListener;
+import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 
-public abstract class InternalFrameClosingListener implements InternalFrameListener {
+import uniol.aptgui.gui.editor.EditorView;
+import uniol.aptgui.gui.editor.graphicalelements.GraphicalPlace;
+import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
 
-	public abstract void internalFrameClosing(InternalFrameEvent e);
+public class CreatePlaceTool extends Tool {
 
-	@Override
-	public void internalFrameOpened(InternalFrameEvent e) {
+	private final PnDocument document;
+	private GraphicalPlace place;
+
+	public CreatePlaceTool(PnDocument document, EditorView view) {
+		super(view);
+		this.document = document;
+		this.place = new GraphicalPlace(0);
 	}
 
 	@Override
-	public void internalFrameClosed(InternalFrameEvent e) {
+	public void mouseMoved(MouseEvent e) {
+		place.setCenter(e.getPoint());
 	}
 
 	@Override
-	public void internalFrameIconified(InternalFrameEvent e) {
-	}
-
-	@Override
-	public void internalFrameDeiconified(InternalFrameEvent e) {
-	}
-
-	@Override
-	public void internalFrameActivated(InternalFrameEvent e) {
-	}
-
-	@Override
-	public void internalFrameDeactivated(InternalFrameEvent e) {
+	public void draw(Graphics2D graphics) {
+		place.draw(graphics);
 	}
 
 }
+
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

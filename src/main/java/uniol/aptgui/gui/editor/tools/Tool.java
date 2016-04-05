@@ -17,21 +17,30 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.editor;
+package uniol.aptgui.gui.editor.tools;
 
+import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 
-import uniol.aptgui.gui.View;
+import uniol.aptgui.gui.editor.EditorView;
 
-public interface PnEditorView extends View<PnEditorPresenter> {
+public abstract class Tool extends MouseAdapter {
 
-	public int getCanvasWidth();
+	protected final EditorView view;
 
-	public int getCanvasHeight();
+	public Tool(EditorView view) {
+		this.view = view;
+	}
 
-	public void addMouseAdapter(MouseAdapter mouseAdapter);
+	public void onActivated() {
+		view.addMouseAdapter(this);
+	}
 
-	public void repaint();
+	public void onDeactivated() {
+		view.removeMouseAdapter(this);
+	}
+
+	public abstract void draw(Graphics2D graphics);
 
 }
 

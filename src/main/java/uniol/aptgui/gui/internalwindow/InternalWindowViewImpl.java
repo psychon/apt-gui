@@ -26,7 +26,7 @@ import javax.swing.WindowConstants;
 import javax.swing.event.InternalFrameEvent;
 
 import uniol.aptgui.gui.JInternalFrameView;
-import uniol.aptgui.gui.misc.InternalFrameClosingListener;
+import uniol.aptgui.gui.misc.CustomInternalFrameListener;
 
 @SuppressWarnings("serial")
 public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPresenter> implements InternalWindowView {
@@ -37,10 +37,15 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 
 	private void initWindowListener() {
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		addInternalFrameListener(new InternalFrameClosingListener() {
+		addInternalFrameListener(new CustomInternalFrameListener() {
 			@Override
 			public void internalFrameClosing(InternalFrameEvent e) {
 				getPresenter().onCloseButtonClicked();
+			}
+
+			@Override
+			public void internalFrameActivated(InternalFrameEvent e) {
+				getPresenter().onActivated();
 			}
 		});
 	}

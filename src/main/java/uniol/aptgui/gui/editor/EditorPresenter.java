@@ -19,44 +19,46 @@
 
 package uniol.aptgui.gui.editor;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.MouseAdapter;
 
-import uniol.aptgui.gui.JPanelView;
+import uniol.aptgui.gui.Presenter;
+import uniol.aptgui.gui.editor.graphicalelements.Document;
+import uniol.aptgui.gui.editor.layout.Layout;
+import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
 
-@SuppressWarnings("serial")
-public class PnEditorViewImpl extends JPanelView<PnEditorPresenter> implements PnEditorView {
+public interface EditorPresenter extends Presenter<EditorView> {
 
-	public PnEditorViewImpl() {
-		setBackground(Color.WHITE);
-		setPreferredSize(new Dimension(400, 300));
-	}
+	/// ACTIONS ///
 
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		getPresenter().onPaint((Graphics2D) g);
-	}
+	public void setDocument(Document document);
 
-	@Override
-	public int getCanvasWidth() {
-		return getWidth();
-	}
+	public void setToolbox(Toolbox toolbox);
 
-	@Override
-	public int getCanvasHeight() {
-		return getHeight();
-	}
+	public void applyLayout(Layout layout);
 
-	@Override
-	public void addMouseAdapter(MouseAdapter mouseAdapter) {
-		addMouseListener(mouseAdapter);
-		addMouseMotionListener(mouseAdapter);
-		addMouseWheelListener(mouseAdapter);
-	}
+	/**
+	 * Translates the view by dx on the x-axis and dy on the y-axis. Scale
+	 * is always applied after any translation.
+	 *
+	 * @param dx
+	 *                x translation
+	 * @param dy
+	 *                y translation
+	 */
+	public void translateView(int dx, int dy);
+
+	/**
+	 * Scales the view. Scale is always applied after any translation.
+	 *
+	 * @param scale
+	 *                scaling factor
+	 */
+	public void scaleView(double scale);
+
+	/// VIEW EVENTS ///
+
+	public void onPaint(Graphics2D graphics);
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

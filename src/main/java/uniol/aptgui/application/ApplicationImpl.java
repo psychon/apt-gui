@@ -25,6 +25,8 @@ import java.util.Map;
 import com.google.inject.Inject;
 
 import uniol.apt.adt.pn.PetriNet;
+import uniol.apt.adt.ts.State;
+import uniol.apt.adt.ts.TransitionSystem;
 import uniol.aptgui.gui.mainwindow.MainWindowPresenter;
 import uniol.aptgui.gui.mainwindow.WindowId;
 
@@ -32,11 +34,15 @@ public class ApplicationImpl implements Application {
 
 	private final MainWindowPresenter mainWindow;
 	private final Map<WindowId, PetriNet> petriNets;
+	private final Map<WindowId, TransitionSystem> transitionSystems;
+
+	private WindowId activeWindow;
 
 	@Inject
 	public ApplicationImpl(MainWindowPresenter mainWindow) {
 		this.mainWindow = mainWindow;
 		this.petriNets = new HashMap<>();
+		this.transitionSystems = new HashMap<>();
 	}
 
 	public void newPetriNet() {
@@ -58,6 +64,34 @@ public class ApplicationImpl implements Application {
 	@Override
 	public void show() {
 		mainWindow.show();
+	}
+
+	@Override
+	public void onInternalWindowActivated(WindowId id) {
+		activeWindow = id;
+		if (petriNets.containsKey(id)) {
+			mainWindow.showPnToolbar();
+		} else if (transitionSystems.containsKey(id)) {
+			mainWindow.showTsToolbar();
+		}
+	}
+
+	@Override
+	public WindowId getActiveWindow() {
+		return activeWindow;
+	}
+
+	@Override
+	public void newTransitionSystem() {
+		// TODO open dialog (using MainWindow) and ask for a name
+		TransitionSystem ts = new TransitionSystem();
+		State s0 = ts.createState();
+		State s1 = ts.createState();
+		ts.setInitialState(s0);
+		ts.createArc(s0, s1, "a");
+		ts.createArc(s1, s0, "b");
+		WindowId id = mainWindow.createWindow(ts);
+		transitionSystems.put(id, ts);
 	}
 
 }

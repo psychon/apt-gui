@@ -17,35 +17,22 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.editor;
+package uniol.aptgui.gui.mainwindow.toolbar;
 
-import com.google.inject.Inject;
+import uniol.aptgui.gui.Presenter;
+import uniol.aptgui.gui.editor.tools.toolbox.ToolIds;
 
-import uniol.apt.adt.pn.PetriNet;
-import uniol.aptgui.application.events.ToolboxEventRouter;
-import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
-import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
+public interface ToolbarPresenter extends Presenter<ToolbarView> {
 
-public class PnEditorPresenterImpl extends EditorPresenterImpl implements PnEditorPresenter {
+	// ACTIONS
 
-	private PnDocument document;
+	public void setContext(ToolbarContext context);
 
-	@Inject
-	public PnEditorPresenterImpl(EditorView view, ToolboxEventRouter toolboxEventRouter) {
-		super(view, toolboxEventRouter);
-	}
+	public void fireActiveToolChanged();
 
-	@Override
-	public void setPetriNet(PetriNet pn) {
-		document = new PnDocument(pn);
-		setDocument(document);
-		setToolbox(Toolbox.createPnToolbox(document, view));
-	}
+	// EVENTS
 
-	@Override
-	public PetriNet getPetriNet() {
-		return document.getPetriNet();
-	}
+	public void setActiveTool(ToolIds tool);
 
 }
 

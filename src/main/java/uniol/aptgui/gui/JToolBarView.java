@@ -17,36 +17,33 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.actions;
+package uniol.aptgui.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
+import java.awt.Component;
 
-import javax.swing.AbstractAction;
-
-import com.google.inject.Inject;
-
-import uniol.aptgui.application.Application;
+import javax.swing.JToolBar;
 
 @SuppressWarnings("serial")
-public class NewPnAction extends AbstractAction {
+public abstract class JToolBarView<P extends Presenter<?>> extends JToolBar implements View<P> {
 
-	private final Application app;
+	private P presenter;
 
-	@Inject
-	public NewPnAction(Application app) {
-		this.app = app;
-		putValue(NAME, "New Petri net");
-		// TODO: add icon
-		// putValue(SMALL_ICON, GraphicsTools.getIcon("ape/New16.gif"));
-		putValue(MNEMONIC_KEY, KeyEvent.VK_N);
+	@Override
+	public Component getGraphicalComponent() {
+		return this;
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		app.newPetriNet();
+	public P getPresenter() {
+		return presenter;
+	}
+
+	@Override
+	public void setPresenter(P presenter) {
+		this.presenter = presenter;
 	}
 
 }
+
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120
