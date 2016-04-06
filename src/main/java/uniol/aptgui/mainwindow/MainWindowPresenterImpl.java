@@ -108,7 +108,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	}
 
 	private void showWindow(WindowId id) {
-		InternalWindowPresenter window = internalWindows.remove(id);
+		InternalWindowPresenter window = internalWindows.get(id);
 		getView().addInternalWindow(window.getView());
 		window.focus();
 	}
