@@ -19,11 +19,7 @@
 
 package uniol.aptgui.gui;
 
-import java.awt.Component;
-
 public interface Presenter<V extends View<?>> {
-
-	public Component getGraphicalComponent();
 
 	public V getView();
 

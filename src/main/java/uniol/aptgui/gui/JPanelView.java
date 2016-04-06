@@ -19,19 +19,12 @@
 
 package uniol.aptgui.gui;
 
-import java.awt.Component;
-
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public abstract class JPanelView<P extends Presenter<?>> extends JPanel implements View<P> {
 
 	private P presenter;
-
-	@Override
-	public Component getGraphicalComponent() {
-		return this;
-	}
 
 	@Override
 	public P getPresenter() {

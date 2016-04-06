@@ -45,7 +45,7 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 
 	@Override
 	public void setContentPresenter(Presenter<?> presenter) {
-		getView().setContent(presenter.getGraphicalComponent());
+		getView().setContent(presenter.getView());
 	}
 
 	@Override

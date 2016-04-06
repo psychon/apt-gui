@@ -85,7 +85,7 @@ public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresen
 		}
 		BaseTool tool = toolbox.getTool(e.getSelectionId());
 		if (tool != null) {
-			view.getGraphicalComponent().setCursor(tool.getCursor());
+			view.setCursor(tool.getCursor());
 		}
 		view.repaint();
 	}

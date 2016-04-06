@@ -19,19 +19,12 @@
 
 package uniol.aptgui.gui;
 
-import java.awt.Component;
-
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
 public abstract class JFrameView<P extends Presenter<?>> extends JFrame implements View<P> {
 
 	private P presenter;
-
-	@Override
-	public Component getGraphicalComponent() {
-		return this;
-	}
 
 	@Override
 	public P getPresenter() {

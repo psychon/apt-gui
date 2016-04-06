@@ -19,7 +19,6 @@
 
 package uniol.aptgui.gui.mainwindow;
 
-import java.awt.Component;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +48,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		this.injector = injector;
 		this.internalWindows = new HashMap<>();
 		this.toolbar = injector.getInstance(ToolbarPresenter.class);
-		view.setToolbar(toolbar.getGraphicalComponent());
+		view.setToolbar(toolbar.getView());
 	}
 
 	@Override
@@ -99,8 +98,8 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 
 	@Override
 	public void removeWindow(WindowId id) {
-		Component component = internalWindows.remove(id).getGraphicalComponent();
-		getView().removeInternalWindow(component);
+		InternalWindowPresenter window = internalWindows.remove(id);
+		getView().removeInternalWindow(window.getView());
 	}
 
 	@Override
@@ -109,9 +108,8 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	}
 
 	private void showWindow(WindowId id) {
-		InternalWindowPresenter window = internalWindows.get(id);
-		Component component = window.getGraphicalComponent();
-		getView().addInternalWindow(component);
+		InternalWindowPresenter window = internalWindows.remove(id);
+		getView().addInternalWindow(window.getView());
 		window.focus();
 	}
 

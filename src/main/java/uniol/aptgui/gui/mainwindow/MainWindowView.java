@@ -19,9 +19,9 @@
 
 package uniol.aptgui.gui.mainwindow;
 
-import java.awt.Component;
-
 import uniol.aptgui.gui.View;
+import uniol.aptgui.gui.internalwindow.InternalWindowView;
+import uniol.aptgui.gui.mainwindow.toolbar.ToolbarView;
 
 public interface MainWindowView extends View<MainWindowPresenter> {
 
@@ -31,11 +31,11 @@ public interface MainWindowView extends View<MainWindowPresenter> {
 
 	public void setTitle(String title);
 
-	public void addInternalWindow(Component component);
+	public void addInternalWindow(InternalWindowView windowView);
 
-	public void removeInternalWindow(Component component);
+	public void removeInternalWindow(InternalWindowView windowView);
 
-	public void setToolbar(Component component);
+	public void setToolbar(ToolbarView toolbarView);
 
 }
 

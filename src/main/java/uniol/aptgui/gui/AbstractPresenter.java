@@ -19,8 +19,6 @@
 
 package uniol.aptgui.gui;
 
-import java.awt.Component;
-
 public abstract class AbstractPresenter<P extends Presenter<V>, V extends View<P>> implements Presenter<V> {
 
 	protected V view;
@@ -29,11 +27,6 @@ public abstract class AbstractPresenter<P extends Presenter<V>, V extends View<P
 	public AbstractPresenter(V view) {
 		this.view = view;
 		this.view.setPresenter((P) this);
-	}
-
-	@Override
-	public Component getGraphicalComponent() {
-		return view.getGraphicalComponent();
 	}
 
 	@Override

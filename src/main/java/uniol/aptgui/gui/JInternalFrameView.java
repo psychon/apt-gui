@@ -19,8 +19,6 @@
 
 package uniol.aptgui.gui;
 
-import java.awt.Component;
-
 import javax.swing.JInternalFrame;
 
 @SuppressWarnings("serial")
@@ -30,11 +28,6 @@ public abstract class JInternalFrameView<P extends Presenter<?>> extends JIntern
 
 	public JInternalFrameView() {
 		super("", true, true, true, false);
-	}
-
-	@Override
-	public Component getGraphicalComponent() {
-		return this;
 	}
 
 	@Override

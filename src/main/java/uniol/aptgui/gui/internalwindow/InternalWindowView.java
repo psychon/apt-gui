@@ -19,13 +19,11 @@
 
 package uniol.aptgui.gui.internalwindow;
 
-import java.awt.Component;
-
 import uniol.aptgui.gui.View;
 
 public interface InternalWindowView extends View<InternalWindowPresenter> {
 
-	public void setContent(Component component);
+	public void setContent(View<?> view);
 
 	public void setTitle(String title);
 

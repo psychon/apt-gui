@@ -27,6 +27,7 @@ import javax.swing.WindowConstants;
 import javax.swing.event.InternalFrameEvent;
 
 import uniol.aptgui.gui.JInternalFrameView;
+import uniol.aptgui.gui.View;
 import uniol.aptgui.gui.misc.CustomInternalFrameListener;
 
 @SuppressWarnings("serial")
@@ -52,10 +53,10 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 	}
 
 	@Override
-	public void setContent(Component component) {
+	public void setContent(View<?> view) {
 		getContentPane().removeAll();
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(component, BorderLayout.CENTER);
+		getContentPane().add((Component) view, BorderLayout.CENTER);
 		pack();
 		setVisible(true);
 	}

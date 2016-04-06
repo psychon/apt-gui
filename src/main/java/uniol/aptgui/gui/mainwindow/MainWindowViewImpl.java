@@ -29,22 +29,18 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.WindowConstants;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-
 import uniol.aptgui.gui.JFrameView;
+import uniol.aptgui.gui.internalwindow.InternalWindowView;
+import uniol.aptgui.gui.mainwindow.toolbar.ToolbarView;
 import uniol.aptgui.gui.misc.WindowClosingListener;
 
 @SuppressWarnings("serial")
 public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implements MainWindowView {
 
-	private final Injector injector;
 	private final JMenuBar jMenuBar;
 	private final JDesktopPane jDesktopPane;
 
-	@Inject
-	public MainWindowViewImpl(Injector injector) {
-		this.injector = injector;
+	public MainWindowViewImpl() {
 
 		initWindowListener();
 		setLayout(new BorderLayout());
@@ -87,19 +83,19 @@ public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implemen
 	}
 
 	@Override
-	public void addInternalWindow(Component component) {
-		jDesktopPane.add(component);
+	public void addInternalWindow(InternalWindowView windowView) {
+		jDesktopPane.add((Component) windowView);
 	}
 
 	@Override
-	public void removeInternalWindow(Component component) {
-		jDesktopPane.remove(component);
+	public void removeInternalWindow(InternalWindowView windowView) {
+		jDesktopPane.remove((Component) windowView);
 		jDesktopPane.repaint();
 	}
 
 	@Override
-	public void setToolbar(Component component) {
-		add(component, BorderLayout.PAGE_START);
+	public void setToolbar(ToolbarView toolbarView) {
+		add((Component) toolbarView, BorderLayout.PAGE_START);
 		revalidate();
 	}
 
