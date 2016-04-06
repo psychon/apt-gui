@@ -21,15 +21,18 @@ package uniol.aptgui.application.events;
 
 import uniol.aptgui.gui.editor.tools.toolbox.ToolIds;
 
-public class ToolboxEventRouter extends AbstractEventRouter<ToolboxEventListener> {
+public class ToolSelectedEvent {
 
-	public void fireToolSelected(ToolIds tool) {
-		for (ToolboxEventListener listener : listeners) {
-			listener.onToolSelected(tool);
-		}
+	private final ToolIds selectionId;
+
+	public ToolSelectedEvent(ToolIds selectionId) {
+		this.selectionId = selectionId;
+	}
+
+	public ToolIds getSelectionId() {
+		return selectionId;
 	}
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

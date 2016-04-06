@@ -14,8 +14,9 @@ dependencies {
 	compile files('../apt/classes/module')
 	compile 'org.apache.commons:commons-collections4:4.0'
 	
-	// Other dependencies
+	// APT-GUI dependencies
 	compile 'com.google.inject:guice:4.0'
+	compile 'com.google.guava:guava:19.0'
 	testCompile 'junit:junit:4.12'
 }
 

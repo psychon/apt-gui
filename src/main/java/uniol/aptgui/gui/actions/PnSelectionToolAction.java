@@ -23,25 +23,26 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
-import uniol.aptgui.application.events.ToolboxEventRouter;
+import uniol.aptgui.application.events.ToolSelectedEvent;
 import uniol.aptgui.gui.editor.tools.toolbox.ToolIds;
 
 @SuppressWarnings("serial")
 public class PnSelectionToolAction extends AbstractAction {
 
-	private final ToolboxEventRouter router;
+	private final EventBus eventBus;
 
 	@Inject
-	public PnSelectionToolAction(ToolboxEventRouter router) {
-		this.router = router;
+	public PnSelectionToolAction(EventBus eventBus) {
+		this.eventBus = eventBus;
 		putValue(NAME, "SELECTION");
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		router.fireToolSelected(ToolIds.SELECTION);
+		eventBus.post(new ToolSelectedEvent(ToolIds.SELECTION));
 	}
 
 }

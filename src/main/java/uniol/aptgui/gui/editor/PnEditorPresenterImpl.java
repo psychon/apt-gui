@@ -19,10 +19,10 @@
 
 package uniol.aptgui.gui.editor;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import uniol.apt.adt.pn.PetriNet;
-import uniol.aptgui.application.events.ToolboxEventRouter;
 import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
 import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
 import uniol.aptgui.gui.history.History;
@@ -32,8 +32,8 @@ public class PnEditorPresenterImpl extends EditorPresenterImpl implements PnEdit
 	private PnDocument document;
 
 	@Inject
-	public PnEditorPresenterImpl(EditorView view, History history, ToolboxEventRouter toolboxEventRouter) {
-		super(view, history, toolboxEventRouter);
+	public PnEditorPresenterImpl(EditorView view, History history, EventBus eventBus) {
+		super(view, history, eventBus);
 	}
 
 	@Override

@@ -19,10 +19,10 @@
 
 package uniol.aptgui.application;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 
-import uniol.aptgui.application.events.ToolboxEventRouter;
 import uniol.aptgui.gui.editor.EditorView;
 import uniol.aptgui.gui.editor.EditorViewImpl;
 import uniol.aptgui.gui.editor.PnEditorPresenter;
@@ -57,8 +57,8 @@ public class DependenyModule extends AbstractModule {
 		bind(EditorView.class).to(EditorViewImpl.class);
 		bind(ToolbarPresenter.class).to(ToolbarPresenterImpl.class);
 		bind(ToolbarView.class).to(ToolbarViewImpl.class);
-		bind(ToolboxEventRouter.class).in(Singleton.class);
 		bind(History.class).in(Singleton.class);
+		bind(EventBus.class).in(Singleton.class);
 	}
 
 }

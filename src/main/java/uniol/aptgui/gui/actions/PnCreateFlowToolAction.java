@@ -23,25 +23,26 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
-import uniol.aptgui.application.events.ToolboxEventRouter;
+import uniol.aptgui.application.events.ToolSelectedEvent;
 import uniol.aptgui.gui.editor.tools.toolbox.ToolIds;
 
 @SuppressWarnings("serial")
 public class PnCreateFlowToolAction extends AbstractAction {
 
-	private final ToolboxEventRouter router;
+	private final EventBus eventBus;
 
 	@Inject
-	public PnCreateFlowToolAction(ToolboxEventRouter router) {
-		this.router = router;
+	public PnCreateFlowToolAction(EventBus eventBus) {
+		this.eventBus = eventBus;
 		putValue(NAME, "CREATE FLOW");
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		router.fireToolSelected(ToolIds.CREATE_FLOW);
+		eventBus.post(new ToolSelectedEvent(ToolIds.CREATE_FLOW));
 	}
 
 }

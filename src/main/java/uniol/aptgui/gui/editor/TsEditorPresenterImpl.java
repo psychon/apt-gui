@@ -19,10 +19,10 @@
 
 package uniol.aptgui.gui.editor;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import uniol.apt.adt.ts.TransitionSystem;
-import uniol.aptgui.application.events.ToolboxEventRouter;
 import uniol.aptgui.gui.editor.graphicalelements.TsDocument;
 import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
 import uniol.aptgui.gui.history.History;
@@ -32,10 +32,9 @@ public class TsEditorPresenterImpl extends EditorPresenterImpl implements TsEdit
 	private TsDocument document;
 
 	@Inject
-	public TsEditorPresenterImpl(EditorView view, History history, ToolboxEventRouter toolboxEventRouter) {
-		super(view, history, toolboxEventRouter);
+	public TsEditorPresenterImpl(EditorView view, History history, EventBus eventBus) {
+		super(view, history, eventBus);
 	}
-
 
 	@Override
 	public void setTransitionSystem(TransitionSystem ts) {
@@ -50,6 +49,5 @@ public class TsEditorPresenterImpl extends EditorPresenterImpl implements TsEdit
 	}
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

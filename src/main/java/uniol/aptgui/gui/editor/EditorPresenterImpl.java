@@ -23,10 +23,11 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
-import uniol.aptgui.application.events.ToolboxEventListener;
-import uniol.aptgui.application.events.ToolboxEventRouter;
+import uniol.aptgui.application.events.ToolSelectedEvent;
 import uniol.aptgui.gui.AbstractPresenter;
 import uniol.aptgui.gui.editor.features.Feature;
 import uniol.aptgui.gui.editor.features.HoverFeature;
@@ -34,12 +35,11 @@ import uniol.aptgui.gui.editor.graphicalelements.Document;
 import uniol.aptgui.gui.editor.graphicalelements.DocumentListener;
 import uniol.aptgui.gui.editor.layout.Layout;
 import uniol.aptgui.gui.editor.tools.Tool;
-import uniol.aptgui.gui.editor.tools.toolbox.ToolIds;
 import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
 import uniol.aptgui.gui.history.History;
 
 public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, EditorView>
-		implements EditorPresenter, ToolboxEventListener, DocumentListener {
+		implements EditorPresenter, DocumentListener {
 
 	protected History history;
 	protected Document document;
@@ -47,11 +47,11 @@ public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresen
 	protected List<Feature> features;
 
 	@Inject
-	public EditorPresenterImpl(EditorView view, History history, ToolboxEventRouter toolboxEventRouter) {
+	public EditorPresenterImpl(EditorView view, History history, EventBus eventBus) {
 		super(view);
 		this.history = history;
 		this.features = new ArrayList<>();
-		toolboxEventRouter.addListener(this);
+		eventBus.register(this);
 	}
 
 	@Override
@@ -73,9 +73,9 @@ public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresen
 		this.toolbox = toolbox;
 	}
 
-	@Override
-	public void onToolSelected(ToolIds id) {
-		toolbox.setActiveTool(id);
+	@Subscribe
+	public void onToolSelected(ToolSelectedEvent e) {
+		toolbox.setActiveTool(e.getSelectionId());
 		Tool tool = toolbox.getActiveTool();
 		if (tool != null) {
 			view.getGraphicalComponent().setCursor(tool.getCursor());
