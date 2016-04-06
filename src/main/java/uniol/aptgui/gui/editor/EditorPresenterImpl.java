@@ -23,10 +23,10 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
+import uniol.aptgui.application.Application;
 import uniol.aptgui.application.events.ToolSelectedEvent;
 import uniol.aptgui.gui.AbstractPresenter;
 import uniol.aptgui.gui.editor.features.Feature;
@@ -34,30 +34,40 @@ import uniol.aptgui.gui.editor.features.HoverFeature;
 import uniol.aptgui.gui.editor.graphicalelements.Document;
 import uniol.aptgui.gui.editor.graphicalelements.DocumentListener;
 import uniol.aptgui.gui.editor.layout.Layout;
-import uniol.aptgui.gui.editor.tools.Tool;
+import uniol.aptgui.gui.editor.tools.BaseTool;
 import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
-import uniol.aptgui.gui.history.History;
+import uniol.aptgui.gui.mainwindow.WindowId;
 
 public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, EditorView>
 		implements EditorPresenter, DocumentListener {
 
-	protected History history;
+	protected final Application application;
+	protected final Toolbox toolbox;
+	protected final List<Feature> features;
+
+	protected WindowId windowId;
 	protected Document document;
-	protected Toolbox toolbox;
-	protected List<Feature> features;
 
 	@Inject
-	public EditorPresenterImpl(EditorView view, History history, EventBus eventBus) {
+	public EditorPresenterImpl(EditorView view, Application application) {
 		super(view);
-		this.history = history;
 		this.features = new ArrayList<>();
-		eventBus.register(this);
+		this.application = application;
+		this.toolbox = new Toolbox(application, view);
+		application.getEventBus().register(this);
+	}
+
+	public void setWindowId(WindowId windowId) {
+		this.windowId = windowId;
+		this.toolbox.setWindowId(windowId);
 	}
 
 	@Override
 	public void setDocument(Document document) {
 		this.document = document;
 		this.document.addListener(this);
+
+		// Update features with new document.
 		for (Feature feature : features) {
 			view.removeMouseAdapter(feature);
 		}
@@ -68,15 +78,12 @@ public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresen
 		}
 	}
 
-	@Override
-	public void setToolbox(Toolbox toolbox) {
-		this.toolbox = toolbox;
-	}
-
 	@Subscribe
 	public void onToolSelected(ToolSelectedEvent e) {
-		toolbox.setActiveTool(e.getSelectionId());
-		Tool tool = toolbox.getActiveTool();
+		if (!application.getActiveWindow().equals(windowId)) {
+			return;
+		}
+		BaseTool tool = toolbox.getTool(e.getSelectionId());
 		if (tool != null) {
 			view.getGraphicalComponent().setCursor(tool.getCursor());
 		}
@@ -104,7 +111,7 @@ public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresen
 		for (Feature feature : features) {
 			feature.draw(graphics);
 		}
-		Tool tool = toolbox.getActiveTool();
+		BaseTool tool = toolbox.getActiveTool();
 		if (tool != null) {
 			tool.draw(graphics);
 		}

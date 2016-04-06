@@ -24,59 +24,92 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.common.eventbus.Subscribe;
+
+import uniol.aptgui.application.Application;
+import uniol.aptgui.application.events.ToolSelectedEvent;
 import uniol.aptgui.gui.editor.EditorView;
 import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
 import uniol.aptgui.gui.editor.graphicalelements.TsDocument;
+import uniol.aptgui.gui.editor.tools.BaseTool;
 import uniol.aptgui.gui.editor.tools.CreateFlowTool;
 import uniol.aptgui.gui.editor.tools.CreatePlaceTool;
 import uniol.aptgui.gui.editor.tools.SelectionTool;
-import uniol.aptgui.gui.editor.tools.Tool;
-import uniol.aptgui.gui.history.History;
+import uniol.aptgui.gui.mainwindow.WindowId;
 
 public class Toolbox {
 
 	private final Logger logger = Logger.getLogger(Toolbox.class.getName());
-	private final Map<ToolIds, Tool> tools;
-	private ToolIds active;
+	private final Application application;
+	private final EditorView view;
+	private final Map<Tool, BaseTool> tools;
+	private WindowId windowId;
 
-	public Toolbox() {
+	private BaseTool activeTool;
+
+	public Toolbox(Application application, EditorView view) {
 		this.tools = new HashMap<>();
+		this.application = application;
+		this.view = view;
+		application.getEventBus().register(this);
 	}
 
-	public void addTool(ToolIds id, Tool tool) {
-		this.tools.put(id, tool);
+	public void setWindowId(WindowId windowId) {
+		this.windowId = windowId;
 	}
 
-	public void setActiveTool(ToolIds id) {
-		Tool previous = getActiveTool();
-		if (previous != null) {
-			previous.onDeactivated();
+	@Subscribe
+	public void onToolSelectedEvent(ToolSelectedEvent e) {
+		if (!application.getActiveWindow().equals(windowId)) {
+			return;
 		}
-		active = id;
-		Tool current = getActiveTool();
-		if (current != null) {
-			current.onActivated();
+
+		deactivateCurrentTool();
+
+		BaseTool selected = tools.get(e.getSelectionId());
+		if (selected != null) {
+			activeTool = selected;
 		} else {
-			logger.log(Level.WARNING, "Trying to select unavailable tool.");
+			logger.log(Level.WARNING, "Trying to select unavailable tool: " + e.getSelectionId());
+		}
+
+		activateCurrentTool();
+	}
+
+	private void deactivateCurrentTool() {
+		if (activeTool != null) {
+			activeTool.onDeactivated();
+			view.removeMouseAdapter(activeTool);
 		}
 	}
 
-	public Tool getActiveTool() {
-		return tools.get(active);
+	private void activateCurrentTool() {
+		if (activeTool != null) {
+			view.addMouseAdapter(activeTool);
+			activeTool.onActivated();
+		}
 	}
 
-	public static Toolbox createPnToolbox(EditorView view, PnDocument document, History history) {
-		Toolbox pnToolbox = new Toolbox();
-		pnToolbox.addTool(ToolIds.SELECTION, new SelectionTool(view, document));
-		pnToolbox.addTool(ToolIds.CREATE_PLACE, new CreatePlaceTool(view, document, history));
-		pnToolbox.addTool(ToolIds.CREATE_FLOW, new CreateFlowTool(view, document));
-		return pnToolbox;
+	public void addTool(Tool id, BaseTool tool) {
+		tools.put(id, tool);
 	}
 
-	public static Toolbox createTsToolbox(EditorView view, TsDocument document) {
-		Toolbox pnToolbox = new Toolbox();
-		pnToolbox.addTool(ToolIds.SELECTION, new SelectionTool(view, document));
-		return pnToolbox;
+	public BaseTool getTool(Tool id) {
+		return tools.get(id);
+	}
+
+	public BaseTool getActiveTool() {
+		return activeTool;
+	}
+
+	public void addPnTools(PnDocument document) {
+		addTool(Tool.PN_SELECTION, new SelectionTool(document));
+		addTool(Tool.PN_CREATE_PLACE, new CreatePlaceTool(document, application.getHistory()));
+		addTool(Tool.PN_CREATE_FLOW, new CreateFlowTool(document));
+	}
+
+	public void addTsTools(TsDocument document) {
+		addTool(Tool.TS_SELECTION, new SelectionTool(document));
 	}
 
 }

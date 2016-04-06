@@ -34,7 +34,6 @@ import uniol.aptgui.gui.editor.PnEditorPresenter;
 import uniol.aptgui.gui.editor.TsEditorPresenter;
 import uniol.aptgui.gui.editor.layout.RandomLayout;
 import uniol.aptgui.gui.internalwindow.InternalWindowPresenter;
-import uniol.aptgui.gui.mainwindow.toolbar.ToolbarContext;
 import uniol.aptgui.gui.mainwindow.toolbar.ToolbarPresenter;
 
 public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresenter, MainWindowView>
@@ -68,8 +67,12 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		PnEditorPresenter editor = injector.getInstance(PnEditorPresenter.class);
 		editor.setPetriNet(pn);
 
-		WindowId id = createInternalWindow(new WindowId(WindowType.PETRI_NET), editor);
+		WindowId id = new WindowId(WindowType.PETRI_NET);
+		createInternalWindow(id, editor);
+		editor.setWindowId(id);
+		showWindow(id);
 		editor.applyLayout(new RandomLayout());
+
 		return id;
 	}
 
@@ -78,19 +81,20 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		TsEditorPresenter editor = injector.getInstance(TsEditorPresenter.class);
 		editor.setTransitionSystem(ts);
 
-		WindowId id = createInternalWindow(new WindowId(WindowType.TRANSITION_SYSTEM), editor);
+		WindowId id = new WindowId(WindowType.TRANSITION_SYSTEM);
+		createInternalWindow(id, editor);
+		editor.setWindowId(id);
+		showWindow(id);
 		editor.applyLayout(new RandomLayout());
+
 		return id;
 	}
 
-	private WindowId createInternalWindow(WindowId id, Presenter<?> contentPresenter) {
+	private void createInternalWindow(WindowId id, Presenter<?> contentPresenter) {
 		InternalWindowPresenter window = injector.getInstance(InternalWindowPresenter.class);
 		window.setWindowId(id);
 		window.setContentPresenter(contentPresenter);
 		internalWindows.put(id, window);
-		showWindow(id);
-		window.focus();
-		return id;
 	}
 
 	@Override
@@ -105,18 +109,10 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	}
 
 	private void showWindow(WindowId id) {
-		Component component = internalWindows.get(id).getGraphicalComponent();
+		InternalWindowPresenter window = internalWindows.get(id);
+		Component component = window.getGraphicalComponent();
 		getView().addInternalWindow(component);
-	}
-
-	@Override
-	public void showPnToolbar() {
-		toolbar.setContext(ToolbarContext.PETRI_NET);
-	}
-
-	@Override
-	public void showTsToolbar() {
-		toolbar.setContext(ToolbarContext.TRANSITION_SYSTEM);
+		window.focus();
 	}
 
 }

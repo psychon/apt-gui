@@ -22,8 +22,7 @@ package uniol.aptgui.gui.editor.graphicalelements;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-import uniol.apt.adt.pn.Flow;
-import uniol.apt.adt.pn.Transition;
+import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.aptgui.gui.editor.layout.Layout;
@@ -47,11 +46,32 @@ public class TsDocument extends Document {
 
 	@Override
 	protected void draw(Graphics2D graphics) {
+		for (State state : transitionSystem.getNodes()) {
+			GraphicalState elem = getGraphicalExtension(state);
+			elem.setId(state.getId());
+			elem.draw(graphics);
+		}
+		for (Arc arc : transitionSystem.getEdges()) {
+			GraphicalArc elem = getGraphicalExtension(arc);
+			elem.setLabel(arc.getLabel());
+			elem.draw(graphics);
+		}
 	}
 
 	@Override
 	public GraphicalElement getElementAt(Point point) {
-		// TODO Auto-generated method stub
+		for (State state : transitionSystem.getNodes()) {
+			GraphicalState elem = getGraphicalExtension(state);
+			if (elem.containsPoint(point)) {
+				return elem;
+			}
+		}
+		for (Arc arc : transitionSystem.getEdges()) {
+			GraphicalArc elem = getGraphicalExtension(arc);
+			if (elem.containsPoint(point)) {
+				return elem;
+			}
+		}
 		return null;
 	}
 

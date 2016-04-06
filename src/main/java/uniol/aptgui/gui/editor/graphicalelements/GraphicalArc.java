@@ -19,21 +19,10 @@
 
 package uniol.aptgui.gui.editor.graphicalelements;
 
-public class GraphicalFlow extends GraphicalEdge {
+public class GraphicalArc extends GraphicalEdge {
 
-	protected long multiplicity;
-
-	public GraphicalFlow(GraphicalNode source, GraphicalNode target) {
+	public GraphicalArc(GraphicalNode source, GraphicalNode target) {
 		super(source, target);
-	}
-
-	public long getMultiplicity() {
-		return multiplicity;
-	}
-
-	public void setMultiplicity(long multiplicity) {
-		this.multiplicity = multiplicity;
-		setLabel(String.valueOf(multiplicity));
 	}
 
 }

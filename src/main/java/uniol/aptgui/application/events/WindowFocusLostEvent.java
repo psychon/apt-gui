@@ -17,23 +17,20 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.editor.graphicalelements;
+package uniol.aptgui.application.events;
 
-public class GraphicalFlow extends GraphicalEdge {
+import uniol.aptgui.gui.mainwindow.WindowId;
 
-	protected long multiplicity;
+public class WindowFocusLostEvent {
 
-	public GraphicalFlow(GraphicalNode source, GraphicalNode target) {
-		super(source, target);
+	private final WindowId windowId;
+
+	public WindowFocusLostEvent(WindowId windowId) {
+		this.windowId = windowId;
 	}
 
-	public long getMultiplicity() {
-		return multiplicity;
-	}
-
-	public void setMultiplicity(long multiplicity) {
-		this.multiplicity = multiplicity;
-		setLabel(String.valueOf(multiplicity));
+	public WindowId getWindowId() {
+		return windowId;
 	}
 
 }

@@ -19,33 +19,31 @@
 
 package uniol.aptgui.gui.editor;
 
-import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import uniol.apt.adt.ts.TransitionSystem;
+import uniol.aptgui.application.Application;
 import uniol.aptgui.gui.editor.graphicalelements.TsDocument;
-import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
-import uniol.aptgui.gui.history.History;
 
 public class TsEditorPresenterImpl extends EditorPresenterImpl implements TsEditorPresenter {
 
-	private TsDocument document;
+	private TsDocument tsDocument;
 
 	@Inject
-	public TsEditorPresenterImpl(EditorView view, History history, EventBus eventBus) {
-		super(view, history, eventBus);
+	public TsEditorPresenterImpl(EditorView view, Application application) {
+		super(view, application);
 	}
 
 	@Override
 	public void setTransitionSystem(TransitionSystem ts) {
-		document = new TsDocument(ts);
-		setDocument(document);
-		setToolbox(Toolbox.createTsToolbox(view, document));
+		tsDocument = new TsDocument(ts);
+		setDocument(tsDocument);
+		toolbox.addTsTools(tsDocument);
 	}
 
 	@Override
 	public TransitionSystem getTransitionSystem() {
-		return document.getTransitionSystem();
+		return tsDocument.getTransitionSystem();
 	}
 
 }

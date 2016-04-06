@@ -19,6 +19,9 @@
 
 package uniol.aptgui.application;
 
+import com.google.common.eventbus.EventBus;
+
+import uniol.aptgui.gui.history.History;
 import uniol.aptgui.gui.mainwindow.WindowId;
 
 public interface Application {
@@ -35,11 +38,11 @@ public interface Application {
 
 	public WindowId getActiveWindow();
 
+	public EventBus getEventBus();
+
+	public History getHistory();
+
 	// getActiveSelectedElement(s)
-
-	// EVENTS
-
-	public void onInternalWindowActivated(WindowId id);
 
 }
 

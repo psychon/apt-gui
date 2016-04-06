@@ -23,28 +23,26 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
-import uniol.aptgui.gui.editor.EditorView;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalElement;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalPlace;
 import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
 import uniol.aptgui.gui.history.CreatePlaceCommand;
 import uniol.aptgui.gui.history.History;
 
-public class CreatePlaceTool extends Tool {
+public class CreatePlaceTool extends BaseTool {
 
 	private final History history;
 	private final PnDocument document;
 	private GraphicalPlace place;
 
-	public CreatePlaceTool(EditorView view, PnDocument document, History history) {
-		super(view);
+	public CreatePlaceTool(PnDocument document, History history) {
 		this.history = history;
 		this.document = document;
 		initPlace();
 	}
 
 	private void initPlace() {
-		this.place = new GraphicalPlace(0);
+		this.place = new GraphicalPlace();
 		this.place.setVisible(false);
 	}
 

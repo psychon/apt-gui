@@ -33,6 +33,7 @@ public abstract class GraphicalEdge extends GraphicalElement {
 	protected GraphicalNode source;
 	protected GraphicalNode target;
 	protected List<Point> breakpoints;
+	protected String label;
 
 	public GraphicalEdge(GraphicalNode source, GraphicalNode target) {
 		assert source != null;
@@ -64,6 +65,14 @@ public abstract class GraphicalEdge extends GraphicalElement {
 
 	public void setBreakpoints(List<Point> breakpoints) {
 		this.breakpoints = breakpoints;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
 	@Override

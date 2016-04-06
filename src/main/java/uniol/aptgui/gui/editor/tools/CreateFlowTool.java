@@ -21,7 +21,6 @@ package uniol.aptgui.gui.editor.tools;
 
 import java.awt.Point;
 
-import uniol.aptgui.gui.editor.EditorView;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalEdge;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalElement;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalFlow;
@@ -32,14 +31,14 @@ import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
 
 public class CreateFlowTool extends CreateEdgeTool {
 
-	public CreateFlowTool(EditorView view, PnDocument document) {
-		super(view, document);
+	public CreateFlowTool(PnDocument document) {
+		super(document);
 	}
 
 	@Override
 	protected GraphicalEdge createGraphicalEdge(GraphicalNode source, GraphicalNode target,
 			Point modelTargetPosition) {
-		GraphicalFlow flow = new GraphicalFlow(source, target, 1);
+		GraphicalFlow flow = new GraphicalFlow(source, target);
 		return flow;
 	}
 

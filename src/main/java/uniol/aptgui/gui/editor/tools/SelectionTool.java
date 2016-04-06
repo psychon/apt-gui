@@ -19,12 +19,10 @@
 
 package uniol.aptgui.gui.editor.tools;
 
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-import uniol.aptgui.gui.editor.EditorView;
 import uniol.aptgui.gui.editor.graphicalelements.Document;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalEdge;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalElement;
@@ -35,7 +33,7 @@ import uniol.aptgui.gui.editor.graphicalelements.GraphicalNode;
  * highlight elements by hovering over them, select elements, move them and
  * modify edge paths.
  */
-public class SelectionTool extends Tool {
+public class SelectionTool extends BaseTool {
 
 	private static enum DragType {
 		NONE, VIEWPORT, NODE, EDGE
@@ -49,8 +47,7 @@ public class SelectionTool extends Tool {
 	private Object draggedElement;
 	private Point dragSource;
 
-	public SelectionTool(EditorView view, Document document) {
-		super(view);
+	public SelectionTool(Document document) {
 		this.document = document;
 		this.dragType = DragType.NONE;
 		this.dragSource = null;
@@ -158,11 +155,6 @@ public class SelectionTool extends Tool {
 	private void scaleView(double scale) {
 		document.scaleView(scale);
 		document.fireDocumentDirty();
-	}
-
-	@Override
-	public void draw(Graphics2D graphics) {
-		// unnecessary
 	}
 
 }

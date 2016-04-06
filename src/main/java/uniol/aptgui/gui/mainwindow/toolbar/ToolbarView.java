@@ -20,18 +20,15 @@
 package uniol.aptgui.gui.mainwindow.toolbar;
 
 import uniol.aptgui.gui.View;
-import uniol.aptgui.gui.editor.tools.toolbox.ToolIds;
+import uniol.aptgui.gui.editor.tools.toolbox.Tool;
 
 public interface ToolbarView extends View<ToolbarPresenter> {
 
-	public void setActiveTool(ToolIds tool);
+	public void setPetriNetToolsVisible(boolean visible);
 
-	/**
-	 * Replaces toolbar buttons according to context.
-	 *
-	 * @param context
-	 */
-	public void setContext(ToolbarContext context);
+	public void setTransitionSystemToolsVisible(boolean visible);
+
+	public void setActiveTool(Tool tool);
 
 }
 

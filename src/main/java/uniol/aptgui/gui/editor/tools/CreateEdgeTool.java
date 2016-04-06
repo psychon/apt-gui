@@ -23,15 +23,13 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
-import uniol.aptgui.gui.editor.EditorView;
 import uniol.aptgui.gui.editor.graphicalelements.Document;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalEdge;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalElement;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalNode;
 import uniol.aptgui.gui.editor.graphicalelements.InvisibleNode;
-import uniol.aptgui.gui.misc.Resource;
 
-public abstract class CreateEdgeTool extends Tool {
+public abstract class CreateEdgeTool extends BaseTool {
 
 	protected final Document document;
 
@@ -45,16 +43,13 @@ public abstract class CreateEdgeTool extends Tool {
 	 */
 	protected GraphicalElement hoverElement;
 
-	public CreateEdgeTool(EditorView view, Document document) {
-		super(view);
+	public CreateEdgeTool(Document document) {
 		this.document = document;
-		this.cursor = Resource.getCursorCreateEdge();
 		this.creating = false;
 	}
 
 	@Override
 	public void onDeactivated() {
-		super.onDeactivated();
 		creating = false;
 		edge = null;
 	}
@@ -63,6 +58,7 @@ public abstract class CreateEdgeTool extends Tool {
 	public void mouseClicked(MouseEvent e) {
 		Point modelPos = document.transformViewToModel(e.getPoint());
 		GraphicalElement elem = document.getElementAt(modelPos);
+
 		if (!creating && elem instanceof GraphicalNode) {
 			// Clicked first node, therefore start creation.
 			creating = true;
@@ -70,9 +66,11 @@ public abstract class CreateEdgeTool extends Tool {
 			target = new InvisibleNode();
 			target.setCenter(modelPos);
 			edge = createGraphicalEdge(source, target, modelPos);
-		} else if (creating && elem instanceof GraphicalNode) {
+		}
+
+		if (creating) {
 			// Clicked second node. If possible, stop creation.
-			if (isValidTarget(elem)) {
+			if (elem != null && isValidTarget(elem)) {
 				creating = false;
 				target = (GraphicalNode) elem;
 				edge.setTarget(target);
@@ -80,10 +78,12 @@ public abstract class CreateEdgeTool extends Tool {
 				edge = null;
 				resetHoverEffects();
 			}
-		} else {
 			// Clicked anywhere else, therefore add breakpoint.
-			edge.addBreakpoint(modelPos);
+			if (elem == null) {
+				edge.addBreakpoint(modelPos);
+			}
 		}
+
 		document.fireDocumentDirty();
 	}
 

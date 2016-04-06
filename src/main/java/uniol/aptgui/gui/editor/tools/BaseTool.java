@@ -17,23 +17,28 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.editor.graphicalelements;
+package uniol.aptgui.gui.editor.tools;
 
-public class GraphicalFlow extends GraphicalEdge {
+import java.awt.Cursor;
+import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
 
-	protected long multiplicity;
+public abstract class BaseTool extends MouseAdapter {
 
-	public GraphicalFlow(GraphicalNode source, GraphicalNode target) {
-		super(source, target);
+	public Cursor getCursor() {
+		return Cursor.getDefaultCursor();
 	}
 
-	public long getMultiplicity() {
-		return multiplicity;
+	public void onActivated() {
+
 	}
 
-	public void setMultiplicity(long multiplicity) {
-		this.multiplicity = multiplicity;
-		setLabel(String.valueOf(multiplicity));
+	public void onDeactivated() {
+
+	}
+
+	public void draw(Graphics2D graphics) {
+
 	}
 
 }

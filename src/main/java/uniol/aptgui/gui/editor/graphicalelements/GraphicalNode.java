@@ -22,9 +22,20 @@ package uniol.aptgui.gui.editor.graphicalelements;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
+import static java.lang.Math.*;
+
 public abstract class GraphicalNode extends GraphicalElement {
 
+	protected String id;
 	protected Point center;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public Point getCenter() {
 		return center;
@@ -47,6 +58,40 @@ public abstract class GraphicalNode extends GraphicalElement {
 	 * @return
 	 */
 	public abstract Point getBoundaryIntersection(Point point);
+
+	protected static Point getCircleBoundaryIntersection(Point center, int radius, Point test) {
+		double deltaCenterTestX = (center.x - test.x);
+		double deltaCenterTestY = (center.y - test.y);
+		double alpha = atan(deltaCenterTestY / deltaCenterTestX);
+		double deltaX = cos(alpha) * radius;
+		double deltaY = sin(alpha) * radius;
+
+		if (deltaCenterTestX > 0) {
+			deltaX = -deltaX;
+			deltaY = -deltaY;
+		}
+
+		int x = (int) (center.x + deltaX);
+		int y = (int) (center.y + deltaY);
+		return new Point(x, y);
+	}
+
+	protected static Point getSquareBoundaryIntersection(Point center, int radius, Point test) {
+		double deltaCenterTestX = (center.x - test.x);
+		double deltaCenterTestY = (center.y - test.y);
+		double alpha = atan(deltaCenterTestY / deltaCenterTestX);
+		double deltaX = cos(alpha) * radius;
+		double deltaY = sin(alpha) * radius;
+
+		if (deltaCenterTestX > 0) {
+			deltaX = -deltaX;
+			deltaY = -deltaY;
+		}
+
+		int x = (int) (center.x + deltaX);
+		int y = (int) (center.y + deltaY);
+		return new Point(x, y);
+	}
 
 	protected static void drawCircle(Graphics2D graphics, Point center, int radius) {
 		graphics.drawOval(center.x - radius, center.y - radius, 2 * radius, 2 * radius);

@@ -22,30 +22,46 @@ package uniol.aptgui.application;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
+import uniol.aptgui.application.events.WindowFocusGainedEvent;
+import uniol.aptgui.gui.history.History;
 import uniol.aptgui.gui.mainwindow.MainWindowPresenter;
 import uniol.aptgui.gui.mainwindow.WindowId;
-import uniol.aptgui.gui.mainwindow.WindowType;
 
 public class ApplicationImpl implements Application {
 
 	private final MainWindowPresenter mainWindow;
+	private final EventBus eventBus;
+	private final History history;
+
 	private final Map<WindowId, PetriNet> petriNets;
 	private final Map<WindowId, TransitionSystem> transitionSystems;
 
 	private WindowId activeWindow;
 
 	@Inject
-	public ApplicationImpl(MainWindowPresenter mainWindow) {
+	public ApplicationImpl(MainWindowPresenter mainWindow, EventBus eventBus, History history) {
 		this.mainWindow = mainWindow;
+		this.eventBus = eventBus;
+		this.history = history;
 		this.petriNets = new HashMap<>();
 		this.transitionSystems = new HashMap<>();
+
+		this.eventBus.register(this);
 	}
 
+	@Subscribe
+	public void onWindowFocusEvent(WindowFocusGainedEvent e) {
+		activeWindow = e.getWindowId();
+	}
+
+	@Override
 	public void newPetriNet() {
 		// TODO: open dialog (using MainWindow) and ask for a name
 		PetriNet pn = new PetriNet();
@@ -58,6 +74,7 @@ public class ApplicationImpl implements Application {
 		petriNets.put(id, pn);
 	}
 
+	@Override
 	public void closeWindow(WindowId id) {
 		mainWindow.removeWindow(id);
 	}
@@ -65,16 +82,6 @@ public class ApplicationImpl implements Application {
 	@Override
 	public void show() {
 		mainWindow.show();
-	}
-
-	@Override
-	public void onInternalWindowActivated(WindowId id) {
-		activeWindow = id;
-		if (id.getType() == WindowType.PETRI_NET) {
-			mainWindow.showPnToolbar();
-		} else if (id.getType() == WindowType.TRANSITION_SYSTEM) {
-			mainWindow.showTsToolbar();
-		}
 	}
 
 	@Override
@@ -93,6 +100,16 @@ public class ApplicationImpl implements Application {
 		ts.createArc(s1, s0, "b");
 		WindowId id = mainWindow.createWindow(ts);
 		transitionSystems.put(id, ts);
+	}
+
+	@Override
+	public EventBus getEventBus() {
+		return eventBus;
+	}
+
+	@Override
+	public History getHistory() {
+		return history;
 	}
 
 }

@@ -19,9 +19,7 @@
 
 package uniol.aptgui.gui.mainwindow.toolbar;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
@@ -35,94 +33,95 @@ import uniol.aptgui.gui.actions.NewTransitionSystemAction;
 import uniol.aptgui.gui.actions.PnCreateFlowToolAction;
 import uniol.aptgui.gui.actions.PnCreatePlaceToolAction;
 import uniol.aptgui.gui.actions.PnSelectionToolAction;
-import uniol.aptgui.gui.editor.tools.toolbox.ToolIds;
+import uniol.aptgui.gui.actions.TsSelectionToolAction;
+import uniol.aptgui.gui.editor.tools.toolbox.Tool;
 
 @SuppressWarnings("serial")
 public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements ToolbarView {
 
-	private final Map<ToolIds, JToggleButton> pnToolButtons;
+	// GENERAL BUTTONS
+	private final JButton newPetriNet;
+	private final JButton newTransitionSystem;
+
+	// PN BUTTONS
 	private final ButtonGroup pnToolGroup;
+	private final JToggleButton pnSelectionTool;
+	private final JToggleButton pnCreatePlaceTool;
+	private final JToggleButton pnCreateFlowTool;
 
-	private final Map<ToolIds, JToggleButton> tsToolButtons;
+	// TS BUTTONS
 	private final ButtonGroup tsToolGroup;
-
-	private Map<ToolIds, JToggleButton> contextToolButtons;
-	private ButtonGroup contextToolGroup;
+	private final JToggleButton tsSelectionTool;
 
 	@Inject
 	public ToolbarViewImpl(Injector injector) {
-		// Create toolbar items.
-		JButton newPn = new JButton(injector.getInstance(NewPetriNetAction.class));
-		JButton newTs = new JButton(injector.getInstance(NewTransitionSystemAction.class));
-		JToggleButton pnSelectionTool = new JToggleButton(injector.getInstance(PnSelectionToolAction.class));
-		JToggleButton pnCreatePlaceTool = new JToggleButton(injector.getInstance(PnCreatePlaceToolAction.class));
-		JToggleButton pnCreateFlowTool = new JToggleButton(injector.getInstance(PnCreateFlowToolAction.class));
+		setFloatable(false);
 
-		// Add items to toolbar.
-		add(newPn);
-		add(newTs);
-		add(pnSelectionTool);
-		add(pnCreatePlaceTool);
-		add(pnCreateFlowTool);
+		// GENERAL BUTTONS
+		newPetriNet = new JButton(injector.getInstance(NewPetriNetAction.class));
+		newTransitionSystem = new JButton(injector.getInstance(NewTransitionSystemAction.class));
 
-		// Put PN specific item in their hash map.
-		pnToolButtons = new HashMap<>();
-		pnToolButtons.put(ToolIds.SELECTION, pnSelectionTool);
-		pnToolButtons.put(ToolIds.CREATE_PLACE, pnCreatePlaceTool);
-		pnToolButtons.put(ToolIds.CREATE_FLOW, pnCreateFlowTool);
+		add(newPetriNet);
+		add(newTransitionSystem);
+
+		// PN BUTTONS
 		pnToolGroup = new ButtonGroup();
-		for (JToggleButton btn : pnToolButtons.values()) {
-			btn.setVisible(false);
-			pnToolGroup.add(btn);
-		}
+		pnSelectionTool = new JToggleButton(injector.getInstance(PnSelectionToolAction.class));
+		pnCreatePlaceTool = new JToggleButton(injector.getInstance(PnCreatePlaceToolAction.class));
+		pnCreateFlowTool = new JToggleButton(injector.getInstance(PnCreateFlowToolAction.class));
 
-		// Put TS specific items in their hash map.
-		tsToolButtons = new HashMap<>();
-		tsToolButtons.put(ToolIds.SELECTION, new JToggleButton("TODO"));
+		addToToolbarAndGroup(pnSelectionTool, pnToolGroup);
+		addToToolbarAndGroup(pnCreatePlaceTool, pnToolGroup);
+		addToToolbarAndGroup(pnCreateFlowTool, pnToolGroup);
+
+		// TS BUTTONS
 		tsToolGroup = new ButtonGroup();
-		for (JToggleButton btn : tsToolButtons.values()) {
-			btn.setVisible(false);
-			tsToolGroup.add(btn);
-		}
+		tsSelectionTool = new JToggleButton(injector.getInstance(TsSelectionToolAction.class));
 
-		contextToolButtons = new HashMap<>();
-		contextToolGroup = new ButtonGroup();
+		addToToolbarAndGroup(tsSelectionTool, tsToolGroup);
+	}
+
+	private void addToToolbarAndGroup(AbstractButton button, ButtonGroup group) {
+		add(button);
+		group.add(button);
 	}
 
 	@Override
-	public void setActiveTool(ToolIds tool) {
-		contextToolGroup.clearSelection();
-		JToggleButton btn = contextToolButtons.get(tool);
-		if (btn != null) {
-			btn.doClick();
-		}
+	public void setPetriNetToolsVisible(boolean visible) {
+		pnSelectionTool.setVisible(visible);
+		pnCreatePlaceTool.setVisible(visible);
+		pnCreateFlowTool.setVisible(visible);
 	}
 
 	@Override
-	public void setContext(ToolbarContext context) {
-		// hide old toolbar buttons
-		for (JToggleButton btn : contextToolButtons.values()) {
-			btn.setVisible(false);
-		}
+	public void setTransitionSystemToolsVisible(boolean visible) {
+		tsSelectionTool.setVisible(visible);
+	}
 
-		switch (context) {
-		case PETRI_NET:
-			contextToolButtons = pnToolButtons;
-			contextToolGroup = pnToolGroup;
+	@Override
+	public void setActiveTool(Tool tool) {
+		switch (tool) {
+		case PN_CREATE_FLOW:
+			pnCreateFlowTool.doClick();
 			break;
-		case TRANSITION_SYSTEM:
-			contextToolButtons = tsToolButtons;
-			contextToolGroup = tsToolGroup;
+		case PN_CREATE_PLACE:
+			pnCreatePlaceTool.doClick();
+			break;
+		case PN_CREATE_TRANSITION:
+			break;
+		case PN_SELECTION:
+			pnSelectionTool.doClick();
+			break;
+		case TS_CREATE_ARC:
+			break;
+		case TS_CREATE_STATE:
+			break;
+		case TS_SELECTION:
+			tsSelectionTool.doClick();
 			break;
 		default:
-			contextToolButtons = new HashMap<>();
-			contextToolGroup = new ButtonGroup();
 			break;
-		}
 
-		// show new toolbar buttons
-		for (JToggleButton btn : contextToolButtons.values()) {
-			btn.setVisible(true);
 		}
 	}
 

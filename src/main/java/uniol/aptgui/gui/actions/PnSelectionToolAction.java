@@ -27,7 +27,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import uniol.aptgui.application.events.ToolSelectedEvent;
-import uniol.aptgui.gui.editor.tools.toolbox.ToolIds;
+import uniol.aptgui.gui.editor.tools.toolbox.Tool;
 
 @SuppressWarnings("serial")
 public class PnSelectionToolAction extends AbstractAction {
@@ -42,7 +42,7 @@ public class PnSelectionToolAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		eventBus.post(new ToolSelectedEvent(ToolIds.SELECTION));
+		eventBus.post(new ToolSelectedEvent(Tool.PN_SELECTION));
 	}
 
 }

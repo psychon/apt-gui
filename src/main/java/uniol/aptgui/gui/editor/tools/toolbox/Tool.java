@@ -17,13 +17,26 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.mainwindow.toolbar;
+package uniol.aptgui.gui.editor.tools.toolbox;
 
-public enum ToolbarContext {
+public enum Tool {
 
-	PETRI_NET, TRANSITION_SYSTEM, NONE
+	PN_SELECTION, PN_CREATE_PLACE, PN_CREATE_TRANSITION, PN_CREATE_FLOW,
+	TS_SELECTION, TS_CREATE_STATE, TS_CREATE_ARC;
+
+	public boolean isPetriNetTool() {
+		return this == Tool.PN_SELECTION
+		    || this == Tool.PN_CREATE_PLACE
+		    || this == Tool.PN_CREATE_TRANSITION
+		    || this == Tool.PN_CREATE_FLOW;
+	}
+
+	public boolean isTransitionSystemTool() {
+		return this == Tool.TS_SELECTION
+		    || this == TS_CREATE_STATE
+		    || this == TS_CREATE_ARC;
+	}
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

@@ -17,37 +17,33 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.gui.editor.tools;
+package uniol.aptgui.gui.actions;
 
-import java.awt.Cursor;
-import java.awt.Graphics2D;
-import java.awt.event.MouseAdapter;
+import java.awt.event.ActionEvent;
 
-import uniol.aptgui.gui.editor.EditorView;
+import javax.swing.AbstractAction;
 
-public abstract class Tool extends MouseAdapter {
+import com.google.common.eventbus.EventBus;
+import com.google.inject.Inject;
 
-	private final EditorView view;
-	protected Cursor cursor;
+import uniol.aptgui.application.events.ToolSelectedEvent;
+import uniol.aptgui.gui.editor.tools.toolbox.Tool;
 
-	public Tool(EditorView view) {
-		this.view = view;
-		this.cursor = Cursor.getDefaultCursor();
+@SuppressWarnings("serial")
+public class TsSelectionToolAction extends AbstractAction {
+
+	private final EventBus eventBus;
+
+	@Inject
+	public TsSelectionToolAction(EventBus eventBus) {
+		this.eventBus = eventBus;
+		putValue(NAME, "TS SELECTION");
 	}
 
-	public Cursor getCursor() {
-		return cursor;
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		eventBus.post(new ToolSelectedEvent(Tool.TS_SELECTION));
 	}
-
-	public void onActivated() {
-		view.addMouseAdapter(this);
-	}
-
-	public void onDeactivated() {
-		view.removeMouseAdapter(this);
-	}
-
-	public abstract void draw(Graphics2D graphics);
 
 }
 

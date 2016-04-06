@@ -28,11 +28,15 @@ import uniol.apt.adt.pn.Node;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
+import uniol.apt.adt.ts.Arc;
+import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
+import uniol.aptgui.gui.editor.graphicalelements.GraphicalArc;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalElement;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalFlow;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalNode;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalPlace;
+import uniol.aptgui.gui.editor.graphicalelements.GraphicalState;
 import uniol.aptgui.gui.editor.graphicalelements.GraphicalTransition;
 
 public class RandomLayout implements Layout {
@@ -44,7 +48,7 @@ public class RandomLayout implements Layout {
 			int x = randomInt(width);
 			int y = randomInt(height);
 			// TODO correct tokens
-			GraphicalPlace elem = new GraphicalPlace(2);
+			GraphicalPlace elem = new GraphicalPlace();
 			elem.setCenter(new Point(x, y));
 			p.putExtension(GraphicalElement.EXTENSION_KEY, elem);
 			nodeMap.put(p, elem);
@@ -52,7 +56,7 @@ public class RandomLayout implements Layout {
 		for (Transition t : pn.getTransitions()) {
 			int x = randomInt(width);
 			int y = randomInt(height);
-			GraphicalTransition elem = new GraphicalTransition(t.getId(), t.getLabel());
+			GraphicalTransition elem = new GraphicalTransition();
 			elem.setCenter(new Point(x, y));
 			t.putExtension(GraphicalElement.EXTENSION_KEY, elem);
 			nodeMap.put(t, elem);
@@ -61,7 +65,7 @@ public class RandomLayout implements Layout {
 			GraphicalNode source = nodeMap.get(f.getSource());
 			GraphicalNode target = nodeMap.get(f.getTarget());
 			// TODO correct multiplicity
-			GraphicalFlow elem = new GraphicalFlow(source, target, 1);
+			GraphicalFlow elem = new GraphicalFlow(source, target);
 			f.putExtension(GraphicalElement.EXTENSION_KEY, elem);
 		}
 	}
@@ -72,8 +76,21 @@ public class RandomLayout implements Layout {
 
 	@Override
 	public void applyTo(TransitionSystem ts, int width, int height) {
-		// TODO Auto-generated method stub
-
+		Map<State, GraphicalState> stateMap = new HashMap<>();
+		for (State s : ts.getNodes()) {
+			int x = randomInt(width);
+			int y = randomInt(height);
+			GraphicalState elem = new GraphicalState();
+			elem.setCenter(new Point(x, y));
+			s.putExtension(GraphicalElement.EXTENSION_KEY, elem);
+			stateMap.put(s, elem);
+		}
+		for (Arc a : ts.getEdges()) {
+			GraphicalState source = stateMap.get(a.getSource());
+			GraphicalState target = stateMap.get(a.getTarget());
+			GraphicalArc elem = new GraphicalArc(source, target);
+			a.putExtension(GraphicalElement.EXTENSION_KEY, elem);
+		}
 	}
 
 }

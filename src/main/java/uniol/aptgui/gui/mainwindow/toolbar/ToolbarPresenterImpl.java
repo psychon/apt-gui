@@ -19,49 +19,66 @@
 
 package uniol.aptgui.gui.mainwindow.toolbar;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
+import uniol.aptgui.application.events.ToolSelectedEvent;
+import uniol.aptgui.application.events.WindowFocusGainedEvent;
+import uniol.aptgui.application.events.WindowFocusLostEvent;
 import uniol.aptgui.gui.AbstractPresenter;
-import uniol.aptgui.gui.editor.tools.toolbox.ToolIds;
+import uniol.aptgui.gui.editor.tools.toolbox.Tool;
 
-public class ToolbarPresenterImpl
-	extends AbstractPresenter<ToolbarPresenter, ToolbarView>
-	implements ToolbarPresenter {
+public class ToolbarPresenterImpl extends AbstractPresenter<ToolbarPresenter, ToolbarView> implements ToolbarPresenter {
 
-	private final Map<ToolbarContext, ToolIds> activeTools;
-	private ToolbarContext context;
+	private final EventBus eventBus;
+	private Tool activePnTool;
+	private Tool activeTsTool;
 
 	@Inject
-	public ToolbarPresenterImpl(ToolbarView view) {
+	public ToolbarPresenterImpl(ToolbarView view, EventBus eventBus) {
 		super(view);
-		activeTools = new HashMap<>();
-		activeTools.put(ToolbarContext.PETRI_NET, ToolIds.SELECTION);
-		activeTools.put(ToolbarContext.TRANSITION_SYSTEM, ToolIds.SELECTION);
-		activeTools.put(ToolbarContext.NONE, ToolIds.SELECTION);
+		this.eventBus = eventBus;
+		this.activePnTool = Tool.PN_SELECTION;
+		this.activeTsTool = Tool.TS_SELECTION;
 
-		setContext(ToolbarContext.NONE);
+		this.eventBus.register(this);
+		view.setPetriNetToolsVisible(false);
+		view.setTransitionSystemToolsVisible(false);
 	}
 
-	@Override
-	public void fireActiveToolChanged() {
-		ToolIds activeTool = activeTools.get(context);
-		view.setActiveTool(activeTool);
+	@Subscribe
+	public void onWindowFocusLostEvent(WindowFocusLostEvent e) {
+		view.setPetriNetToolsVisible(false);
+		view.setTransitionSystemToolsVisible(false);
 	}
 
-	@Override
-	public void setActiveTool(ToolIds tool) {
-		activeTools.put(context, tool);
-		fireActiveToolChanged();
+	@Subscribe
+	public void onWindowFocusGainedEvent(WindowFocusGainedEvent e) {
+		switch (e.getWindowId().getType()) {
+		case MODULE:
+			break;
+		case PETRI_NET:
+			view.setPetriNetToolsVisible(true);
+			view.setTransitionSystemToolsVisible(false);
+			view.setActiveTool(activePnTool);
+			break;
+		case TRANSITION_SYSTEM:
+			view.setPetriNetToolsVisible(false);
+			view.setTransitionSystemToolsVisible(true);
+			view.setActiveTool(activeTsTool);
+			break;
+		}
 	}
 
-	@Override
-	public void setContext(ToolbarContext context) {
-		this.context = context;
-		view.setContext(context);
-		fireActiveToolChanged();
+	@Subscribe
+	public void onToolSelectedEvent(ToolSelectedEvent e) {
+		if (e.getSelectionId().isPetriNetTool()) {
+			activePnTool = e.getSelectionId();
+		}
+		if (e.getSelectionId().isTransitionSystemTool()) {
+			activeTsTool = e.getSelectionId();
+		}
 	}
 
 }

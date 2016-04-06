@@ -20,19 +20,8 @@
 package uniol.aptgui.gui.mainwindow.toolbar;
 
 import uniol.aptgui.gui.Presenter;
-import uniol.aptgui.gui.editor.tools.toolbox.ToolIds;
 
 public interface ToolbarPresenter extends Presenter<ToolbarView> {
-
-	// ACTIONS
-
-	public void setContext(ToolbarContext context);
-
-	public void fireActiveToolChanged();
-
-	// EVENTS
-
-	public void setActiveTool(ToolIds tool);
 
 }
 

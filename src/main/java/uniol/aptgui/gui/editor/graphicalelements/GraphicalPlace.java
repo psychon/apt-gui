@@ -27,10 +27,6 @@ public class GraphicalPlace extends GraphicalNode {
 	private static final int RADIUS = 20;
 	protected long tokens;
 
-	public GraphicalPlace(long tokens) {
-		this.tokens = tokens;
-	}
-
 	public long getTokens() {
 		return tokens;
 	}
@@ -41,7 +37,7 @@ public class GraphicalPlace extends GraphicalNode {
 
 	@Override
 	public Point getBoundaryIntersection(Point point) {
-		return center; // TODO
+		return getCircleBoundaryIntersection(center, RADIUS, point);
 	}
 
 	@Override

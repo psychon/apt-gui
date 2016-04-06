@@ -24,15 +24,15 @@ import java.awt.Graphics2D;
 import uniol.aptgui.gui.Presenter;
 import uniol.aptgui.gui.editor.graphicalelements.Document;
 import uniol.aptgui.gui.editor.layout.Layout;
-import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
+import uniol.aptgui.gui.mainwindow.WindowId;
 
 public interface EditorPresenter extends Presenter<EditorView> {
 
 	/// ACTIONS ///
 
-	public void setDocument(Document document);
+	public void setWindowId(WindowId window);
 
-	public void setToolbox(Toolbox toolbox);
+	public void setDocument(Document document);
 
 	public void applyLayout(Layout layout);
 

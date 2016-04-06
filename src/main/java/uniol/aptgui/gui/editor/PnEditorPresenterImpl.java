@@ -19,33 +19,31 @@
 
 package uniol.aptgui.gui.editor;
 
-import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import uniol.apt.adt.pn.PetriNet;
+import uniol.aptgui.application.Application;
 import uniol.aptgui.gui.editor.graphicalelements.PnDocument;
-import uniol.aptgui.gui.editor.tools.toolbox.Toolbox;
-import uniol.aptgui.gui.history.History;
 
 public class PnEditorPresenterImpl extends EditorPresenterImpl implements PnEditorPresenter {
 
-	private PnDocument document;
+	private PnDocument pnDocument;
 
 	@Inject
-	public PnEditorPresenterImpl(EditorView view, History history, EventBus eventBus) {
-		super(view, history, eventBus);
+	public PnEditorPresenterImpl(EditorView view, Application application) {
+		super(view, application);
 	}
 
 	@Override
 	public void setPetriNet(PetriNet pn) {
-		document = new PnDocument(pn);
-		setDocument(document);
-		setToolbox(Toolbox.createPnToolbox(view, document, history));
+		pnDocument = new PnDocument(pn);
+		toolbox.addPnTools(pnDocument);
+		setDocument(pnDocument);
 	}
 
 	@Override
 	public PetriNet getPetriNet() {
-		return document.getPetriNet();
+		return pnDocument.getPetriNet();
 	}
 
 }

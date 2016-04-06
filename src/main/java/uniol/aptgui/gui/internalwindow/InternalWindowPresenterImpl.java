@@ -19,9 +19,12 @@
 
 package uniol.aptgui.gui.internalwindow;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import uniol.aptgui.application.Application;
+import uniol.aptgui.application.events.WindowFocusGainedEvent;
+import uniol.aptgui.application.events.WindowFocusLostEvent;
 import uniol.aptgui.gui.AbstractPresenter;
 import uniol.aptgui.gui.Presenter;
 import uniol.aptgui.gui.mainwindow.WindowId;
@@ -30,12 +33,14 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 		implements InternalWindowPresenter {
 
 	private final Application application;
+	private final EventBus eventBus;
 	private WindowId id;
 
 	@Inject
-	public InternalWindowPresenterImpl(InternalWindowView view, Application appState) {
+	public InternalWindowPresenterImpl(InternalWindowView view, Application appState, EventBus eventBus) {
 		super(view);
 		this.application = appState;
+		this.eventBus = eventBus;
 	}
 
 	@Override
@@ -46,6 +51,7 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	@Override
 	public void onCloseButtonClicked() {
 		application.closeWindow(id);
+		eventBus.post(new WindowFocusLostEvent(id));
 	}
 
 	@Override
@@ -60,7 +66,7 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 
 	@Override
 	public void onActivated() {
-		application.onInternalWindowActivated(id);
+		eventBus.post(new WindowFocusGainedEvent(id));
 	}
 
 	@Override
