@@ -23,28 +23,29 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
-import uniol.aptgui.editor.EditorView;
 import uniol.aptgui.editor.graphicalelements.BreakpointHandle;
 import uniol.aptgui.editor.graphicalelements.Document;
 import uniol.aptgui.editor.graphicalelements.GraphicalEdge;
 import uniol.aptgui.editor.graphicalelements.GraphicalElement;
 
-public class HoverFeature extends Feature {
+public class HoverFeature {
 
 	private final Document document;
 	private GraphicalElement hoverElem;
 	private BreakpointHandle breakpointHandle;
 
-	public HoverFeature(Document document, EditorView view) {
-		super(view);
+	public HoverFeature(Document document) {
 		this.document = document;
 		this.hoverElem = null;
 		this.breakpointHandle = new BreakpointHandle();
 	}
 
-	@Override
 	public void mouseMoved(MouseEvent e) {
 		setHoverEffects(e.getPoint());
+	}
+
+	public void draw(Graphics2D graphics) {
+		breakpointHandle.draw(graphics);
 	}
 
 	/**
@@ -62,7 +63,9 @@ public class HoverFeature extends Feature {
 			GraphicalEdge edge = (GraphicalEdge) elem;
 			Point breakpoint = edge.getClosestBreakpoint(modelPosition);
 			if (breakpoint != null) {
-				// Transform back to view position since the Feature draw method doesn't take the Document transform into account.
+				// Transform back to view position since the
+				// Feature draw method doesn't take the Document
+				// transform into account.
 				Point viewPosition = document.transformModelToView(breakpoint);
 				breakpointHandle.setCenter(viewPosition);
 				breakpointHandle.setVisible(true);
@@ -84,12 +87,7 @@ public class HoverFeature extends Feature {
 			hoverElem.setHighlighted(true);
 		}
 
-		view.repaint();
-	}
-
-	@Override
-	public void draw(Graphics2D graphics) {
-		breakpointHandle.draw(graphics);
+		document.fireDocumentDirty();
 	}
 
 }

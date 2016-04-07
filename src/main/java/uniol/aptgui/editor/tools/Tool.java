@@ -19,23 +19,21 @@
 
 package uniol.aptgui.editor.tools;
 
-public enum Tool {
+import java.awt.Cursor;
+import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
 
-	PN_SELECTION, PN_CREATE_PLACE, PN_CREATE_TRANSITION, PN_CREATE_FLOW,
-	TS_SELECTION, TS_CREATE_STATE, TS_CREATE_ARC;
+public abstract class Tool extends MouseAdapter {
 
-	public boolean isPetriNetTool() {
-		return this == Tool.PN_SELECTION
-		    || this == Tool.PN_CREATE_PLACE
-		    || this == Tool.PN_CREATE_TRANSITION
-		    || this == Tool.PN_CREATE_FLOW;
+	public Cursor getCursor() {
+		return Cursor.getDefaultCursor();
 	}
 
-	public boolean isTransitionSystemTool() {
-		return this == Tool.TS_SELECTION
-		    || this == TS_CREATE_STATE
-		    || this == TS_CREATE_ARC;
-	}
+	public void onActivated() {}
+
+	public void onDeactivated() {}
+
+	public void draw(Graphics2D graphics) {}
 
 }
 

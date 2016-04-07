@@ -26,7 +26,7 @@ import javax.swing.AbstractAction;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
-import uniol.aptgui.editor.tools.Tool;
+import uniol.aptgui.editor.tools.ToolId;
 import uniol.aptgui.events.ToolSelectedEvent;
 
 @SuppressWarnings("serial")
@@ -42,7 +42,7 @@ public class TsSelectionToolAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		eventBus.post(new ToolSelectedEvent(Tool.TS_SELECTION));
+		eventBus.post(new ToolSelectedEvent(ToolId.TS_SELECTION));
 	}
 
 }

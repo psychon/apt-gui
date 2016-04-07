@@ -27,7 +27,7 @@ import javax.swing.JToggleButton;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-import uniol.aptgui.editor.tools.Tool;
+import uniol.aptgui.editor.tools.ToolId;
 import uniol.aptgui.swing.JToolBarView;
 import uniol.aptgui.swing.actions.NewPetriNetAction;
 import uniol.aptgui.swing.actions.NewTransitionSystemAction;
@@ -99,7 +99,7 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 	}
 
 	@Override
-	public void setActiveTool(Tool tool) {
+	public void setActiveTool(ToolId tool) {
 		switch (tool) {
 		case PN_CREATE_FLOW:
 			pnCreateFlowTool.doClick();

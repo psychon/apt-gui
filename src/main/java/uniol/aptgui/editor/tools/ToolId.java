@@ -17,24 +17,26 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.features;
+package uniol.aptgui.editor.tools;
 
-import java.awt.Graphics2D;
-import java.awt.event.MouseAdapter;
+public enum ToolId {
 
-import uniol.aptgui.editor.EditorView;
+	PN_SELECTION, PN_CREATE_PLACE, PN_CREATE_TRANSITION, PN_CREATE_FLOW,
+	TS_SELECTION, TS_CREATE_STATE, TS_CREATE_ARC;
 
-public abstract class Feature extends MouseAdapter {
-
-	protected final EditorView view;
-
-	public Feature(EditorView view) {
-		this.view = view;
+	public boolean isPetriNetTool() {
+		return this == ToolId.PN_SELECTION
+		    || this == ToolId.PN_CREATE_PLACE
+		    || this == ToolId.PN_CREATE_TRANSITION
+		    || this == ToolId.PN_CREATE_FLOW;
 	}
 
-	public abstract void draw(Graphics2D graphics);
+	public boolean isTransitionSystemTool() {
+		return this == ToolId.TS_SELECTION
+		    || this == TS_CREATE_STATE
+		    || this == TS_CREATE_ARC;
+	}
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

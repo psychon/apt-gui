@@ -29,7 +29,7 @@ import uniol.aptgui.editor.graphicalelements.GraphicalElement;
 import uniol.aptgui.editor.graphicalelements.GraphicalPlace;
 import uniol.aptgui.editor.graphicalelements.PnDocument;
 
-public class CreatePlaceTool extends BaseTool {
+public class CreatePlaceTool extends Tool {
 
 	private final History history;
 	private final PnDocument document;

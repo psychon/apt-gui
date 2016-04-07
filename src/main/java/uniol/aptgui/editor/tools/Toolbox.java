@@ -24,88 +24,69 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
-import uniol.aptgui.editor.EditorView;
 import uniol.aptgui.editor.graphicalelements.PnDocument;
 import uniol.aptgui.editor.graphicalelements.TsDocument;
-import uniol.aptgui.events.ToolSelectedEvent;
-import uniol.aptgui.mainwindow.WindowId;
 
 public class Toolbox {
 
 	private final Logger logger = Logger.getLogger(Toolbox.class.getName());
 	private final Application application;
-	private final EditorView view;
-	private final Map<Tool, BaseTool> tools;
-	private WindowId windowId;
+	private final Map<ToolId, Tool> tools;
 
-	private BaseTool activeTool;
+	private Tool activeTool;
 
-	public Toolbox(Application application, EditorView view) {
+	@Inject
+	public Toolbox(Application application) {
 		this.tools = new HashMap<>();
 		this.application = application;
-		this.view = view;
-		application.getEventBus().register(this);
 	}
 
-	public void setWindowId(WindowId windowId) {
-		this.windowId = windowId;
-	}
-
-	@Subscribe
-	public void onToolSelectedEvent(ToolSelectedEvent e) {
-		if (!application.getActiveWindow().equals(windowId)) {
-			return;
-		}
-
+	public void setActiveTool(ToolId id) {
 		deactivateCurrentTool();
-
-		BaseTool selected = tools.get(e.getSelectionId());
+		Tool selected = tools.get(id);
 		if (selected != null) {
 			activeTool = selected;
 		} else {
-			logger.log(Level.WARNING, "Trying to select unavailable tool: " + e.getSelectionId());
+			logger.log(Level.WARNING, "Trying to select unavailable tool: " + id);
 		}
-
 		activateCurrentTool();
 	}
 
 	private void deactivateCurrentTool() {
 		if (activeTool != null) {
 			activeTool.onDeactivated();
-			view.removeMouseAdapter(activeTool);
 		}
 	}
 
 	private void activateCurrentTool() {
 		if (activeTool != null) {
-			view.addMouseAdapter(activeTool);
 			activeTool.onActivated();
 		}
 	}
 
-	public void addTool(Tool id, BaseTool tool) {
+	public void addTool(ToolId id, Tool tool) {
 		tools.put(id, tool);
 	}
 
-	public BaseTool getTool(Tool id) {
+	public Tool getTool(ToolId id) {
 		return tools.get(id);
 	}
 
-	public BaseTool getActiveTool() {
+	public Tool getActiveTool() {
 		return activeTool;
 	}
 
 	public void addPnTools(PnDocument document) {
-		addTool(Tool.PN_SELECTION, new SelectionTool(document));
-		addTool(Tool.PN_CREATE_PLACE, new CreatePlaceTool(document, application.getHistory()));
-		addTool(Tool.PN_CREATE_FLOW, new CreateFlowTool(document));
+		addTool(ToolId.PN_SELECTION, new SelectionTool(document));
+		addTool(ToolId.PN_CREATE_PLACE, new CreatePlaceTool(document, application.getHistory()));
+		addTool(ToolId.PN_CREATE_FLOW, new CreateFlowTool(document));
 	}
 
 	public void addTsTools(TsDocument document) {
-		addTool(Tool.TS_SELECTION, new SelectionTool(document));
+		addTool(ToolId.TS_SELECTION, new SelectionTool(document));
 	}
 
 }

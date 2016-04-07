@@ -20,7 +20,7 @@
 package uniol.aptgui.mainwindow.toolbar;
 
 import uniol.aptgui.View;
-import uniol.aptgui.editor.tools.Tool;
+import uniol.aptgui.editor.tools.ToolId;
 
 public interface ToolbarView extends View<ToolbarPresenter> {
 
@@ -28,7 +28,7 @@ public interface ToolbarView extends View<ToolbarPresenter> {
 
 	public void setTransitionSystemToolsVisible(boolean visible);
 
-	public void setActiveTool(Tool tool);
+	public void setActiveTool(ToolId tool);
 
 }
 

@@ -20,62 +20,51 @@
 package uniol.aptgui.editor;
 
 import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Application;
-import uniol.aptgui.editor.features.Feature;
 import uniol.aptgui.editor.features.HoverFeature;
 import uniol.aptgui.editor.graphicalelements.Document;
 import uniol.aptgui.editor.graphicalelements.DocumentListener;
 import uniol.aptgui.editor.layout.Layout;
-import uniol.aptgui.editor.tools.BaseTool;
+import uniol.aptgui.editor.tools.Tool;
 import uniol.aptgui.editor.tools.Toolbox;
 import uniol.aptgui.events.ToolSelectedEvent;
 import uniol.aptgui.mainwindow.WindowId;
 
 public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, EditorView>
-		implements EditorPresenter, DocumentListener {
+		implements EditorPresenter, MouseEventListener, DocumentListener {
 
 	protected final Application application;
 	protected final Toolbox toolbox;
-	protected final List<Feature> features;
 
+	protected HoverFeature hoverFeature;
 	protected WindowId windowId;
 	protected Document document;
 
 	@Inject
 	public EditorPresenterImpl(EditorView view, Application application) {
 		super(view);
-		this.features = new ArrayList<>();
+		view.setMouseEventListener(this);
 		this.application = application;
-		this.toolbox = new Toolbox(application, view);
+		this.toolbox = new Toolbox(application);
 		application.getEventBus().register(this);
 	}
 
 	public void setWindowId(WindowId windowId) {
 		this.windowId = windowId;
-		this.toolbox.setWindowId(windowId);
 	}
 
 	@Override
 	public void setDocument(Document document) {
 		this.document = document;
 		this.document.addListener(this);
-
-		// Update features with new document.
-		for (Feature feature : features) {
-			view.removeMouseAdapter(feature);
-		}
-		features.clear();
-		features.add(new HoverFeature(document, view));
-		for (Feature feature : features) {
-			view.addMouseAdapter(feature);
-		}
+		hoverFeature = new HoverFeature(document);
 	}
 
 	@Subscribe
@@ -83,7 +72,8 @@ public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresen
 		if (!application.getActiveWindow().equals(windowId)) {
 			return;
 		}
-		BaseTool tool = toolbox.getTool(e.getSelectionId());
+		toolbox.setActiveTool(e.getSelectionId());
+		Tool tool = toolbox.getActiveTool();
 		if (tool != null) {
 			view.setCursor(tool.getCursor());
 		}
@@ -108,10 +98,8 @@ public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresen
 	@Override
 	public void onPaint(Graphics2D graphics) {
 		document.drawDocument(graphics);
-		for (Feature feature : features) {
-			feature.draw(graphics);
-		}
-		BaseTool tool = toolbox.getActiveTool();
+		hoverFeature.draw(graphics);
+		Tool tool = toolbox.getActiveTool();
 		if (tool != null) {
 			tool.draw(graphics);
 		}
@@ -132,6 +120,37 @@ public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresen
 	@Override
 	public void onDocumentDirty() {
 		getView().repaint();
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		toolbox.getActiveTool().mouseClicked(e);
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		toolbox.getActiveTool().mouseDragged(e);
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		toolbox.getActiveTool().mouseMoved(e);
+		hoverFeature.mouseMoved(e);
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		toolbox.getActiveTool().mousePressed(e);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		toolbox.getActiveTool().mouseReleased(e);
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		toolbox.getActiveTool().mouseWheelMoved(e);
 	}
 
 }

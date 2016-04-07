@@ -17,29 +17,24 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.tools;
+package uniol.aptgui.editor;
 
-import java.awt.Cursor;
-import java.awt.Graphics2D;
-import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
-public abstract class BaseTool extends MouseAdapter {
+public interface MouseEventListener {
 
-	public Cursor getCursor() {
-		return Cursor.getDefaultCursor();
-	}
+	public void mouseClicked(MouseEvent e);
 
-	public void onActivated() {
+	public void mouseDragged(MouseEvent e);
 
-	}
+	public void mouseMoved(MouseEvent e);
 
-	public void onDeactivated() {
+	public void mousePressed(MouseEvent e);
 
-	}
+	public void mouseReleased(MouseEvent e);
 
-	public void draw(Graphics2D graphics) {
-
-	}
+	public void mouseWheelMoved(MouseWheelEvent e);
 
 }
 

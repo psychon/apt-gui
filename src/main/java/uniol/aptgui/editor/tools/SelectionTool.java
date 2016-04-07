@@ -33,7 +33,7 @@ import uniol.aptgui.editor.graphicalelements.GraphicalNode;
  * highlight elements by hovering over them, select elements, move them and
  * modify edge paths.
  */
-public class SelectionTool extends BaseTool {
+public class SelectionTool extends Tool {
 
 	private static enum DragType {
 		NONE, VIEWPORT, NODE, EDGE

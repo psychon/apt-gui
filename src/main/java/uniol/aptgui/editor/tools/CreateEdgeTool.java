@@ -29,7 +29,7 @@ import uniol.aptgui.editor.graphicalelements.GraphicalElement;
 import uniol.aptgui.editor.graphicalelements.GraphicalNode;
 import uniol.aptgui.editor.graphicalelements.InvisibleNode;
 
-public abstract class CreateEdgeTool extends BaseTool {
+public abstract class CreateEdgeTool extends Tool {
 
 	protected final Document document;
 
