@@ -17,14 +17,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.graphicalelements;
+package uniol.aptgui.editor.document;
 
-public class GraphicalArc extends GraphicalEdge {
+public interface DocumentListener {
 
-	public GraphicalArc(GraphicalNode source, GraphicalNode target) {
-		super(source, target);
-	}
+	public void onDocumentDirty();
 
 }
+
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

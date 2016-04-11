@@ -27,8 +27,8 @@ import java.util.logging.Logger;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
-import uniol.aptgui.editor.graphicalelements.PnDocument;
-import uniol.aptgui.editor.graphicalelements.TsDocument;
+import uniol.aptgui.editor.document.PnDocument;
+import uniol.aptgui.editor.document.TsDocument;
 
 public class Toolbox {
 

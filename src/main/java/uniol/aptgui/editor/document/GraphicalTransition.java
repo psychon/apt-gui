@@ -17,18 +17,28 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.graphicalelements;
+package uniol.aptgui.editor.document;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-public class GraphicalState extends GraphicalNode {
+public class GraphicalTransition extends GraphicalNode {
 
 	private static final int RADIUS = 20;
 
+	protected String label;
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
 	@Override
 	public Point getBoundaryIntersection(Point point) {
-		return getCircleBoundaryIntersection(center, RADIUS, point);
+		return center; // TODO
 	}
 
 	@Override
@@ -37,15 +47,18 @@ public class GraphicalState extends GraphicalNode {
 			return;
 		}
 		super.draw(graphics);
-		drawCircle(graphics, center, RADIUS);
+		drawSquare(graphics, center, 20);
 	}
 
 	@Override
 	public boolean containsPoint(Point point) {
-		return center.distance(point.x, point.y) < RADIUS;
+		int minX = center.x - RADIUS;
+		int maxX = center.x + RADIUS;
+		int minY = center.y - RADIUS;
+		int maxY = center.y + RADIUS;
+		return minX <= point.x && point.x <= maxX && minY <= point.y && point.y <= maxY;
 	}
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

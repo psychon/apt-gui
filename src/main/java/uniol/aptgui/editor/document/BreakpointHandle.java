@@ -17,24 +17,36 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.graphicalelements;
+package uniol.aptgui.editor.document;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
 
-public class InvisibleNode extends GraphicalNode {
+public class BreakpointHandle extends GraphicalNode {
 
-	public InvisibleNode() {
+	public BreakpointHandle() {
+		setColor(Color.BLUE);
 		setVisible(false);
 	}
 
 	@Override
 	public Point getBoundaryIntersection(Point point) {
-		return center;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean containsPoint(Point point) {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void draw(Graphics2D graphics) {
+		if (!visible) {
+			return;
+		}
+		super.draw(graphics);
+		drawSquare(graphics, center, 5);
 	}
 
 }

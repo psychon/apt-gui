@@ -31,13 +31,13 @@ import uniol.apt.adt.pn.Transition;
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
-import uniol.aptgui.editor.graphicalelements.GraphicalArc;
-import uniol.aptgui.editor.graphicalelements.GraphicalElement;
-import uniol.aptgui.editor.graphicalelements.GraphicalFlow;
-import uniol.aptgui.editor.graphicalelements.GraphicalNode;
-import uniol.aptgui.editor.graphicalelements.GraphicalPlace;
-import uniol.aptgui.editor.graphicalelements.GraphicalState;
-import uniol.aptgui.editor.graphicalelements.GraphicalTransition;
+import uniol.aptgui.editor.document.GraphicalArc;
+import uniol.aptgui.editor.document.GraphicalElement;
+import uniol.aptgui.editor.document.GraphicalFlow;
+import uniol.aptgui.editor.document.GraphicalNode;
+import uniol.aptgui.editor.document.GraphicalPlace;
+import uniol.aptgui.editor.document.GraphicalState;
+import uniol.aptgui.editor.document.GraphicalTransition;
 
 public class RandomLayout implements Layout {
 

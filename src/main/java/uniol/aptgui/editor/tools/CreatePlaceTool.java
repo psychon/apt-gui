@@ -25,9 +25,9 @@ import java.awt.event.MouseEvent;
 
 import uniol.aptgui.commands.CreatePlaceCommand;
 import uniol.aptgui.commands.History;
-import uniol.aptgui.editor.graphicalelements.GraphicalElement;
-import uniol.aptgui.editor.graphicalelements.GraphicalPlace;
-import uniol.aptgui.editor.graphicalelements.PnDocument;
+import uniol.aptgui.editor.document.GraphicalElement;
+import uniol.aptgui.editor.document.GraphicalPlace;
+import uniol.aptgui.editor.document.PnDocument;
 
 public class CreatePlaceTool extends Tool {
 

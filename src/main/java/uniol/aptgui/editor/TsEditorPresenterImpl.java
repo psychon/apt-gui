@@ -23,7 +23,7 @@ import com.google.inject.Inject;
 
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.aptgui.Application;
-import uniol.aptgui.editor.graphicalelements.TsDocument;
+import uniol.aptgui.editor.document.TsDocument;
 
 public class TsEditorPresenterImpl extends EditorPresenterImpl implements TsEditorPresenter {
 

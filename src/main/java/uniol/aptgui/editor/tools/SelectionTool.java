@@ -23,10 +23,10 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-import uniol.aptgui.editor.graphicalelements.Document;
-import uniol.aptgui.editor.graphicalelements.GraphicalEdge;
-import uniol.aptgui.editor.graphicalelements.GraphicalElement;
-import uniol.aptgui.editor.graphicalelements.GraphicalNode;
+import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.GraphicalEdge;
+import uniol.aptgui.editor.document.GraphicalElement;
+import uniol.aptgui.editor.document.GraphicalNode;
 
 /**
  * Selection tool. Gives the user the ability to translate and scale the view,

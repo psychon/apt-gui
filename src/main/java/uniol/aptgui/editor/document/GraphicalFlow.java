@@ -17,46 +17,23 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.graphicalelements;
+package uniol.aptgui.editor.document;
 
-import java.awt.Graphics2D;
-import java.awt.Point;
+public class GraphicalFlow extends GraphicalEdge {
 
-public class GraphicalTransition extends GraphicalNode {
+	protected long multiplicity;
 
-	private static final int RADIUS = 20;
-
-	protected String label;
-
-	public String getLabel() {
-		return label;
+	public GraphicalFlow(GraphicalNode source, GraphicalNode target) {
+		super(source, target);
 	}
 
-	public void setLabel(String label) {
-		this.label = label;
+	public long getMultiplicity() {
+		return multiplicity;
 	}
 
-	@Override
-	public Point getBoundaryIntersection(Point point) {
-		return center; // TODO
-	}
-
-	@Override
-	public void draw(Graphics2D graphics) {
-		if (!visible) {
-			return;
-		}
-		super.draw(graphics);
-		drawSquare(graphics, center, 20);
-	}
-
-	@Override
-	public boolean containsPoint(Point point) {
-		int minX = center.x - RADIUS;
-		int maxX = center.x + RADIUS;
-		int minY = center.y - RADIUS;
-		int maxY = center.y + RADIUS;
-		return minX <= point.x && point.x <= maxX && minY <= point.y && point.y <= maxY;
+	public void setMultiplicity(long multiplicity) {
+		this.multiplicity = multiplicity;
+		setLabel(String.valueOf(multiplicity));
 	}
 
 }

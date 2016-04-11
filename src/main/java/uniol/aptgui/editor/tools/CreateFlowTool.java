@@ -22,13 +22,13 @@ package uniol.aptgui.editor.tools;
 import java.awt.Cursor;
 import java.awt.Point;
 
-import uniol.aptgui.editor.graphicalelements.GraphicalEdge;
-import uniol.aptgui.editor.graphicalelements.GraphicalElement;
-import uniol.aptgui.editor.graphicalelements.GraphicalFlow;
-import uniol.aptgui.editor.graphicalelements.GraphicalNode;
-import uniol.aptgui.editor.graphicalelements.GraphicalPlace;
-import uniol.aptgui.editor.graphicalelements.GraphicalTransition;
-import uniol.aptgui.editor.graphicalelements.PnDocument;
+import uniol.aptgui.editor.document.GraphicalEdge;
+import uniol.aptgui.editor.document.GraphicalElement;
+import uniol.aptgui.editor.document.GraphicalFlow;
+import uniol.aptgui.editor.document.GraphicalNode;
+import uniol.aptgui.editor.document.GraphicalPlace;
+import uniol.aptgui.editor.document.GraphicalTransition;
+import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.swing.Resource;
 
 public class CreateFlowTool extends CreateEdgeTool {

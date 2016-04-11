@@ -23,7 +23,7 @@ import com.google.inject.Inject;
 
 import uniol.apt.adt.pn.PetriNet;
 import uniol.aptgui.Application;
-import uniol.aptgui.editor.graphicalelements.PnDocument;
+import uniol.aptgui.editor.document.PnDocument;
 
 public class PnEditorPresenterImpl extends EditorPresenterImpl implements PnEditorPresenter {
 

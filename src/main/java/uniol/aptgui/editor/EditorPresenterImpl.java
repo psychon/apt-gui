@@ -28,9 +28,9 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Application;
+import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.DocumentListener;
 import uniol.aptgui.editor.features.HoverFeature;
-import uniol.aptgui.editor.graphicalelements.Document;
-import uniol.aptgui.editor.graphicalelements.DocumentListener;
 import uniol.aptgui.editor.layout.Layout;
 import uniol.aptgui.editor.tools.Tool;
 import uniol.aptgui.editor.tools.Toolbox;
