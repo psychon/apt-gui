@@ -19,6 +19,7 @@
 
 package uniol.aptgui.swing.actions;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
@@ -28,6 +29,7 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.swing.Resource;
+import uniol.aptgui.swing.filechooser.OpenFileChooser;
 
 @SuppressWarnings("serial")
 public class OpenAction extends AbstractAction {
@@ -46,7 +48,11 @@ public class OpenAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO
+		OpenFileChooser fc = new OpenFileChooser();
+		int res = fc.showOpenDialog((Component) app.getMainWindow().getView());
+		if (res == OpenFileChooser.APPROVE_OPTION) {
+			app.openFile(fc.getSelectedFile());
+		}
 	}
 
 }

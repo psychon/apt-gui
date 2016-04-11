@@ -69,7 +69,7 @@ public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresen
 
 	@Subscribe
 	public void onToolSelected(ToolSelectedEvent e) {
-		if (!application.getActiveWindow().equals(windowId)) {
+		if (!application.getActiveInternalWindow().equals(windowId)) {
 			return;
 		}
 		toolbox.setActiveTool(e.getSelectionId());

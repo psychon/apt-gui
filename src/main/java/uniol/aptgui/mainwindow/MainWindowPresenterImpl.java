@@ -43,6 +43,8 @@ import uniol.aptgui.mainwindow.toolbar.ToolbarPresenter;
 public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresenter, MainWindowView>
 		implements MainWindowPresenter {
 
+	private static final String TITLE = "APT";
+
 	private final Injector injector;
 	private final Map<WindowId, InternalWindowPresenter> internalWindows;
 	private final ToolbarPresenter toolbar;
@@ -59,6 +61,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 
 		view.setToolbar(toolbar.getView());
 		view.setMenu(menu.getView());
+		view.setTitle(TITLE);
 	}
 
 	@Override

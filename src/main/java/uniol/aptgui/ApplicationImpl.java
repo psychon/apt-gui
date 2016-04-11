@@ -19,8 +19,13 @@
 
 package uniol.aptgui;
 
+import java.awt.Component;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.JOptionPane;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -29,6 +34,8 @@ import com.google.inject.Inject;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
+import uniol.apt.io.parser.ParseException;
+import uniol.apt.io.parser.impl.AptPNParser;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.PnDocument;
@@ -36,6 +43,7 @@ import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.mainwindow.MainWindowPresenter;
 import uniol.aptgui.mainwindow.WindowId;
+import uniol.aptgui.swing.filechooser.OpenFileChooser;
 
 public class ApplicationImpl implements Application {
 
@@ -71,10 +79,8 @@ public class ApplicationImpl implements Application {
 		pn.createTransition("t0");
 		pn.createFlow("p0", "t0", 1);
 		pn.createFlow("t0", "p1", 5);
-		WindowId id = mainWindow.createWindow(pn);
 
-		PnDocument pnDoc = new PnDocument(pn);
-		documents.put(id, pnDoc);
+		openPetriNet(pn);
 	}
 
 	@Override
@@ -88,7 +94,7 @@ public class ApplicationImpl implements Application {
 	}
 
 	@Override
-	public WindowId getActiveWindow() {
+	public WindowId getActiveInternalWindow() {
 		return activeWindow;
 	}
 
@@ -102,10 +108,7 @@ public class ApplicationImpl implements Application {
 		ts.createArc(s0, s1, "a");
 		ts.createArc(s1, s0, "b");
 
-		WindowId id = mainWindow.createWindow(ts);
-		TsDocument tsDoc = new TsDocument(ts);
-
-		documents.put(id, tsDoc);
+		openTransitionSystem(ts);
 	}
 
 	@Override
@@ -116,6 +119,39 @@ public class ApplicationImpl implements Application {
 	@Override
 	public History getHistory() {
 		return history;
+	}
+
+	@Override
+	public void openFile(File file) {
+		// TODO correctly handle different types of APT-files
+		AptPNParser parser = new AptPNParser();
+		try {
+			PetriNet pn = parser.parseFile(file);
+			openPetriNet(pn);
+		} catch (ParseException|IOException e) {
+			JOptionPane.showMessageDialog((Component) mainWindow,
+					e.getMessage(),
+					"Error",
+					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public MainWindowPresenter getMainWindow() {
+		return mainWindow;
+	}
+
+	private void openTransitionSystem(TransitionSystem ts) {
+		WindowId id = mainWindow.createWindow(ts);
+		Document tsDoc = new TsDocument(ts);
+		documents.put(id, tsDoc);
+	}
+
+	private void openPetriNet(PetriNet pn) {
+		WindowId id = mainWindow.createWindow(pn);
+		Document pnDoc = new PnDocument(pn);
+		documents.put(id, pnDoc);
 	}
 
 }
