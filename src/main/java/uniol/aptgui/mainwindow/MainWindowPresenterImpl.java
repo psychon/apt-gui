@@ -21,23 +21,22 @@ package uniol.aptgui.mainwindow;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-import uniol.apt.adt.pn.PetriNet;
-import uniol.apt.adt.ts.TransitionSystem;
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Presenter;
+import uniol.aptgui.editor.EditorPresenter;
 import uniol.aptgui.editor.PnEditorPresenter;
 import uniol.aptgui.editor.TsEditorPresenter;
-import uniol.aptgui.editor.layout.RandomLayout;
+import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.PnDocument;
+import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.internalwindow.InternalWindowPresenter;
 import uniol.aptgui.mainwindow.menu.MenuPresenter;
-import uniol.aptgui.mainwindow.menu.MenuView;
 import uniol.aptgui.mainwindow.toolbar.ToolbarPresenter;
 
 public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresenter, MainWindowView>
@@ -45,6 +44,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 
 	private static final String TITLE = "APT";
 
+	private final Logger logger = Logger.getLogger(MainWindowPresenterImpl.class.getName());
 	private final Injector injector;
 	private final Map<WindowId, InternalWindowPresenter> internalWindows;
 	private final ToolbarPresenter toolbar;
@@ -74,34 +74,6 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		getView().close();
 	}
 
-	@Override
-	public WindowId createWindow(PetriNet pn) {
-		PnEditorPresenter editor = injector.getInstance(PnEditorPresenter.class);
-		editor.setPetriNet(pn);
-
-		WindowId id = new WindowId(WindowType.PETRI_NET);
-		createInternalWindow(id, editor);
-		editor.setWindowId(id);
-		showWindow(id);
-		editor.applyLayout(new RandomLayout());
-
-		return id;
-	}
-
-	@Override
-	public WindowId createWindow(TransitionSystem ts) {
-		TsEditorPresenter editor = injector.getInstance(TsEditorPresenter.class);
-		editor.setTransitionSystem(ts);
-
-		WindowId id = new WindowId(WindowType.TRANSITION_SYSTEM);
-		createInternalWindow(id, editor);
-		editor.setWindowId(id);
-		showWindow(id);
-		editor.applyLayout(new RandomLayout());
-
-		return id;
-	}
-
 	private void createInternalWindow(WindowId id, Presenter<?> contentPresenter) {
 		InternalWindowPresenter window = injector.getInstance(InternalWindowPresenter.class);
 		window.setWindowId(id);
@@ -120,10 +92,38 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		close();
 	}
 
-	private void showWindow(WindowId id) {
+	@Override
+	public void showWindow(WindowId id) {
 		InternalWindowPresenter window = internalWindows.get(id);
 		getView().addInternalWindow(window.getView());
 		window.focus();
+	}
+
+	@Override
+	public WindowId createWindow(Document document) {
+		WindowId id = null;
+		EditorPresenter<?> editor = null;
+
+		if (document instanceof PnDocument) {
+			PnDocument pnDoc = (PnDocument) document;
+			PnEditorPresenter pnEditor = injector.getInstance(PnEditorPresenter.class);
+			pnEditor.setDocument(pnDoc);
+			editor = pnEditor;
+			id = new WindowId(WindowType.PETRI_NET);
+		} else if (document instanceof TsDocument) {
+			TsDocument tsDoc = (TsDocument) document;
+			TsEditorPresenter tsEditor = injector.getInstance(TsEditorPresenter.class);
+			tsEditor.setDocument(tsDoc);
+			editor = tsEditor;
+			id = new WindowId(WindowType.TRANSITION_SYSTEM);
+		} else {
+			logger.log(Level.SEVERE, "Unknown document type.");
+		}
+
+		editor.setWindowId(id);
+		createInternalWindow(id, editor);
+
+		return id;
 	}
 
 }

@@ -19,15 +19,9 @@
 
 package uniol.aptgui.editor;
 
-import uniol.apt.adt.pn.PetriNet;
+import uniol.aptgui.editor.document.PnDocument;
 
-public interface PnEditorPresenter extends EditorPresenter {
-
-	/// ACTIONS ///
-
-	public void setPetriNet(PetriNet pn);
-
-	public PetriNet getPetriNet();
+public interface PnEditorPresenter extends EditorPresenter<PnDocument> {
 
 }
 

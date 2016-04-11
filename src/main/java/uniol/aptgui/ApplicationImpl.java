@@ -36,14 +36,15 @@ import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.io.parser.ParseException;
 import uniol.apt.io.parser.impl.AptPNParser;
+import uniol.aptgui.commands.ApplyLayoutCommand;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
+import uniol.aptgui.editor.layout.RandomLayout;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.mainwindow.MainWindowPresenter;
 import uniol.aptgui.mainwindow.WindowId;
-import uniol.aptgui.swing.filechooser.OpenFileChooser;
 
 public class ApplicationImpl implements Application {
 
@@ -86,6 +87,7 @@ public class ApplicationImpl implements Application {
 	@Override
 	public void closeWindow(WindowId id) {
 		mainWindow.removeWindow(id);
+		documents.remove(id);
 	}
 
 	@Override
@@ -143,15 +145,26 @@ public class ApplicationImpl implements Application {
 	}
 
 	private void openTransitionSystem(TransitionSystem ts) {
-		WindowId id = mainWindow.createWindow(ts);
 		Document tsDoc = new TsDocument(ts);
-		documents.put(id, tsDoc);
+		openDocument(tsDoc);
 	}
 
 	private void openPetriNet(PetriNet pn) {
-		WindowId id = mainWindow.createWindow(pn);
 		Document pnDoc = new PnDocument(pn);
-		documents.put(id, pnDoc);
+		openDocument(pnDoc);
+	}
+
+	private void openDocument(Document document) {
+		WindowId id = mainWindow.createWindow(document);
+		documents.put(id, document);
+		mainWindow.showWindow(id);
+		history.execute(new ApplyLayoutCommand(document, new RandomLayout()));
+		document.setVisible(true);
+	}
+
+	@Override
+	public Document getDocument(WindowId id) {
+		return documents.get(id);
 	}
 
 }

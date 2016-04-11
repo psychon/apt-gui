@@ -20,11 +20,13 @@
 package uniol.aptgui.internalwindow;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Application;
 import uniol.aptgui.Presenter;
+import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.events.WindowFocusLostEvent;
 import uniol.aptgui.mainwindow.WindowId;
@@ -37,10 +39,28 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	private WindowId id;
 
 	@Inject
-	public InternalWindowPresenterImpl(InternalWindowView view, Application appState, EventBus eventBus) {
+	public InternalWindowPresenterImpl(InternalWindowView view, Application application, EventBus eventBus) {
 		super(view);
-		this.application = appState;
+		this.application = application;
 		this.eventBus = eventBus;
+		eventBus.register(this);
+	}
+
+	@Subscribe
+	public void onWindowFocusGainedEvent(WindowFocusGainedEvent e) {
+		if (e.getWindowId() != id) {
+			return;
+		}
+
+		Document doc = application.getDocument(id);
+		String title = doc.getTitle();
+		if (title.trim().isEmpty()) {
+			title = "$" + id;
+		} else {
+			title = title + "($" + id + ")";
+		}
+
+		view.setTitle(title);
 	}
 
 	@Override

@@ -17,23 +17,37 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor;
+package uniol.aptgui.commands;
 
-import java.awt.Cursor;
+import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.layout.Layout;
 
-import uniol.aptgui.View;
+public class ApplyLayoutCommand implements Command {
 
-public interface EditorView extends View<EditorPresenter<?>> {
+	private final Document document;
+	private final Layout layout;
 
-	public int getCanvasWidth();
+	public ApplyLayoutCommand(Document document, Layout layout) {
+		this.document = document;
+		this.layout = layout;
+	}
 
-	public int getCanvasHeight();
+	@Override
+	public void execute() {
+		document.applyLayout(layout);
+	}
 
-	public void setCursor(Cursor cursor);
+	@Override
+	public void undo() {
+		// TODO Auto-generated method stub
 
-	public void setMouseEventListener(MouseEventListener mouseEventListener);
+	}
 
-	public void repaint();
+	@Override
+	public void redo() {
+		// TODO Auto-generated method stub
+
+	}
 
 }
 

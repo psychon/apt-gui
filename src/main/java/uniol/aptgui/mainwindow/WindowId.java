@@ -21,14 +21,31 @@ package uniol.aptgui.mainwindow;
 
 public class WindowId {
 
+	private static int nextId = 0;
+
+	private final int id;
 	private final WindowType type;
 
 	public WindowId(WindowType type) {
+		this.id = getNextId();
 		this.type = type;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public WindowType getType() {
 		return type;
+	}
+
+	@Override
+	public String toString() {
+		return String.valueOf(id);
+	}
+
+	private static synchronized int getNextId() {
+		return nextId++;
 	}
 
 }

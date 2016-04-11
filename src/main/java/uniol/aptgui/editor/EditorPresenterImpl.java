@@ -37,15 +37,15 @@ import uniol.aptgui.editor.tools.Toolbox;
 import uniol.aptgui.events.ToolSelectedEvent;
 import uniol.aptgui.mainwindow.WindowId;
 
-public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, EditorView>
-		implements EditorPresenter, MouseEventListener, DocumentListener {
+public abstract class EditorPresenterImpl<T extends Document> extends AbstractPresenter<EditorPresenter<?>, EditorView>
+		implements EditorPresenter<T>, MouseEventListener, DocumentListener {
 
 	protected final Application application;
 	protected final Toolbox toolbox;
 
 	protected HoverFeature hoverFeature;
 	protected WindowId windowId;
-	protected Document document;
+	protected T document;
 
 	@Inject
 	public EditorPresenterImpl(EditorView view, Application application) {
@@ -61,7 +61,7 @@ public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresen
 	}
 
 	@Override
-	public void setDocument(Document document) {
+	public void setDocument(T document) {
 		this.document = document;
 		this.document.addListener(this);
 		hoverFeature = new HoverFeature(document);
@@ -124,33 +124,45 @@ public abstract class EditorPresenterImpl extends AbstractPresenter<EditorPresen
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		toolbox.getActiveTool().mouseClicked(e);
+		if (document.isVisible()) {
+			toolbox.getActiveTool().mouseClicked(e);
+		}
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		toolbox.getActiveTool().mouseDragged(e);
+		if (document.isVisible()) {
+			toolbox.getActiveTool().mouseDragged(e);
+		}
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		toolbox.getActiveTool().mouseMoved(e);
-		hoverFeature.mouseMoved(e);
+		if (document.isVisible()) {
+			toolbox.getActiveTool().mouseMoved(e);
+			hoverFeature.mouseMoved(e);
+		}
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		toolbox.getActiveTool().mousePressed(e);
+		if (document.isVisible()) {
+			toolbox.getActiveTool().mousePressed(e);
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		toolbox.getActiveTool().mouseReleased(e);
+		if (document.isVisible()) {
+			toolbox.getActiveTool().mouseReleased(e);
+		}
 	}
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		toolbox.getActiveTool().mouseWheelMoved(e);
+		if (document.isVisible()) {
+			toolbox.getActiveTool().mouseWheelMoved(e);
+		}
 	}
 
 }

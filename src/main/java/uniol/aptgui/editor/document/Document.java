@@ -34,8 +34,11 @@ public abstract class Document {
 
 	private List<DocumentListener> listeners;
 
+	protected String title;
+	protected boolean hasUnsavedChanges;
 	protected int width;
 	protected int height;
+	protected boolean visible;
 
 	protected int translationX = 0;
 	protected int translationY = 0;
@@ -49,10 +52,36 @@ public abstract class Document {
 		this.listeners = new ArrayList<>();
 		this.width = width;
 		this.height = height;
+		this.visible = false;
+		this.hasUnsavedChanges = false;
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public void addListener(DocumentListener listener) {
 		listeners.add(listener);
+	}
+
+	public boolean hasUnsavedChanges() {
+		return hasUnsavedChanges;
+	}
+
+	public void setHasUnsavedChanges(boolean hasUnsavedChanges) {
+		this.hasUnsavedChanges = hasUnsavedChanges;
 	}
 
 	public void fireDocumentDirty() {
@@ -64,6 +93,10 @@ public abstract class Document {
 	public abstract void applyLayout(Layout layout);
 
 	public void drawDocument(Graphics2D graphics) {
+		if (!visible) {
+			return;
+		}
+
 		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		AffineTransform originalTransform = graphics.getTransform();
 		graphics.translate(translationX, translationY);

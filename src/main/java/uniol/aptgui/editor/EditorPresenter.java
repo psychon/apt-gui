@@ -26,13 +26,13 @@ import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.layout.Layout;
 import uniol.aptgui.mainwindow.WindowId;
 
-public interface EditorPresenter extends Presenter<EditorView> {
+public interface EditorPresenter<T extends Document> extends Presenter<EditorView> {
 
 	/// ACTIONS ///
 
 	public void setWindowId(WindowId window);
 
-	public void setDocument(Document document);
+	public void setDocument(T document);
 
 	public void applyLayout(Layout layout);
 

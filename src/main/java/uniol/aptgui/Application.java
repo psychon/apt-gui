@@ -24,6 +24,7 @@ import java.io.File;
 import com.google.common.eventbus.EventBus;
 
 import uniol.aptgui.commands.History;
+import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.mainwindow.MainWindowPresenter;
 import uniol.aptgui.mainwindow.WindowId;
 
@@ -40,6 +41,8 @@ public interface Application {
 	public void closeWindow(WindowId id);
 
 	public WindowId getActiveInternalWindow();
+
+	public Document getDocument(WindowId id);
 
 	public EventBus getEventBus();
 

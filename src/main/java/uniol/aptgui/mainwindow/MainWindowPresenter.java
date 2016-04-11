@@ -19,9 +19,8 @@
 
 package uniol.aptgui.mainwindow;
 
-import uniol.apt.adt.pn.PetriNet;
-import uniol.apt.adt.ts.TransitionSystem;
 import uniol.aptgui.Presenter;
+import uniol.aptgui.editor.document.Document;
 
 public interface MainWindowPresenter extends Presenter<MainWindowView> {
 
@@ -31,9 +30,9 @@ public interface MainWindowPresenter extends Presenter<MainWindowView> {
 
 	public void close();
 
-	public WindowId createWindow(PetriNet pn);
+	public WindowId createWindow(Document document);
 
-	public WindowId createWindow(TransitionSystem ts);
+	public void showWindow(WindowId id);
 
 	public void removeWindow(WindowId id);
 

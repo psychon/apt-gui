@@ -34,6 +34,7 @@ public class PnDocument extends Document {
 
 	public PnDocument(PetriNet petriNet) {
 		this.petriNet = petriNet;
+		setTitle(petriNet.getName());
 	}
 
 	public PetriNet getPetriNet() {

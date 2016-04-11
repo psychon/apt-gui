@@ -32,7 +32,7 @@ import java.awt.event.MouseWheelListener;
 import uniol.aptgui.swing.JPanelView;
 
 @SuppressWarnings("serial")
-public class EditorViewImpl extends JPanelView<EditorPresenter>
+public class EditorViewImpl extends JPanelView<EditorPresenter<?>>
 		implements EditorView, MouseListener, MouseMotionListener, MouseWheelListener {
 
 	private MouseEventListener mouseEventListener;

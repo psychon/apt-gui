@@ -21,13 +21,10 @@ package uniol.aptgui.editor;
 
 import com.google.inject.Inject;
 
-import uniol.apt.adt.ts.TransitionSystem;
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.TsDocument;
 
-public class TsEditorPresenterImpl extends EditorPresenterImpl implements TsEditorPresenter {
-
-	private TsDocument tsDocument;
+public class TsEditorPresenterImpl extends EditorPresenterImpl<TsDocument> implements TsEditorPresenter {
 
 	@Inject
 	public TsEditorPresenterImpl(EditorView view, Application application) {
@@ -35,15 +32,9 @@ public class TsEditorPresenterImpl extends EditorPresenterImpl implements TsEdit
 	}
 
 	@Override
-	public void setTransitionSystem(TransitionSystem ts) {
-		tsDocument = new TsDocument(ts);
-		setDocument(tsDocument);
-		toolbox.addTsTools(tsDocument);
-	}
-
-	@Override
-	public TransitionSystem getTransitionSystem() {
-		return tsDocument.getTransitionSystem();
+	public void setDocument(TsDocument document) {
+		super.setDocument(document);
+		toolbox.addTsTools(document);
 	}
 
 }

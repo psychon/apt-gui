@@ -19,15 +19,9 @@
 
 package uniol.aptgui.editor;
 
-import uniol.apt.adt.ts.TransitionSystem;
+import uniol.aptgui.editor.document.TsDocument;
 
-public interface TsEditorPresenter extends EditorPresenter {
-
-	/// ACTIONS ///
-
-	public void setTransitionSystem(TransitionSystem ts);
-
-	public TransitionSystem getTransitionSystem();
+public interface TsEditorPresenter extends EditorPresenter<TsDocument> {
 
 }
 

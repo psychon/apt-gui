@@ -33,6 +33,7 @@ public class TsDocument extends Document {
 
 	public TsDocument(TransitionSystem transitionSystem) {
 		this.transitionSystem = transitionSystem;
+		setTitle(transitionSystem.getName());
 	}
 
 	public TransitionSystem getTransitionSystem() {

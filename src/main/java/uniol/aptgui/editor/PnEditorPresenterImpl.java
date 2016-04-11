@@ -21,13 +21,10 @@ package uniol.aptgui.editor;
 
 import com.google.inject.Inject;
 
-import uniol.apt.adt.pn.PetriNet;
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.PnDocument;
 
-public class PnEditorPresenterImpl extends EditorPresenterImpl implements PnEditorPresenter {
-
-	private PnDocument pnDocument;
+public class PnEditorPresenterImpl extends EditorPresenterImpl<PnDocument> implements PnEditorPresenter {
 
 	@Inject
 	public PnEditorPresenterImpl(EditorView view, Application application) {
@@ -35,15 +32,9 @@ public class PnEditorPresenterImpl extends EditorPresenterImpl implements PnEdit
 	}
 
 	@Override
-	public void setPetriNet(PetriNet pn) {
-		pnDocument = new PnDocument(pn);
-		toolbox.addPnTools(pnDocument);
-		setDocument(pnDocument);
-	}
-
-	@Override
-	public PetriNet getPetriNet() {
-		return pnDocument.getPetriNet();
+	public void setDocument(PnDocument document) {
+		super.setDocument(document);
+		toolbox.addPnTools(document);
 	}
 
 }
