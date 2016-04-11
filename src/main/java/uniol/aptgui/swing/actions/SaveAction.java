@@ -20,33 +20,33 @@
 package uniol.aptgui.swing.actions;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
 
-import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
-import uniol.aptgui.editor.tools.ToolId;
-import uniol.aptgui.events.ToolSelectedEvent;
+import uniol.aptgui.Application;
 import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
-public class TsSelectionToolAction extends AbstractAction {
+public class SaveAction extends AbstractAction {
 
-	private final EventBus eventBus;
+	private final Application app;
 
 	@Inject
-	public TsSelectionToolAction(EventBus eventBus) {
-		this.eventBus = eventBus;
-		String name = "Select";
+	public SaveAction(Application app) {
+		this.app = app;
+		String name = "Save file...";
 		putValue(NAME, name);
-		putValue(SMALL_ICON, Resource.getIconSelect());
+		putValue(SMALL_ICON, Resource.getIconSaveFile());
 		putValue(SHORT_DESCRIPTION, name);
+		putValue(MNEMONIC_KEY, KeyEvent.VK_S);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		eventBus.post(new ToolSelectedEvent(ToolId.TS_SELECTION));
+		// TODO
 	}
 
 }

@@ -20,13 +20,13 @@
 package uniol.aptgui.swing.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
 
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
+import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
 public class NewTransitionSystemAction extends AbstractAction {
@@ -36,15 +36,15 @@ public class NewTransitionSystemAction extends AbstractAction {
 	@Inject
 	public NewTransitionSystemAction(Application app) {
 		this.app = app;
-		putValue(NAME, "New Petri net");
-		// TODO: add icon
-		// putValue(SMALL_ICON, GraphicsTools.getIcon("ape/New16.gif"));
-		putValue(MNEMONIC_KEY, KeyEvent.VK_N);
+		String name = "New transition system";
+		putValue(NAME, name);
+		putValue(SMALL_ICON, Resource.getIconNewFile());
+		putValue(SHORT_DESCRIPTION, name);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		app.newPetriNet();
+		app.newTransitionSystem();
 	}
 
 }

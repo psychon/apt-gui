@@ -26,6 +26,7 @@ import javax.swing.AbstractAction;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
+import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
 public class NewPetriNetAction extends AbstractAction {
@@ -35,12 +36,15 @@ public class NewPetriNetAction extends AbstractAction {
 	@Inject
 	public NewPetriNetAction(Application app) {
 		this.app = app;
-		putValue(NAME, "New transition system");
+		String name = "New Petri net";
+		putValue(NAME, name);
+		putValue(SMALL_ICON, Resource.getIconNewFile());
+		putValue(SHORT_DESCRIPTION, name);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		app.newTransitionSystem();
+		app.newPetriNet();
 	}
 
 }

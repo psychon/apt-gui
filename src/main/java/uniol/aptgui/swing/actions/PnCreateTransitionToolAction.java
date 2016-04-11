@@ -31,22 +31,22 @@ import uniol.aptgui.events.ToolSelectedEvent;
 import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
-public class TsSelectionToolAction extends AbstractAction {
+public class PnCreateTransitionToolAction extends AbstractAction {
 
 	private final EventBus eventBus;
 
 	@Inject
-	public TsSelectionToolAction(EventBus eventBus) {
+	public PnCreateTransitionToolAction(EventBus eventBus) {
 		this.eventBus = eventBus;
-		String name = "Select";
+		String name = "Create transition";
 		putValue(NAME, name);
-		putValue(SMALL_ICON, Resource.getIconSelect());
+		putValue(SMALL_ICON, Resource.getIconTransition());
 		putValue(SHORT_DESCRIPTION, name);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		eventBus.post(new ToolSelectedEvent(ToolId.TS_SELECTION));
+		eventBus.post(new ToolSelectedEvent(ToolId.PN_CREATE_TRANSITION));
 	}
 
 }

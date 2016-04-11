@@ -28,6 +28,7 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.editor.tools.ToolId;
 import uniol.aptgui.events.ToolSelectedEvent;
+import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
 public class PnCreateFlowToolAction extends AbstractAction {
@@ -37,7 +38,10 @@ public class PnCreateFlowToolAction extends AbstractAction {
 	@Inject
 	public PnCreateFlowToolAction(EventBus eventBus) {
 		this.eventBus = eventBus;
-		putValue(NAME, "CREATE FLOW");
+		String name = "Create flow";
+		putValue(NAME, name);
+		putValue(SMALL_ICON, Resource.getIconArc());
+		putValue(SHORT_DESCRIPTION, name);
 	}
 
 	@Override

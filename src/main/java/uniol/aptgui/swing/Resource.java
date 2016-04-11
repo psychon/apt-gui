@@ -25,10 +25,12 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.net.URL;
 
+import javax.swing.ImageIcon;
+
 public class Resource {
 
 	public static Cursor getCursorCreateEdge() {
-		return getCursor("/cursor_create_edge.gif");
+		return getCursor("/Arc32.gif");
 	}
 
 	private static Cursor getCursor(String path) {
@@ -36,6 +38,51 @@ public class Resource {
 		URL url = Resource.class.getResource(path);
 		Image image = tk.getImage(url);
 		return tk.createCustomCursor(image, new Point(0, 0), path);
+	}
+
+	private static ImageIcon getIcon(String path) {
+		URL url = Resource.class.getResource(path);
+		return new ImageIcon(url);
+	}
+
+	public static ImageIcon getIconOpenFile() {
+		return getIcon("/Open16.gif");
+	}
+
+	public static ImageIcon getIconSaveFile() {
+		return getIcon("/Save16.gif");
+	}
+
+	public static ImageIcon getIconSaveFileAs() {
+		return getIcon("/SaveAs16.gif");
+	}
+
+	public static ImageIcon getIconNewFile() {
+		return getIcon("/New16.gif");
+	}
+
+	public static ImageIcon getIconFlow() {
+		return getIconArc();
+	}
+
+	public static ImageIcon getIconPlace() {
+		return getIcon("/Place16.gif");
+	}
+
+	public static ImageIcon getIconSelect() {
+		return getIcon("/Select16.gif");
+	}
+
+	public static ImageIcon getIconTransition() {
+		return getIcon("/Transition16.gif");
+	}
+
+	public static ImageIcon getIconState() {
+		return getIconPlace();
+	}
+
+	public static ImageIcon getIconArc() {
+		return getIcon("/Arc16.gif");
 	}
 
 }

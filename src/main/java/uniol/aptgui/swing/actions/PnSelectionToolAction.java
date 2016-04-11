@@ -28,6 +28,7 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.editor.tools.ToolId;
 import uniol.aptgui.events.ToolSelectedEvent;
+import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
 public class PnSelectionToolAction extends AbstractAction {
@@ -37,7 +38,10 @@ public class PnSelectionToolAction extends AbstractAction {
 	@Inject
 	public PnSelectionToolAction(EventBus eventBus) {
 		this.eventBus = eventBus;
-		putValue(NAME, "SELECTION");
+		String name = "Select";
+		putValue(NAME, name);
+		putValue(SMALL_ICON, Resource.getIconSelect());
+		putValue(SHORT_DESCRIPTION, name);
 	}
 
 	@Override
