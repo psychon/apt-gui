@@ -82,11 +82,14 @@ public class Toolbox {
 	public void addPnTools(PnDocument document) {
 		addTool(ToolId.PN_SELECTION, new SelectionTool(document));
 		addTool(ToolId.PN_CREATE_PLACE, new CreatePlaceTool(document, application.getHistory()));
+		addTool(ToolId.PN_CREATE_TRANSITION, new CreateTransitionTool(document, application.getHistory()));
 		addTool(ToolId.PN_CREATE_FLOW, new CreateFlowTool(document));
 	}
 
 	public void addTsTools(TsDocument document) {
 		addTool(ToolId.TS_SELECTION, new SelectionTool(document));
+		addTool(ToolId.TS_CREATE_STATE, new CreateStateTool(document, application.getHistory()));
+		addTool(ToolId.TS_CREATE_ARC, new CreateArcTool(document));
 	}
 
 }

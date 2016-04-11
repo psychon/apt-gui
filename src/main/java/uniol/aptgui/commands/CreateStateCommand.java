@@ -17,41 +17,40 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui;
+package uniol.aptgui.commands;
 
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
+import uniol.apt.adt.ts.State;
+import uniol.aptgui.editor.document.GraphicalElement;
+import uniol.aptgui.editor.document.GraphicalState;
+import uniol.aptgui.editor.document.TsDocument;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+public class CreateStateCommand implements Command {
 
-public class Main implements Runnable {
+	private final TsDocument document;
+	private final GraphicalState graphicalState;
+	private State tsState;
 
-	public static void main(String args[]) {
-
-		SwingUtilities.invokeLater(new Main());
+	public CreateStateCommand(TsDocument document, GraphicalState graphicalState) {
+		this.document = document;
+		this.graphicalState = graphicalState;
 	}
 
 	@Override
-	public void run() {
-		setLookAndFeel();
-
-		Injector injector = Guice.createInjector(new DependenyModule());
-		Application app = injector.getInstance(Application.class);
-		app.show();
+	public void execute() {
+		tsState = document.getTransitionSystem().createState();
+		tsState.putExtension(GraphicalElement.EXTENSION_KEY, graphicalState);
+		document.fireDocumentDirty();
 	}
 
-	private void setLookAndFeel() {
-		try {
-			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				if ("Metal".equals(info.getName())) {
-					UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (Exception e) {
-		}
+	@Override
+	public void undo() {
+		document.getTransitionSystem().removeState(tsState);
+		document.fireDocumentDirty();
+	}
+
+	@Override
+	public void redo() {
+		execute();
 	}
 
 }
