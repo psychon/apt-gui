@@ -89,7 +89,7 @@ public class Toolbox {
 	public void addTsTools(TsDocument document) {
 		addTool(ToolId.TS_SELECTION, new SelectionTool(document));
 		addTool(ToolId.TS_CREATE_STATE, new CreateStateTool(document, application.getHistory()));
-		addTool(ToolId.TS_CREATE_ARC, new CreateArcTool(document));
+		addTool(ToolId.TS_CREATE_ARC, new CreateArcTool(document, application.getHistory()));
 	}
 
 }

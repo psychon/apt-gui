@@ -57,7 +57,7 @@ public class CreatePlaceTool extends Tool {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		Point modelPoint = document.transformViewToModel(e.getPoint());
-		GraphicalElement elem = document.getElementAt(modelPoint);
+		GraphicalElement elem = document.getGraphicalElementAt(modelPoint);
 		// Only add the place if the user clicked the canvas instead of
 		// an element.
 		if (elem == null) {

@@ -56,7 +56,7 @@ public class SelectionTool extends Tool {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) {
-			GraphicalElement elem = document.getElementAtViewCoordinates(e.getPoint());
+			GraphicalElement elem = document.getGraphialElementAtViewCoordinates(e.getPoint());
 			if (elem instanceof GraphicalNode) {
 				dragType = DragType.NODE;
 				draggedElement = elem;

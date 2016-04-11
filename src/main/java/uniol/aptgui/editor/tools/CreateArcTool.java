@@ -22,6 +22,9 @@ package uniol.aptgui.editor.tools;
 import java.awt.Cursor;
 import java.awt.Point;
 
+import uniol.apt.adt.ts.State;
+import uniol.aptgui.commands.CreateArcCommand;
+import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.GraphicalArc;
 import uniol.aptgui.editor.document.GraphicalEdge;
 import uniol.aptgui.editor.document.GraphicalElement;
@@ -33,9 +36,11 @@ import uniol.aptgui.swing.Resource;
 public class CreateArcTool extends CreateEdgeTool {
 
 	private final Cursor cursor = Resource.getCursorCreateEdge();
+	private final History history;
 
-	public CreateArcTool(TsDocument document) {
+	public CreateArcTool(TsDocument document, History history) {
 		super(document);
+		this.history = history;
 	}
 
 	@Override
@@ -52,8 +57,12 @@ public class CreateArcTool extends CreateEdgeTool {
 
 	@Override
 	protected void commitEdgeCreation(GraphicalEdge edge) {
-		// TODO actually create a flow in the ts document
-
+		State source = document.getModelElementAt(edge.getSource().getCenter());
+		State target = document.getModelElementAt(edge.getTarget().getCenter());
+		TsDocument tsDocument = (TsDocument) document;
+		GraphicalArc graphicalArc = (GraphicalArc) edge;
+		CreateArcCommand cmd = new CreateArcCommand(tsDocument, source, target, "a", graphicalArc);
+		history.execute(cmd);
 	}
 
 	@Override

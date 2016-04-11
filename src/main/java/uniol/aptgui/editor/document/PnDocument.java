@@ -71,7 +71,7 @@ public class PnDocument extends Document {
 	}
 
 	@Override
-	public GraphicalElement getElementAt(Point point) {
+	public GraphicalElement getGraphicalElementAt(Point point) {
 		for (Place place : petriNet.getPlaces()) {
 			GraphicalPlace elem = getGraphicalExtension(place);
 			if (elem.containsPoint(point)) {
@@ -90,6 +90,12 @@ public class PnDocument extends Document {
 				return elem;
 			}
 		}
+		return null;
+	}
+
+	@Override
+	public <T> T getModelElementAt(Point point) {
+		// TODO
 		return null;
 	}
 

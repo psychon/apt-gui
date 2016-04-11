@@ -57,7 +57,7 @@ public abstract class CreateEdgeTool extends Tool {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		Point modelPos = document.transformViewToModel(e.getPoint());
-		GraphicalElement elem = document.getElementAt(modelPos);
+		GraphicalElement elem = document.getGraphicalElementAt(modelPos);
 
 		if (!creating && elem instanceof GraphicalNode) {
 			// Clicked first node, therefore start creation.
@@ -94,7 +94,7 @@ public abstract class CreateEdgeTool extends Tool {
 			// Move invisible target.
 			target.setCenter(modelPos);
 			// Highlight elements based on validity.
-			GraphicalElement elem = document.getElementAt(modelPos);
+			GraphicalElement elem = document.getGraphicalElementAt(modelPos);
 			setHoverEffects(elem);
 			document.fireDocumentDirty();
 		}

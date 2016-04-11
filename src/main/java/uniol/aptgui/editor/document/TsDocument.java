@@ -60,7 +60,7 @@ public class TsDocument extends Document {
 	}
 
 	@Override
-	public GraphicalElement getElementAt(Point point) {
+	public GraphicalElement getGraphicalElementAt(Point point) {
 		for (State state : transitionSystem.getNodes()) {
 			GraphicalState elem = getGraphicalExtension(state);
 			if (elem.containsPoint(point)) {
@@ -71,6 +71,24 @@ public class TsDocument extends Document {
 			GraphicalArc elem = getGraphicalExtension(arc);
 			if (elem.containsPoint(point)) {
 				return elem;
+			}
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getModelElementAt(Point point) {
+		for (State state : transitionSystem.getNodes()) {
+			GraphicalState elem = getGraphicalExtension(state);
+			if (elem.containsPoint(point)) {
+				return (T) state;
+			}
+		}
+		for (Arc arc : transitionSystem.getEdges()) {
+			GraphicalArc elem = getGraphicalExtension(arc);
+			if (elem.containsPoint(point)) {
+				return (T) arc;
 			}
 		}
 		return null;

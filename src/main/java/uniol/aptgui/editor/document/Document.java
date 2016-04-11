@@ -208,10 +208,12 @@ public abstract class Document {
 	 * @param point point in model coordinates
 	 * @return
 	 */
-	public abstract GraphicalElement getElementAt(Point point);
+	public abstract GraphicalElement getGraphicalElementAt(Point point);
 
-	public GraphicalElement getElementAtViewCoordinates(Point cursor) {
-		return getElementAt(transformViewToModel(cursor));
+	public abstract <T> T getModelElementAt(Point point);
+
+	public GraphicalElement getGraphialElementAtViewCoordinates(Point cursor) {
+		return getGraphicalElementAt(transformViewToModel(cursor));
 	}
 
 }

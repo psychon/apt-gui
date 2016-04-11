@@ -56,7 +56,7 @@ public class HoverFeature {
 	 */
 	private void setHoverEffects(Point cursor) {
 		Point modelPosition = document.transformViewToModel(cursor);
-		GraphicalElement elem = document.getElementAt(modelPosition);
+		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
 
 		// Display breakpoint handle if necessary.
 		if (elem instanceof GraphicalEdge) {
