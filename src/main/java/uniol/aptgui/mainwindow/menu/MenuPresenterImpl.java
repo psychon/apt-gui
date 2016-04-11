@@ -17,36 +17,17 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.swing.actions;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.AbstractAction;
+package uniol.aptgui.mainwindow.menu;
 
 import com.google.inject.Inject;
 
-import uniol.aptgui.Application;
-import uniol.aptgui.swing.Resource;
+import uniol.aptgui.AbstractPresenter;
 
-@SuppressWarnings("serial")
-public class OpenFileAction extends AbstractAction {
-
-	private final Application app;
+public class MenuPresenterImpl extends AbstractPresenter<MenuPresenter, MenuView> implements MenuPresenter {
 
 	@Inject
-	public OpenFileAction(Application app) {
-		this.app = app;
-		String name = "Open file...";
-		putValue(NAME, name);
-		putValue(SMALL_ICON, Resource.getIconOpenFile());
-		putValue(SHORT_DESCRIPTION, name);
-		putValue(MNEMONIC_KEY, KeyEvent.VK_O);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO
+	public MenuPresenterImpl(MenuView view) {
+		super(view);
 	}
 
 }

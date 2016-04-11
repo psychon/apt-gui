@@ -22,6 +22,9 @@ package uniol.aptgui.mainwindow;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
@@ -33,6 +36,8 @@ import uniol.aptgui.editor.PnEditorPresenter;
 import uniol.aptgui.editor.TsEditorPresenter;
 import uniol.aptgui.editor.layout.RandomLayout;
 import uniol.aptgui.internalwindow.InternalWindowPresenter;
+import uniol.aptgui.mainwindow.menu.MenuPresenter;
+import uniol.aptgui.mainwindow.menu.MenuView;
 import uniol.aptgui.mainwindow.toolbar.ToolbarPresenter;
 
 public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresenter, MainWindowView>
@@ -41,14 +46,19 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	private final Injector injector;
 	private final Map<WindowId, InternalWindowPresenter> internalWindows;
 	private final ToolbarPresenter toolbar;
+	private final MenuPresenter menu;
 
 	@Inject
-	public MainWindowPresenterImpl(MainWindowView view, Injector injector) {
+	public MainWindowPresenterImpl(MainWindowView view, Injector injector, ToolbarPresenter toolbar,
+			MenuPresenter menu) {
 		super(view);
 		this.injector = injector;
 		this.internalWindows = new HashMap<>();
-		this.toolbar = injector.getInstance(ToolbarPresenter.class);
+		this.toolbar = toolbar;
+		this.menu = menu;
+
 		view.setToolbar(toolbar.getView());
+		view.setMenu(menu.getView());
 	}
 
 	@Override

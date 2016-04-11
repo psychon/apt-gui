@@ -17,28 +17,33 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.mainwindow;
+package uniol.aptgui.swing.actions;
 
-import uniol.aptgui.View;
-import uniol.aptgui.internalwindow.InternalWindowView;
-import uniol.aptgui.mainwindow.menu.MenuView;
-import uniol.aptgui.mainwindow.toolbar.ToolbarView;
+import java.awt.event.ActionEvent;
 
-public interface MainWindowView extends View<MainWindowPresenter> {
+import javax.swing.AbstractAction;
 
-	public void setVisible(boolean visible);
+import com.google.inject.Inject;
 
-	public void close();
+import uniol.aptgui.Application;
 
-	public void setTitle(String title);
+@SuppressWarnings("serial")
+public class ExitAction extends AbstractAction {
 
-	public void addInternalWindow(InternalWindowView windowView);
+	private final Application app;
 
-	public void removeInternalWindow(InternalWindowView windowView);
+	@Inject
+	public ExitAction(Application app) {
+		this.app = app;
+		String name = "Exit";
+		putValue(NAME, name);
+		putValue(SHORT_DESCRIPTION, name);
+	}
 
-	public void setToolbar(ToolbarView toolbarView);
-
-	public void setMenu(MenuView menuView);
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO
+	}
 
 }
 

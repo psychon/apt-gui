@@ -17,28 +17,27 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.mainwindow;
+package uniol.aptgui.swing;
 
+import javax.swing.JMenuBar;
+
+import uniol.aptgui.Presenter;
 import uniol.aptgui.View;
-import uniol.aptgui.internalwindow.InternalWindowView;
-import uniol.aptgui.mainwindow.menu.MenuView;
-import uniol.aptgui.mainwindow.toolbar.ToolbarView;
 
-public interface MainWindowView extends View<MainWindowPresenter> {
+@SuppressWarnings("serial")
+public abstract class JMenuBarView<P extends Presenter<?>> extends JMenuBar implements View<P> {
 
-	public void setVisible(boolean visible);
+	private P presenter;
 
-	public void close();
+	@Override
+	public P getPresenter() {
+		return presenter;
+	}
 
-	public void setTitle(String title);
-
-	public void addInternalWindow(InternalWindowView windowView);
-
-	public void removeInternalWindow(InternalWindowView windowView);
-
-	public void setToolbar(ToolbarView toolbarView);
-
-	public void setMenu(MenuView menuView);
+	@Override
+	public void setPresenter(P presenter) {
+		this.presenter = presenter;
+	}
 
 }
 

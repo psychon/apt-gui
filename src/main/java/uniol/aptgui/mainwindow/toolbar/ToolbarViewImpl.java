@@ -32,7 +32,7 @@ import uniol.aptgui.editor.tools.ToolId;
 import uniol.aptgui.swing.JToolBarView;
 import uniol.aptgui.swing.actions.NewPetriNetAction;
 import uniol.aptgui.swing.actions.NewTransitionSystemAction;
-import uniol.aptgui.swing.actions.OpenFileAction;
+import uniol.aptgui.swing.actions.OpenAction;
 import uniol.aptgui.swing.actions.PnCreateFlowToolAction;
 import uniol.aptgui.swing.actions.PnCreatePlaceToolAction;
 import uniol.aptgui.swing.actions.PnCreateTransitionToolAction;
@@ -73,7 +73,7 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 		// GENERAL BUTTONS
 		newPetriNet = new JButton(injector.getInstance(NewPetriNetAction.class));
 		newTransitionSystem = new JButton(injector.getInstance(NewTransitionSystemAction.class));
-		open = new JButton(injector.getInstance(OpenFileAction.class));
+		open = new JButton(injector.getInstance(OpenAction.class));
 		save = new JButton(injector.getInstance(SaveAction.class));
 		saveAll = new JButton(injector.getInstance(SaveAllAction.class));
 
@@ -87,7 +87,7 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 		add(save);
 		add(saveAll);
 
-		add(new JToolBar.Separator());
+		addSeparator();
 
 		// PN BUTTONS
 		pnToolGroup = new ButtonGroup();

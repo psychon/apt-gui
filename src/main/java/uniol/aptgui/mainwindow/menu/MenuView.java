@@ -17,29 +17,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.mainwindow;
+package uniol.aptgui.mainwindow.menu;
 
 import uniol.aptgui.View;
-import uniol.aptgui.internalwindow.InternalWindowView;
-import uniol.aptgui.mainwindow.menu.MenuView;
-import uniol.aptgui.mainwindow.toolbar.ToolbarView;
 
-public interface MainWindowView extends View<MainWindowPresenter> {
-
-	public void setVisible(boolean visible);
-
-	public void close();
-
-	public void setTitle(String title);
-
-	public void addInternalWindow(InternalWindowView windowView);
-
-	public void removeInternalWindow(InternalWindowView windowView);
-
-	public void setToolbar(ToolbarView toolbarView);
-
-	public void setMenu(MenuView menuView);
+public interface MenuView extends View<MenuPresenter> {
 
 }
+
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

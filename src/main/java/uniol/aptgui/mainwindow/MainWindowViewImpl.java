@@ -30,6 +30,7 @@ import javax.swing.JMenuItem;
 import javax.swing.WindowConstants;
 
 import uniol.aptgui.internalwindow.InternalWindowView;
+import uniol.aptgui.mainwindow.menu.MenuView;
 import uniol.aptgui.mainwindow.toolbar.ToolbarView;
 import uniol.aptgui.swing.JFrameView;
 import uniol.aptgui.swing.WindowClosingListener;
@@ -37,17 +38,12 @@ import uniol.aptgui.swing.WindowClosingListener;
 @SuppressWarnings("serial")
 public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implements MainWindowView {
 
-	private final JMenuBar jMenuBar;
 	private final JDesktopPane jDesktopPane;
 
 	public MainWindowViewImpl() {
-
 		initWindowListener();
 		setLayout(new BorderLayout());
 		setSize(1280, 720);
-
-		jMenuBar = createMenuBar();
-		setJMenuBar(jMenuBar);
 
 		jDesktopPane = createDesktopPane();
 		add(jDesktopPane, BorderLayout.CENTER);
@@ -61,15 +57,6 @@ public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implemen
 				getPresenter().onCloseButtonClicked();
 			}
 		});
-	}
-
-	private JMenuBar createMenuBar() {
-		JMenuBar jMenuBar = new JMenuBar();
-		JMenu addMenu = new JMenu("Add");
-		JMenuItem newFrame = new JMenuItem("Internal Frame");
-		addMenu.add(newFrame);
-		jMenuBar.add(addMenu);
-		return jMenuBar;
 	}
 
 	private JDesktopPane createDesktopPane() {
@@ -96,6 +83,12 @@ public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implemen
 	@Override
 	public void setToolbar(ToolbarView toolbarView) {
 		add((Component) toolbarView, BorderLayout.PAGE_START);
+		revalidate();
+	}
+
+	@Override
+	public void setMenu(MenuView menuView) {
+		setJMenuBar((JMenuBar) menuView);
 		revalidate();
 	}
 
