@@ -30,6 +30,9 @@ import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.aptgui.commands.History;
+import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.PnDocument;
+import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.mainwindow.MainWindowPresenter;
 import uniol.aptgui.mainwindow.WindowId;
@@ -40,8 +43,7 @@ public class ApplicationImpl implements Application {
 	private final EventBus eventBus;
 	private final History history;
 
-	private final Map<WindowId, PetriNet> petriNets;
-	private final Map<WindowId, TransitionSystem> transitionSystems;
+	private final Map<WindowId, Document> documents;
 
 	private WindowId activeWindow;
 
@@ -50,8 +52,7 @@ public class ApplicationImpl implements Application {
 		this.mainWindow = mainWindow;
 		this.eventBus = eventBus;
 		this.history = history;
-		this.petriNets = new HashMap<>();
-		this.transitionSystems = new HashMap<>();
+		this.documents = new HashMap<>();
 
 		this.eventBus.register(this);
 	}
@@ -71,7 +72,9 @@ public class ApplicationImpl implements Application {
 		pn.createFlow("p0", "t0", 1);
 		pn.createFlow("t0", "p1", 5);
 		WindowId id = mainWindow.createWindow(pn);
-		petriNets.put(id, pn);
+
+		PnDocument pnDoc = new PnDocument(pn);
+		documents.put(id, pnDoc);
 	}
 
 	@Override
@@ -98,8 +101,11 @@ public class ApplicationImpl implements Application {
 		ts.setInitialState(s0);
 		ts.createArc(s0, s1, "a");
 		ts.createArc(s1, s0, "b");
+
 		WindowId id = mainWindow.createWindow(ts);
-		transitionSystems.put(id, ts);
+		TsDocument tsDoc = new TsDocument(ts);
+
+		documents.put(id, tsDoc);
 	}
 
 	@Override
