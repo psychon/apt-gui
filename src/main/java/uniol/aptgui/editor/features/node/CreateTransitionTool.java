@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.tools.node;
+package uniol.aptgui.editor.features.node;
 
 import uniol.aptgui.commands.CreateTransitionCommand;
 import uniol.aptgui.commands.History;

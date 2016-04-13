@@ -27,9 +27,9 @@ import uniol.aptgui.editor.document.Transform2D;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 import uniol.aptgui.editor.document.graphical.special.BreakpointHandle;
-import uniol.aptgui.editor.tools.Tool;
+import uniol.aptgui.editor.features.base.Feature;
 
-public class HoverFeature extends Tool {
+public class HoverFeature extends Feature {
 
 	/**
 	 * Document reference the HoverFeature operates on.

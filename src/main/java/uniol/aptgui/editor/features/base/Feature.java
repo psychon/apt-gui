@@ -17,18 +17,39 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.mainwindow.toolbar;
+package uniol.aptgui.editor.features.base;
 
-import uniol.aptgui.View;
-import uniol.aptgui.editor.features.base.FeatureId;
+import java.awt.Cursor;
+import java.awt.event.MouseAdapter;
 
-public interface ToolbarView extends View<ToolbarPresenter> {
+public abstract class Feature extends MouseAdapter {
 
-	public void setPetriNetToolsVisible(boolean visible);
+	/**
+	 * Returns the Cursor that should be shown by the editor while this tool
+	 * is active. Returns the default cursor unless overridden by
+	 * subclasses.
+	 *
+	 * @return the tool's cursor
+	 */
+	public Cursor getCursor() {
+		return Cursor.getDefaultCursor();
+	}
 
-	public void setTransitionSystemToolsVisible(boolean visible);
+	/**
+	 * Called by the editor when this tool is activated. Can be overridden
+	 * by subclasses to get informed when the tool is activated.
+	 */
+	public void onActivated() {
+		// By default, do nothing.
+	}
 
-	public void setActiveTool(FeatureId tool);
+	/**
+	 * Called by the editor when this tool is deactivated. Can be overridden
+	 * by subclasses to get informed when the tool is deactivated.
+	 */
+	public void onDeactivated() {
+		// By default, do nothing.
+	}
 
 }
 

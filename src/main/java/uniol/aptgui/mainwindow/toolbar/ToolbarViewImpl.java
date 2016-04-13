@@ -27,7 +27,7 @@ import javax.swing.JToggleButton;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-import uniol.aptgui.editor.tools.ToolId;
+import uniol.aptgui.editor.features.base.FeatureId;
 import uniol.aptgui.swing.JToolBarView;
 import uniol.aptgui.swing.actions.NewPetriNetAction;
 import uniol.aptgui.swing.actions.NewTransitionSystemAction;
@@ -40,7 +40,6 @@ import uniol.aptgui.swing.actions.SaveAllAction;
 import uniol.aptgui.swing.actions.SelectionToolAction;
 import uniol.aptgui.swing.actions.TsCreateArcToolAction;
 import uniol.aptgui.swing.actions.TsCreateStateToolAction;
-import uniol.aptgui.swing.actions.ViewportToolAction;
 
 @SuppressWarnings("serial")
 public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements ToolbarView {
@@ -57,7 +56,6 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 	private final ButtonGroup tsToolGroup;
 
 	// PN AND TS BUTTONS
-	private final JToggleButton viewportTool;
 	private final JToggleButton selectionTool;
 
 	// PN BUTTONS
@@ -97,21 +95,16 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 		tsToolGroup = new ButtonGroup();
 
 		// PN AND TS BUTTONS
-		viewportTool = new JToggleButton(injector.getInstance(ViewportToolAction.class));
 		selectionTool = new JToggleButton(injector.getInstance(SelectionToolAction.class));
-
-		addToToolbarAndBothGroups(viewportTool);
 		addToToolbarAndBothGroups(selectionTool);
 
 		// PN BUTTONS
 		pnCreatePlaceTool = new JToggleButton(injector.getInstance(PnCreatePlaceToolAction.class));
 		pnCreateTransitionTool = new JToggleButton(injector.getInstance(PnCreateTransitionToolAction.class));
 		pnCreateFlowTool = new JToggleButton(injector.getInstance(PnCreateFlowToolAction.class));
-
 		pnCreatePlaceTool.setHideActionText(true);
 		pnCreateTransitionTool.setHideActionText(true);
 		pnCreateFlowTool.setHideActionText(true);
-
 		addToToolbarAndGroup(pnCreatePlaceTool, pnToolGroup);
 		addToToolbarAndGroup(pnCreateTransitionTool, pnToolGroup);
 		addToToolbarAndGroup(pnCreateFlowTool, pnToolGroup);
@@ -119,10 +112,8 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 		// TS BUTTONS
 		tsCreateStateTool = new JToggleButton(injector.getInstance(TsCreateStateToolAction.class));
 		tsCreateArcTool = new JToggleButton(injector.getInstance(TsCreateArcToolAction.class));
-
 		tsCreateStateTool.setHideActionText(true);
 		tsCreateArcTool.setHideActionText(true);
-
 		addToToolbarAndGroup(tsCreateStateTool, tsToolGroup);
 		addToToolbarAndGroup(tsCreateArcTool, tsToolGroup);
 	}
@@ -140,7 +131,6 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 
 	@Override
 	public void setPetriNetToolsVisible(boolean visible) {
-		viewportTool.setVisible(visible);
 		selectionTool.setVisible(visible);
 		pnCreatePlaceTool.setVisible(visible);
 		pnCreateTransitionTool.setVisible(visible);
@@ -149,14 +139,13 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 
 	@Override
 	public void setTransitionSystemToolsVisible(boolean visible) {
-		viewportTool.setVisible(visible);
 		selectionTool.setVisible(visible);
 		tsCreateStateTool.setVisible(visible);
 		tsCreateArcTool.setVisible(visible);
 	}
 
 	@Override
-	public void setActiveTool(ToolId tool) {
+	public void setActiveTool(FeatureId tool) {
 		switch (tool) {
 		case PN_CREATE_FLOW:
 			pnCreateFlowTool.doClick();
@@ -176,8 +165,7 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 		case TS_CREATE_STATE:
 			tsCreateStateTool.doClick();
 			break;
-		case VIEWPORT:
-			viewportTool.doClick();
+		default:
 			break;
 		}
 	}

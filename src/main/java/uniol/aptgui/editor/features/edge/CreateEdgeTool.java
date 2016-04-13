@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.tools.edge;
+package uniol.aptgui.editor.features.edge;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -28,9 +28,9 @@ import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 import uniol.aptgui.editor.document.graphical.special.InvisibleNode;
-import uniol.aptgui.editor.tools.Tool;
+import uniol.aptgui.editor.features.base.Feature;
 
-public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalEdge> extends Tool {
+public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalEdge> extends Feature {
 
 	/**
 	 * Document this tool operates on.

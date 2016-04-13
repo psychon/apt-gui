@@ -47,11 +47,14 @@ public class GraphicalPlace extends GraphicalNode {
 		}
 		super.draw(graphics);
 		drawCircle(graphics, center, RADIUS);
+		if (selected) {
+			drawSelectionMarkers(graphics, center, RADIUS + 2);
+		}
 	}
 
 	@Override
 	public boolean coversPoint(Point point) {
-		return center.distance(point.x, point.y) < RADIUS;
+		return super.coversPoint(point) && center.distance(point.x, point.y) < RADIUS;
 	}
 
 }

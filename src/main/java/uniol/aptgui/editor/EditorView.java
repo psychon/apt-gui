@@ -20,6 +20,7 @@
 package uniol.aptgui.editor;
 
 import java.awt.Cursor;
+import java.awt.event.MouseAdapter;
 
 import uniol.aptgui.View;
 
@@ -31,7 +32,7 @@ public interface EditorView extends View<EditorPresenter> {
 
 	public void setCursor(Cursor cursor);
 
-	public void setMouseEventListener(MouseEventListener mouseEventListener);
+	public void addMouseEventListener(MouseAdapter mouseEventListener);
 
 	public void repaint();
 

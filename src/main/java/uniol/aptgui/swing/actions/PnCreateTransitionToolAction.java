@@ -26,7 +26,7 @@ import javax.swing.AbstractAction;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
-import uniol.aptgui.editor.tools.ToolId;
+import uniol.aptgui.editor.features.base.FeatureId;
 import uniol.aptgui.events.ToolSelectedEvent;
 import uniol.aptgui.swing.Resource;
 
@@ -46,7 +46,7 @@ public class PnCreateTransitionToolAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		eventBus.post(new ToolSelectedEvent(ToolId.PN_CREATE_TRANSITION));
+		eventBus.post(new ToolSelectedEvent(FeatureId.PN_CREATE_TRANSITION));
 	}
 
 }

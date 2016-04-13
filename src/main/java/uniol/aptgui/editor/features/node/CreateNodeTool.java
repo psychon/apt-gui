@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.tools.node;
+package uniol.aptgui.editor.features.node;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -25,9 +25,9 @@ import java.awt.event.MouseEvent;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.Transform2D;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
-import uniol.aptgui.editor.tools.Tool;
+import uniol.aptgui.editor.features.base.Feature;
 
-public abstract class CreateNodeTool<T extends Document<?>, U extends GraphicalNode> extends Tool {
+public abstract class CreateNodeTool<T extends Document<?>, U extends GraphicalNode> extends Feature {
 
 	/**
 	 * Document this tool operates on.

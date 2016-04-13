@@ -17,27 +17,26 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.tools.edge;
+package uniol.aptgui.editor.features.edge;
 
 import java.awt.Cursor;
 
-import uniol.apt.adt.pn.Node;
-import uniol.aptgui.commands.CreateFlowCommand;
+import uniol.apt.adt.ts.State;
+import uniol.aptgui.commands.CreateArcCommand;
 import uniol.aptgui.commands.History;
-import uniol.aptgui.editor.document.PnDocument;
+import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
-import uniol.aptgui.editor.document.graphical.edges.GraphicalFlow;
+import uniol.aptgui.editor.document.graphical.edges.GraphicalArc;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
-import uniol.aptgui.editor.document.graphical.nodes.GraphicalPlace;
-import uniol.aptgui.editor.document.graphical.nodes.GraphicalTransition;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
 import uniol.aptgui.swing.Resource;
 
-public class CreateFlowTool extends CreateEdgeTool<PnDocument, GraphicalFlow> {
+public class CreateArcTool extends CreateEdgeTool<TsDocument, GraphicalArc> {
 
 	private final Cursor cursor = Resource.getCursorCreateEdge();
 	private final History history;
 
-	public CreateFlowTool(PnDocument document, History history) {
+	public CreateArcTool(TsDocument document, History history) {
 		super(document);
 		this.history = history;
 	}
@@ -48,22 +47,22 @@ public class CreateFlowTool extends CreateEdgeTool<PnDocument, GraphicalFlow> {
 	}
 
 	@Override
-	protected GraphicalFlow createGraphicalEdge(GraphicalNode source, GraphicalNode target) {
-		GraphicalFlow flow = new GraphicalFlow(source, target);
-		return flow;
+	protected GraphicalArc createGraphicalEdge(GraphicalNode source, GraphicalNode target) {
+		GraphicalArc arc = new GraphicalArc(source, target);
+		return arc;
 	}
 
 	@Override
-	protected void commitEdgeCreation(GraphicalFlow edge) {
-		Node source = document.getAssociatedModelElement(edge.getSource());
-		Node target = document.getAssociatedModelElement(edge.getTarget());
-		history.execute(new CreateFlowCommand(document, source, target, 1, edge));
+	protected void commitEdgeCreation(GraphicalArc edge) {
+		State source = document.getAssociatedModelElement(edge.getSource());
+		State target = document.getAssociatedModelElement(edge.getTarget());
+		CreateArcCommand cmd = new CreateArcCommand(document, source, target, "a", edge);
+		history.execute(cmd);
 	}
 
 	@Override
 	protected boolean isValidTarget(GraphicalElement target) {
-		boolean typesCorrect = (graphicalSource instanceof GraphicalPlace && target instanceof GraphicalTransition)
-				    || (graphicalSource instanceof GraphicalTransition && target instanceof GraphicalPlace);
+		boolean typesCorrect = graphicalSource instanceof GraphicalState && target instanceof GraphicalState;
 		return graphicalSource != target && typesCorrect;
 	}
 

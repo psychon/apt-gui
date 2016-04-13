@@ -28,17 +28,26 @@ public abstract class GraphicalElement {
 	private static final Color HIGHLIGHT_COLOR = Color.BLUE;
 	private static final Color HIGHLIGHT_COLOR_ERROR = Color.RED;
 	private static final Color HIGHLIGHT_COLOR_SUCCESS = Color.GREEN;
-	public static final String EXTENSION_KEY = "uniol.ape.gui.editor.graphicalelements.GraphicalElement";
+	public static final String EXTENSION_KEY = "uniol.aptgui.editor.document.graphical.GraphicalElement";
 
 	protected Color color;
 	protected boolean highlighted;
 	protected boolean highlightedError;
 	protected boolean highlightedSuccess;
 	protected boolean visible;
+	protected boolean selected;
 
 	public GraphicalElement() {
 		this.color = Color.BLACK;
 		this.visible = true;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 
 	public boolean isVisible() {

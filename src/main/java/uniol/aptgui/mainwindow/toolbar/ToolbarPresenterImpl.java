@@ -24,7 +24,7 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import uniol.aptgui.AbstractPresenter;
-import uniol.aptgui.editor.tools.ToolId;
+import uniol.aptgui.editor.features.base.FeatureId;
 import uniol.aptgui.events.ToolSelectedEvent;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.events.WindowFocusLostEvent;
@@ -32,15 +32,15 @@ import uniol.aptgui.events.WindowFocusLostEvent;
 public class ToolbarPresenterImpl extends AbstractPresenter<ToolbarPresenter, ToolbarView> implements ToolbarPresenter {
 
 	private final EventBus eventBus;
-	private ToolId activePnTool;
-	private ToolId activeTsTool;
+	private FeatureId activePnTool;
+	private FeatureId activeTsTool;
 
 	@Inject
 	public ToolbarPresenterImpl(ToolbarView view, EventBus eventBus) {
 		super(view);
 		this.eventBus = eventBus;
-		this.activePnTool = ToolId.SELECTION;
-		this.activeTsTool = ToolId.SELECTION;
+		this.activePnTool = FeatureId.SELECTION;
+		this.activeTsTool = FeatureId.SELECTION;
 
 		this.eventBus.register(this);
 		view.setPetriNetToolsVisible(false);

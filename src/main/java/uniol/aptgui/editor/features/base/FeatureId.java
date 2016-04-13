@@ -17,30 +17,28 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.tools.node;
+package uniol.aptgui.editor.features.base;
 
-import uniol.aptgui.commands.CreatePlaceCommand;
-import uniol.aptgui.commands.History;
-import uniol.aptgui.editor.document.PnDocument;
-import uniol.aptgui.editor.document.graphical.nodes.GraphicalPlace;
+public enum FeatureId {
 
-public class CreatePlaceTool extends CreateNodeTool<PnDocument, GraphicalPlace> {
+	// FEATURES
+	VIEWPORT, HOVER,
 
-	private final History history;
+	// TOOLS
+	SELECTION, PN_CREATE_PLACE, PN_CREATE_TRANSITION, PN_CREATE_FLOW,
+	TS_CREATE_STATE, TS_CREATE_ARC;
 
-	public CreatePlaceTool(PnDocument document, History history) {
-		super(document);
-		this.history = history;
+	public boolean isPetriNetTool() {
+		return this == FeatureId.SELECTION
+		    || this == FeatureId.PN_CREATE_PLACE
+		    || this == FeatureId.PN_CREATE_TRANSITION
+		    || this == FeatureId.PN_CREATE_FLOW;
 	}
 
-	@Override
-	protected GraphicalPlace createGraphicalNode() {
-		return new GraphicalPlace();
-	}
-
-	@Override
-	protected void commitNodeCreation(GraphicalPlace node) {
-		history.execute(new CreatePlaceCommand(document, node));
+	public boolean isTransitionSystemTool() {
+		return this == FeatureId.SELECTION
+		    || this == TS_CREATE_STATE
+		    || this == TS_CREATE_ARC;
 	}
 
 }

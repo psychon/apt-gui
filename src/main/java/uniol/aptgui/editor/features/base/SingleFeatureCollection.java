@@ -17,38 +17,40 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.tools;
+package uniol.aptgui.editor.features.base;
 
-import java.awt.Cursor;
-import java.awt.event.MouseAdapter;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-public abstract class Tool extends MouseAdapter {
+public class SingleFeatureCollection extends FeatureCollection {
 
-	/**
-	 * Returns the Cursor that should be shown by the editor while this tool
-	 * is active. Returns the default cursor unless overridden by
-	 * subclasses.
-	 *
-	 * @return the tool's cursor
-	 */
-	public Cursor getCursor() {
-		return Cursor.getDefaultCursor();
+	private Feature activeFeature;
+
+	public void setActive(FeatureId id) {
+		onDeactivated();
+		activeFeature = get(id);
+		assert activeFeature != null;
+		onActivated();
 	}
 
-	/**
-	 * Called by the editor when this tool is activated. Can be overridden
-	 * by subclasses to get informed when the tool is activated.
-	 */
-	public void onActivated() {
-		// By default, do nothing.
+	public Feature getActiveFeature() {
+		return activeFeature;
 	}
 
-	/**
-	 * Called by the editor when this tool is deactivated. Can be overridden
-	 * by subclasses to get informed when the tool is deactivated.
-	 */
-	public void onDeactivated() {
-		// By default, do nothing.
+	@Override
+	public void clear() {
+		super.clear();
+		activeFeature = null;
+	}
+
+	@Override
+	protected Collection<Feature> getActiveFeatureSet() {
+		Set<Feature> active = new HashSet<>();
+		if (activeFeature != null) {
+			active.add(activeFeature);
+		}
+		return active;
 	}
 
 }

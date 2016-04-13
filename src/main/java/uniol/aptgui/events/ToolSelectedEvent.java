@@ -19,17 +19,17 @@
 
 package uniol.aptgui.events;
 
-import uniol.aptgui.editor.tools.ToolId;
+import uniol.aptgui.editor.features.base.FeatureId;
 
 public class ToolSelectedEvent {
 
-	private final ToolId selectionId;
+	private final FeatureId selectionId;
 
-	public ToolSelectedEvent(ToolId selectionId) {
+	public ToolSelectedEvent(FeatureId selectionId) {
 		this.selectionId = selectionId;
 	}
 
-	public ToolId getSelectionId() {
+	public FeatureId getSelectionId() {
 		return selectionId;
 	}
 

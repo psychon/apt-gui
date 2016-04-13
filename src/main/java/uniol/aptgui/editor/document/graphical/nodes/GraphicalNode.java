@@ -52,6 +52,11 @@ public abstract class GraphicalNode extends GraphicalElement {
 		center.y += dy;
 	}
 
+	@Override
+	public boolean coversPoint(Point point) {
+		return center != null;
+	}
+
 	/**
 	 * Returns the intersection point of this GraphicalNode's boundary with
 	 * a line from the given point to this GraphicalNode's center.
@@ -101,6 +106,27 @@ public abstract class GraphicalNode extends GraphicalElement {
 
 	protected static void drawSquare(Graphics2D graphics, Point center, int radius) {
 		graphics.drawRect(center.x - radius, center.y - radius, 2 * radius, 2 * radius);
+	}
+
+	protected static void drawSelectionMarkers(Graphics2D graphics, Point center, int radius) {
+		int len = 5;
+
+		Point topLeft = new Point(center.x - radius, center.y - radius);
+		Point topRight = new Point(center.x + radius, center.y - radius);
+		Point bottomLeft = new Point(center.x - radius, center.y + radius);
+		Point bottomRight = new Point(center.x + radius, center.y + radius);
+
+		graphics.drawLine(topLeft.x, topLeft.y, topLeft.x + len, topLeft.y);
+		graphics.drawLine(topLeft.x, topLeft.y, topLeft.x, topLeft.y + len);
+
+		graphics.drawLine(topRight.x, topRight.y, topRight.x - len, topRight.y);
+		graphics.drawLine(topRight.x, topRight.y, topRight.x, topRight.y + len);
+
+		graphics.drawLine(bottomLeft.x, bottomLeft.y, bottomLeft.x + len, bottomLeft.y);
+		graphics.drawLine(bottomLeft.x, bottomLeft.y, bottomLeft.x, bottomLeft.y - len);
+
+		graphics.drawLine(bottomRight.x, bottomRight.y, bottomRight.x - len, bottomRight.y);
+		graphics.drawLine(bottomRight.x, bottomRight.y, bottomRight.x, bottomRight.y - len);
 	}
 
 }

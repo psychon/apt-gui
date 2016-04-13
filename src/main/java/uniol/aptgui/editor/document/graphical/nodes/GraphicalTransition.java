@@ -48,10 +48,16 @@ public class GraphicalTransition extends GraphicalNode {
 		}
 		super.draw(graphics);
 		drawSquare(graphics, center, 20);
+		if (selected) {
+			drawSelectionMarkers(graphics, center, RADIUS + 2);
+		}
 	}
 
 	@Override
 	public boolean coversPoint(Point point) {
+		if (!super.coversPoint(point)) {
+			return false;
+		}
 		int minX = center.x - RADIUS;
 		int maxX = center.x + RADIUS;
 		int minY = center.y - RADIUS;

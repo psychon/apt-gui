@@ -17,15 +17,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.tools;
+package uniol.aptgui.editor.features;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.features.base.Feature;
 
-public class ViewportTool extends Tool {
+public class ViewportFeature extends Feature {
 
 	/**
 	 * Scale factor that gets applied for a single mouse wheel click.
@@ -47,7 +48,7 @@ public class ViewportTool extends Tool {
 	 */
 	private Point dragSource;
 
-	public ViewportTool(Document<?> document) {
+	public ViewportFeature(Document<?> document) {
 		this.document = document;
 		this.dragging = false;
 		this.dragSource = null;
@@ -59,7 +60,12 @@ public class ViewportTool extends Tool {
 			return;
 		}
 
-		// User pressed LMB: Move view.
+		Point modelPosition = document.getTransform().applyInverse(e.getPoint());
+		if (document.getGraphicalElementAt(modelPosition) != null) {
+			return;
+		}
+
+		// User pressed LMB and did not click an element: Move view.
 		dragging = true;
 		dragSource = e.getPoint();
 	}

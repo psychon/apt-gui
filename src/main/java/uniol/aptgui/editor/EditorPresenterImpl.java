@@ -20,8 +20,6 @@
 package uniol.aptgui.editor;
 
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -33,18 +31,27 @@ import uniol.aptgui.editor.document.DocumentListener;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.features.HoverFeature;
-import uniol.aptgui.editor.tools.Tool;
-import uniol.aptgui.editor.tools.Toolbox;
+import uniol.aptgui.editor.features.SelectionTool;
+import uniol.aptgui.editor.features.ViewportFeature;
+import uniol.aptgui.editor.features.base.Feature;
+import uniol.aptgui.editor.features.base.FeatureCollection;
+import uniol.aptgui.editor.features.base.FeatureId;
+import uniol.aptgui.editor.features.base.SingleFeatureCollection;
+import uniol.aptgui.editor.features.edge.CreateArcTool;
+import uniol.aptgui.editor.features.edge.CreateFlowTool;
+import uniol.aptgui.editor.features.node.CreatePlaceTool;
+import uniol.aptgui.editor.features.node.CreateStateTool;
+import uniol.aptgui.editor.features.node.CreateTransitionTool;
 import uniol.aptgui.events.ToolSelectedEvent;
 import uniol.aptgui.mainwindow.WindowId;
 
 public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, EditorView>
-		implements EditorPresenter, MouseEventListener, DocumentListener {
+		implements EditorPresenter, DocumentListener {
 
 	private final Application application;
 
-	private final Toolbox toolbox;
-	private HoverFeature hoverFeature;
+	private final FeatureCollection features;
+	private final SingleFeatureCollection tools;
 
 	private WindowId windowId;
 	private Document<?> document;
@@ -52,9 +59,12 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 	@Inject
 	public EditorPresenterImpl(EditorView view, Application application) {
 		super(view);
-		view.setMouseEventListener(this);
 		this.application = application;
-		this.toolbox = new Toolbox(application);
+		this.features = new FeatureCollection();
+		this.tools = new SingleFeatureCollection();
+
+		view.addMouseEventListener(features);
+		view.addMouseEventListener(tools);
 		application.getEventBus().register(this);
 	}
 
@@ -67,20 +77,31 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 		if (document != null) {
 			document.removeListener(this);
 		}
-		if (hoverFeature != null) {
-			hoverFeature.onDeactivated();
-		}
 
 		this.document = document;
 		this.document.addListener(this);
-		hoverFeature = new HoverFeature(document);
-		hoverFeature.onActivated();
 
+		features.onDeactivated();
+		features.put(FeatureId.VIEWPORT, new ViewportFeature(document));
+		features.put(FeatureId.HOVER, new HoverFeature(document));
+		features.onActivated();
+		features.setListening(true);
+
+		tools.clear();
 		if (document instanceof PnDocument) {
-			toolbox.addPnTools((PnDocument)document);
+			PnDocument pnDocument = (PnDocument) document;
+			tools.put(FeatureId.SELECTION, new SelectionTool(document));
+			tools.put(FeatureId.PN_CREATE_PLACE, new CreatePlaceTool(pnDocument, application.getHistory()));
+			tools.put(FeatureId.PN_CREATE_TRANSITION,
+					new CreateTransitionTool(pnDocument, application.getHistory()));
+			tools.put(FeatureId.PN_CREATE_FLOW, new CreateFlowTool(pnDocument, application.getHistory()));
 		} else if (document instanceof TsDocument) {
-			toolbox.addTsTools((TsDocument)document);
+			TsDocument tsDocument = (TsDocument) document;
+			tools.put(FeatureId.SELECTION, new SelectionTool(document));
+			tools.put(FeatureId.TS_CREATE_STATE, new CreateStateTool(tsDocument, application.getHistory()));
+			tools.put(FeatureId.TS_CREATE_ARC, new CreateArcTool(tsDocument, application.getHistory()));
 		}
+		tools.setListening(true);
 	}
 
 	@Subscribe
@@ -88,8 +109,13 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 		if (!application.getActiveInternalWindow().equals(windowId)) {
 			return;
 		}
-		toolbox.setActiveTool(e.getSelectionId());
-		Tool tool = toolbox.getActiveTool();
+
+		features.setListening(false);
+		tools.setListening(false);
+		tools.setActive(e.getSelectionId());
+		tools.setListening(true);
+		features.setListening(true);
+		Feature tool = tools.getActiveFeature();
 		view.setCursor(tool.getCursor());
 		view.repaint();
 	}
@@ -121,49 +147,6 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 	public void onDocumentDirty() {
 		if (document.isVisible()) {
 			getView().repaint();
-		}
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		if (document.isVisible()) {
-			toolbox.getActiveTool().mouseClicked(e);
-		}
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		if (document.isVisible()) {
-			toolbox.getActiveTool().mouseDragged(e);
-		}
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		if (document.isVisible()) {
-			toolbox.getActiveTool().mouseMoved(e);
-			hoverFeature.mouseMoved(e);
-		}
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		if (document.isVisible()) {
-			toolbox.getActiveTool().mousePressed(e);
-		}
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		if (document.isVisible()) {
-			toolbox.getActiveTool().mouseReleased(e);
-		}
-	}
-
-	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
-		if (document.isVisible()) {
-			toolbox.getActiveTool().mouseWheelMoved(e);
 		}
 	}
 

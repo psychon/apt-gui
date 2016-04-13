@@ -23,26 +23,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
+import java.awt.event.MouseAdapter;
 
 import uniol.aptgui.swing.JPanelView;
 
 @SuppressWarnings("serial")
-public class EditorViewImpl extends JPanelView<EditorPresenter>
-		implements EditorView, MouseListener, MouseMotionListener, MouseWheelListener {
-
-	private MouseEventListener mouseEventListener;
+public class EditorViewImpl extends JPanelView<EditorPresenter> implements EditorView {
 
 	public EditorViewImpl() {
 		setBackground(Color.WHITE);
 		setPreferredSize(new Dimension(400, 300));
-		addMouseListener(this);
-		addMouseMotionListener(this);
-		addMouseWheelListener(this);
+
 	}
 
 	@Override
@@ -62,59 +53,12 @@ public class EditorViewImpl extends JPanelView<EditorPresenter>
 	}
 
 	@Override
-	public void setMouseEventListener(MouseEventListener mouseEventListener) {
-		this.mouseEventListener = mouseEventListener;
+	public void addMouseEventListener(MouseAdapter mouseEventListener) {
+		addMouseListener(mouseEventListener);
+		addMouseMotionListener(mouseEventListener);
+		addMouseWheelListener(mouseEventListener);
 	}
 
-	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
-		if (mouseEventListener != null) {
-			mouseEventListener.mouseWheelMoved(e);
-		}
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		if (mouseEventListener != null) {
-			mouseEventListener.mouseDragged(e);
-		}
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		if (mouseEventListener != null) {
-			mouseEventListener.mouseMoved(e);
-		}
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		if (mouseEventListener != null) {
-			mouseEventListener.mouseClicked(e);
-		}
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		if (mouseEventListener != null) {
-			mouseEventListener.mousePressed(e);
-		}
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		if (mouseEventListener != null) {
-			mouseEventListener.mouseReleased(e);
-		}
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120
