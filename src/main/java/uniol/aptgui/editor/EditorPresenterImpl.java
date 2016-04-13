@@ -107,13 +107,13 @@ public abstract class EditorPresenterImpl<T extends Document> extends AbstractPr
 
 	@Override
 	public void translateView(int dx, int dy) {
-		document.translateView(dx, dy);
+		document.getTransform().translateView(dx, dy);
 		getView().repaint();
 	}
 
 	@Override
 	public void scaleView(double scale) {
-		document.scaleView(scale);
+		document.getTransform().scaleView(scale);
 		getView().repaint();
 	}
 

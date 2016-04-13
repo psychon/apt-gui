@@ -148,12 +148,12 @@ public class SelectionTool extends Tool {
 	}
 
 	private void translateView(int dx, int dy) {
-		document.translateView(dx, dy);
+		document.getTransform().translateView(dx, dy);
 		document.fireDocumentDirty();
 	}
 
 	private void scaleView(double scale) {
-		document.scaleView(scale);
+		document.getTransform().scaleView(scale);
 		document.fireDocumentDirty();
 	}
 

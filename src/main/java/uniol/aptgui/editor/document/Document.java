@@ -40,9 +40,7 @@ public abstract class Document {
 	protected int height;
 	protected boolean visible;
 
-	protected int translationX = 0;
-	protected int translationY = 0;
-	protected double scale = 1.0;
+	private Transform2D transform;
 
 	public Document() {
 		this(400, 300);
@@ -54,6 +52,11 @@ public abstract class Document {
 		this.height = height;
 		this.visible = false;
 		this.hasUnsavedChanges = false;
+		this.transform = new Transform2D();
+	}
+
+	public Transform2D getTransform() {
+		return transform;
 	}
 
 	public boolean isVisible() {
@@ -99,8 +102,8 @@ public abstract class Document {
 
 		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		AffineTransform originalTransform = graphics.getTransform();
-		graphics.translate(translationX, translationY);
-		graphics.scale(scale, scale);
+		graphics.translate(transform.getTranslationX(), transform.getTranslationY());
+		graphics.scale(transform.getScale(), transform.getScale());
 		draw(graphics);
 		graphics.setTransform(originalTransform);
 	}
@@ -116,8 +119,8 @@ public abstract class Document {
 	public Point transformViewToModel(Point point) {
 		try {
 			AffineTransform tx = new AffineTransform();
-			tx.translate(translationX, translationY);
-			tx.scale(scale, scale);
+			tx.translate(transform.getTranslationX(), transform.getTranslationY());
+			tx.scale(transform.getScale(), transform.getScale());
 			Point2D p2d = tx.inverseTransform(point, null);
 			return point2DtoPoint(p2d);
 		} catch (Exception e) {
@@ -135,8 +138,8 @@ public abstract class Document {
 	 */
 	public Point transformModelToView(Point point) {
 		AffineTransform tx = new AffineTransform();
-		tx.translate(translationX, translationY);
-		tx.scale(scale, scale);
+		tx.translate(transform.getTranslationX(), transform.getTranslationY());
+		tx.scale(transform.getScale(), transform.getScale());
 		Point2D p2d = tx.transform(point, null);
 		return point2DtoPoint(p2d);
 	}
@@ -152,14 +155,7 @@ public abstract class Document {
 		return (T) obj.getExtension(GraphicalElement.EXTENSION_KEY);
 	}
 
-	public void translateView(int dx, int dy) {
-		translationX += dx;
-		translationY += dy;
-	}
 
-	public void scaleView(double scale) {
-		this.scale = this.scale * scale;
-	}
 
 	public int getWidth() {
 		return width;
@@ -177,29 +173,6 @@ public abstract class Document {
 		this.height = height;
 	}
 
-	public int getTranslationX() {
-		return translationX;
-	}
-
-	public void setTranslationX(int translationX) {
-		this.translationX = translationX;
-	}
-
-	public int getTranslationY() {
-		return translationY;
-	}
-
-	public void setTranslationY(int translationY) {
-		this.translationY = translationY;
-	}
-
-	public double getScale() {
-		return scale;
-	}
-
-	public void setScale(double scale) {
-		this.scale = scale;
-	}
 
 	/**
 	 * Returns the GraphicalElement that covers the given point or null if
