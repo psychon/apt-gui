@@ -23,7 +23,7 @@ import java.awt.Cursor;
 
 import uniol.aptgui.View;
 
-public interface EditorView extends View<EditorPresenter<?>> {
+public interface EditorView extends View<EditorPresenter> {
 
 	public int getCanvasWidth();
 

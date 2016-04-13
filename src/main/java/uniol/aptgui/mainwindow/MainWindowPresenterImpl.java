@@ -30,8 +30,6 @@ import com.google.inject.Injector;
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Presenter;
 import uniol.aptgui.editor.EditorPresenter;
-import uniol.aptgui.editor.PnEditorPresenter;
-import uniol.aptgui.editor.TsEditorPresenter;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
@@ -102,19 +100,12 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	@Override
 	public WindowId createWindow(Document document) {
 		WindowId id = null;
-		EditorPresenter<?> editor = null;
+		EditorPresenter editor = injector.getInstance(EditorPresenter.class);
+		editor.setDocument(document);
 
 		if (document instanceof PnDocument) {
-			PnDocument pnDoc = (PnDocument) document;
-			PnEditorPresenter pnEditor = injector.getInstance(PnEditorPresenter.class);
-			pnEditor.setDocument(pnDoc);
-			editor = pnEditor;
 			id = new WindowId(WindowType.PETRI_NET);
 		} else if (document instanceof TsDocument) {
-			TsDocument tsDoc = (TsDocument) document;
-			TsEditorPresenter tsEditor = injector.getInstance(TsEditorPresenter.class);
-			tsEditor.setDocument(tsDoc);
-			editor = tsEditor;
 			id = new WindowId(WindowType.TRANSITION_SYSTEM);
 		} else {
 			logger.log(Level.SEVERE, "Unknown document type.");

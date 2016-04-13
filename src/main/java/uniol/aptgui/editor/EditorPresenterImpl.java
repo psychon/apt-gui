@@ -30,6 +30,8 @@ import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.DocumentListener;
+import uniol.aptgui.editor.document.PnDocument;
+import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.features.HoverFeature;
 import uniol.aptgui.editor.layout.Layout;
 import uniol.aptgui.editor.tools.Tool;
@@ -37,15 +39,15 @@ import uniol.aptgui.editor.tools.Toolbox;
 import uniol.aptgui.events.ToolSelectedEvent;
 import uniol.aptgui.mainwindow.WindowId;
 
-public abstract class EditorPresenterImpl<T extends Document> extends AbstractPresenter<EditorPresenter<?>, EditorView>
-		implements EditorPresenter<T>, MouseEventListener, DocumentListener {
+public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, EditorView>
+		implements EditorPresenter, MouseEventListener, DocumentListener {
 
 	protected final Application application;
 	protected final Toolbox toolbox;
 
 	protected HoverFeature hoverFeature;
 	protected WindowId windowId;
-	protected T document;
+	protected Document document;
 
 	@Inject
 	public EditorPresenterImpl(EditorView view, Application application) {
@@ -61,10 +63,15 @@ public abstract class EditorPresenterImpl<T extends Document> extends AbstractPr
 	}
 
 	@Override
-	public void setDocument(T document) {
+	public void setDocument(Document document) {
 		this.document = document;
 		this.document.addListener(this);
 		hoverFeature = new HoverFeature(document);
+		if (document instanceof PnDocument) {
+			toolbox.addPnTools((PnDocument)document);
+		} else if (document instanceof TsDocument) {
+			toolbox.addTsTools((TsDocument)document);
+		}
 	}
 
 	@Subscribe

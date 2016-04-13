@@ -24,12 +24,10 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 
 import uniol.aptgui.commands.History;
+import uniol.aptgui.editor.EditorPresenter;
+import uniol.aptgui.editor.EditorPresenterImpl;
 import uniol.aptgui.editor.EditorView;
 import uniol.aptgui.editor.EditorViewImpl;
-import uniol.aptgui.editor.PnEditorPresenter;
-import uniol.aptgui.editor.PnEditorPresenterImpl;
-import uniol.aptgui.editor.TsEditorPresenter;
-import uniol.aptgui.editor.TsEditorPresenterImpl;
 import uniol.aptgui.internalwindow.InternalWindowPresenter;
 import uniol.aptgui.internalwindow.InternalWindowPresenterImpl;
 import uniol.aptgui.internalwindow.InternalWindowView;
@@ -58,8 +56,7 @@ public class DependenyModule extends AbstractModule {
 		bind(MenuView.class).to(MenuViewImpl.class);
 		bind(InternalWindowPresenter.class).to(InternalWindowPresenterImpl.class);
 		bind(InternalWindowView.class).to(InternalWindowViewImpl.class);
-		bind(PnEditorPresenter.class).to(PnEditorPresenterImpl.class);
-		bind(TsEditorPresenter.class).to(TsEditorPresenterImpl.class);
+		bind(EditorPresenter.class).to(EditorPresenterImpl.class);
 		bind(EditorView.class).to(EditorViewImpl.class);
 		bind(ToolbarPresenter.class).to(ToolbarPresenterImpl.class);
 		bind(ToolbarView.class).to(ToolbarViewImpl.class);
