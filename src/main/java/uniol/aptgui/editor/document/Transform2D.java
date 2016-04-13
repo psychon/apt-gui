@@ -19,6 +19,10 @@
 
 package uniol.aptgui.editor.document;
 
+import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+
 public class Transform2D {
 
 	private int translationX = 0;
@@ -56,6 +60,45 @@ public class Transform2D {
 
 	public void scaleView(double scale) {
 		this.scaleXY = this.scaleXY * scale;
+	}
+
+	public AffineTransform getAffineTransform() {
+		AffineTransform tx = new AffineTransform();
+		tx.translate(translationX, translationY);
+		tx.scale(scaleXY, scaleXY);
+		return tx;
+	}
+
+	/**
+	 * Returns a new Point that is calculated by applying the inverse
+	 * transform of this Transform2D's parameters.
+	 *
+	 * @param point
+	 *                the point to transform
+	 * @return a transformed point
+	 */
+	public Point applyInverse(Point2D point) {
+		try {
+			AffineTransform tx = getAffineTransform();
+			Point2D res = tx.inverseTransform(point, null);
+			return new Point((int) res.getX(), (int) res.getY());
+		} catch (Exception e) {
+			throw new AssertionError();
+		}
+	}
+
+	/**
+	 * Returns a new Point that is calculated by transforming the given
+	 * point with this Transform2D's parameters.
+	 *
+	 * @param point
+	 *                the point to transform
+	 * @return a transformed point
+	 */
+	public Point apply(Point2D point) {
+		AffineTransform tx = getAffineTransform();
+		Point2D res = tx.transform(point, null);
+		return new Point((int) res.getX(), (int) res.getY());
 	}
 
 }

@@ -17,35 +17,32 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.document;
+package uniol.aptgui.editor.tools.node;
 
-import java.awt.Graphics2D;
-import java.awt.Point;
+import uniol.aptgui.commands.CreatePlaceCommand;
+import uniol.aptgui.commands.History;
+import uniol.aptgui.editor.document.PnDocument;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalPlace;
 
-public class GraphicalState extends GraphicalNode {
+public class CreatePlaceTool extends CreateNodeTool<PnDocument, GraphicalPlace> {
 
-	private static final int RADIUS = 20;
+	private final History history;
 
-	@Override
-	public Point getBoundaryIntersection(Point point) {
-		return getCircleBoundaryIntersection(center, RADIUS, point);
+	public CreatePlaceTool(PnDocument document, History history) {
+		super(document);
+		this.history = history;
 	}
 
 	@Override
-	public void draw(Graphics2D graphics) {
-		if (!visible) {
-			return;
-		}
-		super.draw(graphics);
-		drawCircle(graphics, center, RADIUS);
+	protected GraphicalPlace createGraphicalNode() {
+		return new GraphicalPlace();
 	}
 
 	@Override
-	public boolean containsPoint(Point point) {
-		return center.distance(point.x, point.y) < RADIUS;
+	protected void commitNodeCreation(GraphicalPlace node) {
+		history.execute(new CreatePlaceCommand(document, node));
 	}
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

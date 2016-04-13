@@ -17,31 +17,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.layout;
+package uniol.aptgui.editor.document.graphical.edges;
 
-import java.awt.Point;
-
-import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 
-public class RandomLayout implements Layout {
+public class GraphicalArc extends GraphicalEdge {
 
-	private static int randomInt(int max) {
-		return (int) (Math.random() * (max + 1));
-	}
-
-	@Override
-	public void applyTo(Document<?> document, int width, int height) {
-		for (GraphicalElement elem : document.getGraphicalElements()) {
-			// Only nodes are positioned directly.
-			if (elem instanceof GraphicalNode) {
-				GraphicalNode node = (GraphicalNode) elem;
-				int x = randomInt(width);
-				int y = randomInt(height);
-				node.setCenter(new Point(x, y));
-			}
-		}
+	public GraphicalArc(GraphicalNode source, GraphicalNode target) {
+		super(source, target);
 	}
 
 }

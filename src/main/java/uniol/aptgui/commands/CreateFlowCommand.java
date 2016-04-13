@@ -19,34 +19,48 @@
 
 package uniol.aptgui.commands;
 
-import uniol.apt.adt.pn.Transition;
+import uniol.apt.adt.pn.Flow;
+import uniol.apt.adt.pn.Node;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
-import uniol.aptgui.editor.document.graphical.nodes.GraphicalTransition;
+import uniol.aptgui.editor.document.graphical.edges.GraphicalFlow;
 
-public class CreateTransitionCommand implements Command {
+public class CreateFlowCommand implements Command {
 
 	private final PnDocument pnDocument;
-	private final GraphicalTransition graphicalTransition;
-	private Transition pnTransition;
+	private final Node source;
+	private final Node target;
+	private final int multiplicity;
+	private final GraphicalFlow graphialFlow;
 
-	public CreateTransitionCommand(PnDocument pnDocument, GraphicalTransition transition) {
-		this.pnDocument = pnDocument;
-		this.graphicalTransition = transition;
+	private Flow pnFlow;
+
+	public CreateFlowCommand(
+			PnDocument document,
+			Node source,
+			Node target,
+			int multiplicity,
+			GraphicalFlow graphialFlow
+	) {
+		this.pnDocument = document;
+		this.source = source;
+		this.target = target;
+		this.multiplicity = multiplicity;
+		this.graphialFlow = graphialFlow;
 	}
 
 	@Override
 	public void execute() {
-		pnTransition = pnDocument.getModel().createTransition();
-		pnTransition.putExtension(GraphicalElement.EXTENSION_KEY, graphicalTransition);
-		pnDocument.add(graphicalTransition, pnTransition);
+		pnFlow = pnDocument.getModel().createFlow(source, target, multiplicity);
+		pnFlow.putExtension(GraphicalElement.EXTENSION_KEY, graphialFlow);
+		pnDocument.add(graphialFlow, pnFlow);
 		pnDocument.fireDocumentDirty();
 	}
 
 	@Override
 	public void undo() {
-		pnDocument.getModel().removeTransition(pnTransition);
-		pnDocument.remove(graphicalTransition);
+		pnDocument.getModel().removeFlow(pnFlow);
+		pnDocument.remove(graphialFlow);
 		pnDocument.fireDocumentDirty();
 	}
 
@@ -56,6 +70,5 @@ public class CreateTransitionCommand implements Command {
 	}
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

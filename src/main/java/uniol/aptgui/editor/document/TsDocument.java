@@ -25,6 +25,9 @@ import java.util.Map;
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.editor.document.graphical.edges.GraphicalArc;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
 
 public class TsDocument extends Document<TransitionSystem> {
 

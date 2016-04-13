@@ -23,7 +23,6 @@ import java.awt.Graphics2D;
 
 import uniol.aptgui.Presenter;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.layout.Layout;
 import uniol.aptgui.mainwindow.WindowId;
 
 public interface EditorPresenter extends Presenter<EditorView> {

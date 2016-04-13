@@ -17,23 +17,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.tools;
+package uniol.aptgui.editor.tools.edge;
 
 import java.awt.Cursor;
-import java.awt.Point;
 
 import uniol.apt.adt.ts.State;
 import uniol.aptgui.commands.CreateArcCommand;
 import uniol.aptgui.commands.History;
-import uniol.aptgui.editor.document.GraphicalArc;
-import uniol.aptgui.editor.document.GraphicalEdge;
-import uniol.aptgui.editor.document.GraphicalElement;
-import uniol.aptgui.editor.document.GraphicalNode;
-import uniol.aptgui.editor.document.GraphicalState;
 import uniol.aptgui.editor.document.TsDocument;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.editor.document.graphical.edges.GraphicalArc;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
 import uniol.aptgui.swing.Resource;
 
-public class CreateArcTool extends CreateEdgeTool {
+public class CreateArcTool extends CreateEdgeTool<TsDocument, GraphicalArc> {
 
 	private final Cursor cursor = Resource.getCursorCreateEdge();
 	private final History history;
@@ -49,26 +47,23 @@ public class CreateArcTool extends CreateEdgeTool {
 	}
 
 	@Override
-	protected GraphicalEdge createGraphicalEdge(GraphicalNode source, GraphicalNode target,
-			Point modelTargetPosition) {
+	protected GraphicalArc createGraphicalEdge(GraphicalNode source, GraphicalNode target) {
 		GraphicalArc arc = new GraphicalArc(source, target);
 		return arc;
 	}
 
 	@Override
-	protected void commitEdgeCreation(GraphicalEdge edge) {
-		State source = (State) document.getModelElementAt(edge.getSource().getCenter());
-		State target = (State) document.getModelElementAt(edge.getTarget().getCenter());
-		TsDocument tsDocument = (TsDocument) document;
-		GraphicalArc graphicalArc = (GraphicalArc) edge;
-		CreateArcCommand cmd = new CreateArcCommand(tsDocument, source, target, "a", graphicalArc);
+	protected void commitEdgeCreation(GraphicalArc edge) {
+		State source = document.getAssociatedModelElement(edge.getSource());
+		State target = document.getAssociatedModelElement(edge.getTarget());
+		CreateArcCommand cmd = new CreateArcCommand(document, source, target, "a", edge);
 		history.execute(cmd);
 	}
 
 	@Override
 	protected boolean isValidTarget(GraphicalElement target) {
-		boolean typesCorrect = source instanceof GraphicalState && target instanceof GraphicalState;
-		return source != target && typesCorrect;
+		boolean typesCorrect = graphicalSource instanceof GraphicalState && target instanceof GraphicalState;
+		return graphicalSource != target && typesCorrect;
 	}
 
 }

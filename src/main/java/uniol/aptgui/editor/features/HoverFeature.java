@@ -19,33 +19,58 @@
 
 package uniol.aptgui.editor.features;
 
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
-import uniol.aptgui.editor.document.BreakpointHandle;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.GraphicalEdge;
-import uniol.aptgui.editor.document.GraphicalElement;
+import uniol.aptgui.editor.document.Transform2D;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
+import uniol.aptgui.editor.document.graphical.special.BreakpointHandle;
+import uniol.aptgui.editor.tools.Tool;
 
-public class HoverFeature {
+public class HoverFeature extends Tool {
 
-	private final Document document;
+	/**
+	 * Document reference the HoverFeature operates on.
+	 */
+	private final Document<?> document;
+
+	/**
+	 * Reference to the Document's transform object.
+	 */
+	private final Transform2D transform;
+
+	/**
+	 * Graphical representation for edge corners.
+	 */
+	private final BreakpointHandle breakpointHandle;
+
+	/**
+	 * Currently highlighted element.
+	 */
 	private GraphicalElement hoverElem;
-	private BreakpointHandle breakpointHandle;
 
-	public HoverFeature(Document document) {
+	public HoverFeature(Document<?> document) {
 		this.document = document;
-		this.hoverElem = null;
+		this.transform = document.getTransform();
 		this.breakpointHandle = new BreakpointHandle();
+		this.hoverElem = null;
 	}
 
+	@Override
+	public void onActivated() {
+		document.add(breakpointHandle);
+	}
+
+	@Override
+	public void onDeactivated() {
+		document.remove(breakpointHandle);
+	}
+
+	@Override
 	public void mouseMoved(MouseEvent e) {
 		setHoverEffects(e.getPoint());
-	}
-
-	public void draw(Graphics2D graphics) {
-		breakpointHandle.draw(graphics);
 	}
 
 	/**
@@ -55,7 +80,7 @@ public class HoverFeature {
 	 *                current mouse position
 	 */
 	private void setHoverEffects(Point cursor) {
-		Point modelPosition = document.transformViewToModel(cursor);
+		Point modelPosition = transform.applyInverse(cursor);
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
 
 		// Display breakpoint handle if necessary.
@@ -63,11 +88,7 @@ public class HoverFeature {
 			GraphicalEdge edge = (GraphicalEdge) elem;
 			Point breakpoint = edge.getClosestBreakpoint(modelPosition);
 			if (breakpoint != null) {
-				// Transform back to view position since the
-				// Feature draw method doesn't take the Document
-				// transform into account.
-				Point viewPosition = document.transformModelToView(breakpoint);
-				breakpointHandle.setCenter(viewPosition);
+				breakpointHandle.setCenter(breakpoint);
 				breakpointHandle.setVisible(true);
 			}
 		} else {

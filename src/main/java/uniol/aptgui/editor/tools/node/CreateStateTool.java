@@ -17,36 +17,30 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.document;
+package uniol.aptgui.editor.tools.node;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import uniol.aptgui.commands.CreateStateCommand;
+import uniol.aptgui.commands.History;
+import uniol.aptgui.editor.document.TsDocument;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
 
-public class BreakpointHandle extends GraphicalNode {
+public class CreateStateTool extends CreateNodeTool<TsDocument, GraphicalState> {
 
-	public BreakpointHandle() {
-		setColor(Color.BLUE);
-		setVisible(false);
+	private final History history;
+
+	public CreateStateTool(TsDocument document, History history) {
+		super(document);
+		this.history = history;
 	}
 
 	@Override
-	public Point getBoundaryIntersection(Point point) {
-		throw new UnsupportedOperationException();
+	protected GraphicalState createGraphicalNode() {
+		return new GraphicalState();
 	}
 
 	@Override
-	public boolean containsPoint(Point point) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void draw(Graphics2D graphics) {
-		if (!visible) {
-			return;
-		}
-		super.draw(graphics);
-		drawSquare(graphics, center, 5);
+	protected void commitNodeCreation(GraphicalState node) {
+		history.execute(new CreateStateCommand(document, node));
 	}
 
 }

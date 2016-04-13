@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.document;
+package uniol.aptgui.editor.document.graphical;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -97,7 +97,7 @@ public abstract class GraphicalElement {
 		}
 	}
 
-	public abstract boolean containsPoint(Point point);
+	public abstract boolean coversPoint(Point point);
 
 }
 

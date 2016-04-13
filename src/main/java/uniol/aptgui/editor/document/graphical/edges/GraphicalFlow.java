@@ -17,24 +17,25 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.document;
+package uniol.aptgui.editor.document.graphical.edges;
 
-import java.awt.Point;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 
-public class InvisibleNode extends GraphicalNode {
+public class GraphicalFlow extends GraphicalEdge {
 
-	public InvisibleNode() {
-		setVisible(false);
+	protected long multiplicity;
+
+	public GraphicalFlow(GraphicalNode source, GraphicalNode target) {
+		super(source, target);
 	}
 
-	@Override
-	public Point getBoundaryIntersection(Point point) {
-		return center;
+	public long getMultiplicity() {
+		return multiplicity;
 	}
 
-	@Override
-	public boolean containsPoint(Point point) {
-		throw new UnsupportedOperationException();
+	public void setMultiplicity(long multiplicity) {
+		this.multiplicity = multiplicity;
+		setLabel(String.valueOf(multiplicity));
 	}
 
 }

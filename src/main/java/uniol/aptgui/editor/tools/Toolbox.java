@@ -21,18 +21,20 @@ package uniol.aptgui.editor.tools;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
+import uniol.aptgui.editor.tools.edge.CreateArcTool;
+import uniol.aptgui.editor.tools.edge.CreateFlowTool;
+import uniol.aptgui.editor.tools.node.CreatePlaceTool;
+import uniol.aptgui.editor.tools.node.CreateStateTool;
+import uniol.aptgui.editor.tools.node.CreateTransitionTool;
 
 public class Toolbox {
 
-	private final Logger logger = Logger.getLogger(Toolbox.class.getName());
 	private final Application application;
 	private final Map<ToolId, Tool> tools;
 
@@ -46,12 +48,8 @@ public class Toolbox {
 
 	public void setActiveTool(ToolId id) {
 		deactivateCurrentTool();
-		Tool selected = tools.get(id);
-		if (selected != null) {
-			activeTool = selected;
-		} else {
-			logger.log(Level.WARNING, "Trying to select unavailable tool: " + id);
-		}
+		activeTool = tools.get(id);
+		assert activeTool != null;
 		activateCurrentTool();
 	}
 
@@ -62,9 +60,7 @@ public class Toolbox {
 	}
 
 	private void activateCurrentTool() {
-		if (activeTool != null) {
-			activeTool.onActivated();
-		}
+		activeTool.onActivated();
 	}
 
 	public void addTool(ToolId id, Tool tool) {
@@ -83,7 +79,7 @@ public class Toolbox {
 		addTool(ToolId.PN_SELECTION, new SelectionTool(document));
 		addTool(ToolId.PN_CREATE_PLACE, new CreatePlaceTool(document, application.getHistory()));
 		addTool(ToolId.PN_CREATE_TRANSITION, new CreateTransitionTool(document, application.getHistory()));
-		addTool(ToolId.PN_CREATE_FLOW, new CreateFlowTool(document));
+		addTool(ToolId.PN_CREATE_FLOW, new CreateFlowTool(document, application.getHistory()));
 	}
 
 	public void addTsTools(TsDocument document) {

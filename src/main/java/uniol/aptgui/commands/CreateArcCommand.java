@@ -21,13 +21,13 @@ package uniol.aptgui.commands;
 
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
-import uniol.aptgui.editor.document.GraphicalArc;
-import uniol.aptgui.editor.document.GraphicalElement;
 import uniol.aptgui.editor.document.TsDocument;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.editor.document.graphical.edges.GraphicalArc;
 
 public class CreateArcCommand implements Command {
 
-	private final TsDocument document;
+	private final TsDocument tsDocument;
 	private final State source;
 	private final State target;
 	private final String label;
@@ -35,9 +35,14 @@ public class CreateArcCommand implements Command {
 
 	private Arc tsArc;
 
-	public CreateArcCommand(TsDocument document, State source, State target, String label,
-			GraphicalArc graphialArc) {
-		this.document = document;
+	public CreateArcCommand(
+			TsDocument document,
+			State source,
+			State target,
+			String label,
+			GraphicalArc graphialArc
+	) {
+		this.tsDocument = document;
 		this.source = source;
 		this.target = target;
 		this.label = label;
@@ -46,14 +51,17 @@ public class CreateArcCommand implements Command {
 
 	@Override
 	public void execute() {
-		tsArc = document.getModel().createArc(source, target, label);
+		tsArc = tsDocument.getModel().createArc(source, target, label);
 		tsArc.putExtension(GraphicalElement.EXTENSION_KEY, graphialArc);
-		document.fireDocumentDirty();
+		tsDocument.add(graphialArc, tsArc);
+		tsDocument.fireDocumentDirty();
 	}
 
 	@Override
 	public void undo() {
-		document.getModel().removeArc(tsArc);
+		tsDocument.getModel().removeArc(tsArc);
+		tsDocument.remove(graphialArc);
+		tsDocument.fireDocumentDirty();
 	}
 
 	@Override
@@ -62,6 +70,5 @@ public class CreateArcCommand implements Command {
 	}
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

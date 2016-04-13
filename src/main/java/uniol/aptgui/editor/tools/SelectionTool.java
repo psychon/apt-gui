@@ -24,9 +24,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.GraphicalEdge;
-import uniol.aptgui.editor.document.GraphicalElement;
-import uniol.aptgui.editor.document.GraphicalNode;
+import uniol.aptgui.editor.document.Transform2D;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 
 /**
  * Selection tool. Gives the user the ability to translate and scale the view,
@@ -39,36 +40,51 @@ public class SelectionTool extends Tool {
 		NONE, VIEWPORT, NODE, EDGE
 	}
 
+	/**
+	 * Scale factor that gets applied for a single mouse wheel click.
+	 */
 	private static final double SCALE_FACTOR = 1.1;
 
-	private final Document document;
+	/**
+	 * Document this tool operates on.
+	 */
+	private final Document<?> document;
+
+	/**
+	 * Reference to the Document's transform object.
+	 */
+	private final Transform2D transform;
 
 	private DragType dragType;
 	private Object draggedElement;
 	private Point dragSource;
 
-	public SelectionTool(Document document) {
+	public SelectionTool(Document<?> document) {
 		this.document = document;
+		this.transform = document.getTransform();
 		this.dragType = DragType.NONE;
 		this.dragSource = null;
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1) {
-			GraphicalElement elem = document.getGraphialElementAtViewCoordinates(e.getPoint());
-			if (elem instanceof GraphicalNode) {
-				dragType = DragType.NODE;
-				draggedElement = elem;
-			} else if (elem instanceof GraphicalEdge) {
-				dragType = DragType.EDGE;
-				draggedElement = getOrCreateBreakpoint(e.getPoint(), (GraphicalEdge) elem);
-			} else {
-				dragType = DragType.VIEWPORT;
-				draggedElement = null;
-			}
-			dragSource = e.getPoint();
+		if (e.getButton() != MouseEvent.BUTTON1) {
+			return;
 		}
+
+		Point modelPosition = transform.applyInverse(e.getPoint());
+		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
+		if (elem instanceof GraphicalNode) {
+			dragType = DragType.NODE;
+			draggedElement = elem;
+		} else if (elem instanceof GraphicalEdge) {
+			dragType = DragType.EDGE;
+			draggedElement = getOrCreateBreakpoint(e.getPoint(), (GraphicalEdge) elem);
+		} else {
+			dragType = DragType.VIEWPORT;
+			draggedElement = null;
+		}
+		dragSource = e.getPoint();
 	}
 
 	@Override
@@ -121,7 +137,7 @@ public class SelectionTool extends Tool {
 	 * @return new or existing breakpoint at cursor position
 	 */
 	private Point getOrCreateBreakpoint(Point cursor, GraphicalEdge edge) {
-		Point modelPoint = document.transformViewToModel(cursor);
+		Point modelPoint = transform.applyInverse(cursor);
 		Point breakpoint = edge.getClosestBreakpoint(modelPoint);
 		// Either move existing breakpoint or create a new one.
 		if (breakpoint != null) {
@@ -133,8 +149,9 @@ public class SelectionTool extends Tool {
 	}
 
 	private void translateBreakpoint(Point dragTarget) {
+		// TODO encapsulate in history command
 		Point breakpoint = (Point) draggedElement;
-		Point modelPoint = document.transformViewToModel(dragTarget);
+		Point modelPoint = transform.applyInverse(dragTarget);
 		breakpoint.setLocation(modelPoint);
 		document.fireDocumentDirty();
 	}
@@ -142,7 +159,7 @@ public class SelectionTool extends Tool {
 	private void translateNode(Point dragTarget) {
 		// TODO encapsulate in history command
 		GraphicalNode node = (GraphicalNode) draggedElement;
-		Point modelTarget = document.transformViewToModel(dragTarget);
+		Point modelTarget = transform.applyInverse(dragTarget);
 		node.setCenter(modelTarget);
 		document.fireDocumentDirty();
 	}

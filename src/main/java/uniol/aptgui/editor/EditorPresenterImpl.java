@@ -64,9 +64,18 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 
 	@Override
 	public void setDocument(Document<?> document) {
+		if (document != null) {
+			document.removeListener(this);
+		}
+		if (hoverFeature != null) {
+			hoverFeature.onDeactivated();
+		}
+
 		this.document = document;
 		this.document.addListener(this);
 		hoverFeature = new HoverFeature(document);
+		hoverFeature.onActivated();
+
 		if (document instanceof PnDocument) {
 			toolbox.addPnTools((PnDocument)document);
 		} else if (document instanceof TsDocument) {
@@ -81,33 +90,38 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 		}
 		toolbox.setActiveTool(e.getSelectionId());
 		Tool tool = toolbox.getActiveTool();
-		if (tool != null) {
-			view.setCursor(tool.getCursor());
-		}
+		view.setCursor(tool.getCursor());
 		view.repaint();
 	}
 
 	@Override
 	public void onPaint(Graphics2D graphics) {
-		document.drawDocument(graphics);
-		hoverFeature.draw(graphics);
+		if (document.isVisible()) {
+			document.draw(graphics);
+		}
 	}
 
 	@Override
 	public void translateView(int dx, int dy) {
-		document.getTransform().translateView(dx, dy);
-		getView().repaint();
+		if (document.isVisible()) {
+			document.getTransform().translateView(dx, dy);
+			getView().repaint();
+		}
 	}
 
 	@Override
 	public void scaleView(double scale) {
-		document.getTransform().scaleView(scale);
-		getView().repaint();
+		if (document.isVisible()) {
+			document.getTransform().scaleView(scale);
+			getView().repaint();
+		}
 	}
 
 	@Override
 	public void onDocumentDirty() {
-		getView().repaint();
+		if (document.isVisible()) {
+			getView().repaint();
+		}
 	}
 
 	@Override

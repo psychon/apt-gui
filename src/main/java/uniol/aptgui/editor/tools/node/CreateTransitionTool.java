@@ -17,23 +17,30 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.document;
+package uniol.aptgui.editor.tools.node;
 
-public class GraphicalFlow extends GraphicalEdge {
+import uniol.aptgui.commands.CreateTransitionCommand;
+import uniol.aptgui.commands.History;
+import uniol.aptgui.editor.document.PnDocument;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalTransition;
 
-	protected long multiplicity;
+public class CreateTransitionTool extends CreateNodeTool<PnDocument, GraphicalTransition> {
 
-	public GraphicalFlow(GraphicalNode source, GraphicalNode target) {
-		super(source, target);
+	private final History history;
+
+	public CreateTransitionTool(PnDocument document, History history) {
+		super(document);
+		this.history = history;
 	}
 
-	public long getMultiplicity() {
-		return multiplicity;
+	@Override
+	protected GraphicalTransition createGraphicalNode() {
+		return new GraphicalTransition();
 	}
 
-	public void setMultiplicity(long multiplicity) {
-		this.multiplicity = multiplicity;
-		setLabel(String.valueOf(multiplicity));
+	@Override
+	protected void commitNodeCreation(GraphicalTransition node) {
+		history.execute(new CreateTransitionCommand(document, node));
 	}
 
 }

@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.document;
+package uniol.aptgui.editor.document.graphical.nodes;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -51,7 +51,7 @@ public class GraphicalTransition extends GraphicalNode {
 	}
 
 	@Override
-	public boolean containsPoint(Point point) {
+	public boolean coversPoint(Point point) {
 		int minX = center.x - RADIUS;
 		int maxX = center.x + RADIUS;
 		int minY = center.y - RADIUS;

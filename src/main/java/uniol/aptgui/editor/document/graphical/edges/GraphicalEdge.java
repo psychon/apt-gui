@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.document;
+package uniol.aptgui.editor.document.graphical.edges;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
@@ -26,6 +26,9 @@ import java.awt.Polygon;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
+
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 
 public abstract class GraphicalEdge extends GraphicalElement {
 
@@ -85,7 +88,7 @@ public abstract class GraphicalEdge extends GraphicalElement {
 	}
 
 	@Override
-	public boolean containsPoint(Point point) {
+	public boolean coversPoint(Point point) {
 		return getSegmentIndexAt(point) != -1;
 	}
 

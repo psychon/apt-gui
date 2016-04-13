@@ -20,32 +20,34 @@
 package uniol.aptgui.commands;
 
 import uniol.apt.adt.ts.State;
-import uniol.aptgui.editor.document.GraphicalElement;
-import uniol.aptgui.editor.document.GraphicalState;
 import uniol.aptgui.editor.document.TsDocument;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
 
 public class CreateStateCommand implements Command {
 
-	private final TsDocument document;
+	private final TsDocument tsDocument;
 	private final GraphicalState graphicalState;
 	private State tsState;
 
 	public CreateStateCommand(TsDocument document, GraphicalState graphicalState) {
-		this.document = document;
+		this.tsDocument = document;
 		this.graphicalState = graphicalState;
 	}
 
 	@Override
 	public void execute() {
-		tsState = document.getModel().createState();
+		tsState = tsDocument.getModel().createState();
 		tsState.putExtension(GraphicalElement.EXTENSION_KEY, graphicalState);
-		document.fireDocumentDirty();
+		tsDocument.add(graphicalState, tsState);
+		tsDocument.fireDocumentDirty();
 	}
 
 	@Override
 	public void undo() {
-		document.getModel().removeState(tsState);
-		document.fireDocumentDirty();
+		tsDocument.getModel().removeState(tsState);
+		tsDocument.remove(graphicalState);
+		tsDocument.fireDocumentDirty();
 	}
 
 	@Override
