@@ -57,8 +57,8 @@ public class CreateArcTool extends CreateEdgeTool {
 
 	@Override
 	protected void commitEdgeCreation(GraphicalEdge edge) {
-		State source = document.getModelElementAt(edge.getSource().getCenter());
-		State target = document.getModelElementAt(edge.getTarget().getCenter());
+		State source = (State) document.getModelElementAt(edge.getSource().getCenter());
+		State target = (State) document.getModelElementAt(edge.getTarget().getCenter());
 		TsDocument tsDocument = (TsDocument) document;
 		GraphicalArc graphicalArc = (GraphicalArc) edge;
 		CreateArcCommand cmd = new CreateArcCommand(tsDocument, source, target, "a", graphicalArc);

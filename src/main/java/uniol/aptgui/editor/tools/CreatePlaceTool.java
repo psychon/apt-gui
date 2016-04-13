@@ -19,7 +19,6 @@
 
 package uniol.aptgui.editor.tools;
 
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
@@ -47,6 +46,16 @@ public class CreatePlaceTool extends Tool {
 	}
 
 	@Override
+	public void onActivated() {
+		document.add(place);
+	}
+
+	@Override
+	public void onDeactivated() {
+		document.remove(place);
+	}
+
+	@Override
 	public void mouseMoved(MouseEvent e) {
 		// Use view coordinates since the Tool draw method doesn't take the Document transform into account.
 		place.setCenter(e.getPoint());
@@ -65,11 +74,6 @@ public class CreatePlaceTool extends Tool {
 			history.execute(new CreatePlaceCommand(document, place));
 			initPlace();
 		}
-	}
-
-	@Override
-	public void draw(Graphics2D graphics) {
-		place.draw(graphics);
 	}
 
 }

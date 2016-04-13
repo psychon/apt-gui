@@ -32,9 +32,7 @@ public interface EditorPresenter extends Presenter<EditorView> {
 
 	public void setWindowId(WindowId window);
 
-	public void setDocument(Document document);
-
-	public void applyLayout(Layout layout);
+	public void setDocument(Document<?> document);
 
 	/**
 	 * Translates the view by dx on the x-axis and dy on the y-axis. Scale

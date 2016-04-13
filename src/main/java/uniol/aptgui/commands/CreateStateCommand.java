@@ -37,14 +37,14 @@ public class CreateStateCommand implements Command {
 
 	@Override
 	public void execute() {
-		tsState = document.getTransitionSystem().createState();
+		tsState = document.getModel().createState();
 		tsState.putExtension(GraphicalElement.EXTENSION_KEY, graphicalState);
 		document.fireDocumentDirty();
 	}
 
 	@Override
 	public void undo() {
-		document.getTransitionSystem().removeState(tsState);
+		document.getModel().removeState(tsState);
 		document.fireDocumentDirty();
 	}
 

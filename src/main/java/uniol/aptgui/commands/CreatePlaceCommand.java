@@ -37,14 +37,14 @@ public class CreatePlaceCommand implements Command {
 
 	@Override
 	public void execute() {
-		pnPlace = pnDocument.getPetriNet().createPlace();
+		pnPlace = pnDocument.getModel().createPlace();
 		pnPlace.putExtension(GraphicalElement.EXTENSION_KEY, graphicalPlace);
 		pnDocument.fireDocumentDirty();
 	}
 
 	@Override
 	public void undo() {
-		pnDocument.getPetriNet().removePlace(pnPlace);
+		pnDocument.getModel().removePlace(pnPlace);
 		pnDocument.fireDocumentDirty();
 	}
 

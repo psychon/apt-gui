@@ -25,14 +25,37 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import uniol.apt.adt.extension.IExtensible;
+import uniol.apt.adt.pn.Flow;
+import uniol.apt.adt.pn.Node;
+import uniol.apt.adt.pn.PetriNet;
+import uniol.apt.adt.pn.Place;
+import uniol.apt.adt.pn.Transition;
+import uniol.apt.adt.ts.Arc;
+import uniol.apt.adt.ts.State;
+import uniol.apt.adt.ts.TransitionSystem;
 import uniol.aptgui.editor.layout.Layout;
 
-public abstract class Document {
+public class Document<T> {
 
 	private List<DocumentListener> listeners;
+
+	/**
+	 * Underlying model element. Either PetriNet or TransitionSystem.
+	 */
+	private T model;
+
+	/**
+	 * Map from GraphicalElements to their model objects of undetermined
+	 * type. The model object may be null if there is no corresponding model
+	 * object.
+	 */
+	private Map<GraphicalElement, Object> elements;
 
 	protected String title;
 	protected boolean hasUnsavedChanges;
@@ -53,6 +76,54 @@ public abstract class Document {
 		this.visible = false;
 		this.hasUnsavedChanges = false;
 		this.transform = new Transform2D();
+		this.elements = new HashMap<>();
+	}
+
+	public T getModel() {
+		return model;
+	}
+
+	public void setModel(T model) {
+		this.model = model;
+	}
+
+	/**
+	 * Adds a new standalone GraphicalElement to this Document.
+	 *
+	 * @param graphicalElem
+	 */
+	public void add(GraphicalElement graphicalElem) {
+		add(graphicalElem, null);
+	}
+
+	/**
+	 * Adds a new GraphicalElement to this Document together with its
+	 * corresponding model element.
+	 *
+	 * @param graphicalElem
+	 * @param modelElem
+	 */
+	public void add(GraphicalElement graphicalElem, Object modelElem) {
+		elements.put(graphicalElem, modelElem);
+	}
+
+	/**
+	 * Removes the given GraphicalElement from this Document.
+	 * @param graphicalElem
+	 */
+	public void remove(GraphicalElement graphicalElem) {
+		elements.remove(graphicalElem);
+	}
+
+	/**
+	 * Returns a view of all GraphicalElements in this Document. The view is
+	 * backed by the Document implementation, so changes to the return value
+	 * are reflected in the Document.
+	 *
+	 * @return
+	 */
+	public Set<GraphicalElement> getGraphicalElements() {
+		return elements.keySet();
 	}
 
 	public Transform2D getTransform() {
@@ -93,18 +164,30 @@ public abstract class Document {
 		}
 	}
 
-	public abstract void applyLayout(Layout layout);
+	public void applyLayout(Layout layout) {
+		layout.applyTo(this, width, height);
+	}
 
 	public void drawDocument(Graphics2D graphics) {
 		if (!visible) {
 			return;
 		}
 
-		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		// Setup graphics object.
+		graphics.setRenderingHint(
+			RenderingHints.KEY_ANTIALIASING,
+			RenderingHints.VALUE_ANTIALIAS_ON
+		);
+		// Save original transform.
 		AffineTransform originalTransform = graphics.getTransform();
+		// Apply document transform.
 		graphics.translate(transform.getTranslationX(), transform.getTranslationY());
 		graphics.scale(transform.getScale(), transform.getScale());
-		draw(graphics);
+		// Draw document.
+		for (GraphicalElement elem : elements.keySet()) {
+			elem.draw(graphics);
+		}
+		// Restore original transform.
 		graphics.setTransform(originalTransform);
 	}
 
@@ -148,8 +231,6 @@ public abstract class Document {
 		return new Point((int) p2d.getX(), (int) p2d.getY());
 	}
 
-	protected abstract void draw(Graphics2D graphics);
-
 	@SuppressWarnings("unchecked")
 	protected static <T> T getGraphicalExtension(IExtensible obj) {
 		return (T) obj.getExtension(GraphicalElement.EXTENSION_KEY);
@@ -181,9 +262,24 @@ public abstract class Document {
 	 * @param point point in model coordinates
 	 * @return
 	 */
-	public abstract GraphicalElement getGraphicalElementAt(Point point);
+	public GraphicalElement getGraphicalElementAt(Point point) {
+		for (GraphicalElement elem : elements.keySet()) {
+			if (elem.containsPoint(point)) {
+				return elem;
+			}
+		}
+		return null;
+	}
 
-	public abstract <T> T getModelElementAt(Point point);
+	@SuppressWarnings("unchecked")
+	public <U> U getModelElementAt(Point point) {
+		for (GraphicalElement elem : elements.keySet()) {
+			if (elem.containsPoint(point)) {
+				return (U) elements.get(elem);
+			}
+		}
+		return null;
+	}
 
 	public GraphicalElement getGraphialElementAtViewCoordinates(Point cursor) {
 		return getGraphicalElementAt(transformViewToModel(cursor));

@@ -37,14 +37,14 @@ public class CreateTransitionCommand implements Command {
 
 	@Override
 	public void execute() {
-		pnTransition = pnDocument.getPetriNet().createTransition();
+		pnTransition = pnDocument.getModel().createTransition();
 		pnTransition.putExtension(GraphicalElement.EXTENSION_KEY, graphicalTransition);
 		pnDocument.fireDocumentDirty();
 	}
 
 	@Override
 	public void undo() {
-		pnDocument.getPetriNet().removeTransition(pnTransition);
+		pnDocument.getModel().removeTransition(pnTransition);
 		pnDocument.fireDocumentDirty();
 	}
 

@@ -19,7 +19,6 @@
 
 package uniol.aptgui.editor.tools;
 
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
@@ -31,7 +30,7 @@ import uniol.aptgui.editor.document.InvisibleNode;
 
 public abstract class CreateEdgeTool extends Tool {
 
-	protected final Document document;
+	protected final Document<?> document;
 
 	protected boolean creating;
 	protected GraphicalNode source;
@@ -43,15 +42,21 @@ public abstract class CreateEdgeTool extends Tool {
 	 */
 	protected GraphicalElement hoverElement;
 
-	public CreateEdgeTool(Document document) {
+	public CreateEdgeTool(Document<?> document) {
 		this.document = document;
 		this.creating = false;
 	}
 
 	@Override
 	public void onDeactivated() {
+		// Stop creation when the tool is deactivated.
 		creating = false;
-		edge = null;
+
+		// Hide GraphicalEdge.
+		if (edge != null) {
+			document.remove(edge);
+			edge = null;
+		}
 	}
 
 	@Override
@@ -66,6 +71,7 @@ public abstract class CreateEdgeTool extends Tool {
 			target = new InvisibleNode();
 			target.setCenter(modelPos);
 			edge = createGraphicalEdge(source, target, modelPos);
+			document.add(edge);
 		}
 
 		if (creating) {
@@ -140,13 +146,6 @@ public abstract class CreateEdgeTool extends Tool {
 	protected abstract boolean isValidTarget(GraphicalElement target);
 
 	protected abstract void commitEdgeCreation(GraphicalEdge edge);
-
-	@Override
-	public void draw(Graphics2D graphics) {
-		if (edge != null) {
-			edge.draw(graphics);
-		}
-	}
 
 }
 

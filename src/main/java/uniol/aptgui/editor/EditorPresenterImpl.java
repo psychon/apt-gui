@@ -33,7 +33,6 @@ import uniol.aptgui.editor.document.DocumentListener;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.features.HoverFeature;
-import uniol.aptgui.editor.layout.Layout;
 import uniol.aptgui.editor.tools.Tool;
 import uniol.aptgui.editor.tools.Toolbox;
 import uniol.aptgui.events.ToolSelectedEvent;
@@ -42,12 +41,13 @@ import uniol.aptgui.mainwindow.WindowId;
 public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, EditorView>
 		implements EditorPresenter, MouseEventListener, DocumentListener {
 
-	protected final Application application;
-	protected final Toolbox toolbox;
+	private final Application application;
 
-	protected HoverFeature hoverFeature;
-	protected WindowId windowId;
-	protected Document document;
+	private final Toolbox toolbox;
+	private HoverFeature hoverFeature;
+
+	private WindowId windowId;
+	private Document<?> document;
 
 	@Inject
 	public EditorPresenterImpl(EditorView view, Application application) {
@@ -63,7 +63,7 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 	}
 
 	@Override
-	public void setDocument(Document document) {
+	public void setDocument(Document<?> document) {
 		this.document = document;
 		this.document.addListener(this);
 		hoverFeature = new HoverFeature(document);
@@ -88,28 +88,9 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 	}
 
 	@Override
-	public void applyLayout(Layout layout) {
-		int width = getView().getCanvasWidth();
-		int height = getView().getCanvasHeight();
-		if (width == 0 && height == 0) {
-			throw new AssertionError(
-					"Layout can only be applied to the editor once it is visible (and its size is known).");
-		}
-		if (document != null) {
-			document.setWidth(width);
-			document.setHeight(height);
-			document.applyLayout(layout);
-		}
-	}
-
-	@Override
 	public void onPaint(Graphics2D graphics) {
 		document.drawDocument(graphics);
 		hoverFeature.draw(graphics);
-		Tool tool = toolbox.getActiveTool();
-		if (tool != null) {
-			tool.draw(graphics);
-		}
 	}
 
 	@Override

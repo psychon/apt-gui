@@ -19,84 +19,41 @@
 
 package uniol.aptgui.editor.document;
 
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.util.HashMap;
+import java.util.Map;
 
 import uniol.apt.adt.pn.Flow;
+import uniol.apt.adt.pn.Node;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
-import uniol.aptgui.editor.layout.Layout;
 
-public class PnDocument extends Document {
+public class PnDocument extends Document<PetriNet> {
 
-	private final PetriNet petriNet;
+	public PnDocument(PetriNet pn) {
+		setModel(pn);
+		setTitle(pn.getName());
 
-	public PnDocument(PetriNet petriNet) {
-		this.petriNet = petriNet;
-		setTitle(petriNet.getName());
-	}
-
-	public PetriNet getPetriNet() {
-		return petriNet;
-	}
-
-	@Override
-	public void draw(Graphics2D graphics) {
-		for (Place place : petriNet.getPlaces()) {
-			GraphicalPlace elem = getGraphicalExtension(place);
-			elem.setTokens(place.getInitialToken().getValue());
-			elem.draw(graphics);
+		Map<Node, GraphicalNode> nodeMap = new HashMap<>();
+		for (Place place : pn.getPlaces()) {
+			GraphicalPlace elem = new GraphicalPlace();
+			place.putExtension(GraphicalElement.EXTENSION_KEY, elem);
+			nodeMap.put(place, elem);
+			add(elem, place);
 		}
-		for (Transition transition : petriNet.getTransitions()) {
-			GraphicalTransition elem = getGraphicalExtension(transition);
-			elem.setId(transition.getId());
-			elem.setLabel(transition.getLabel());
-			elem.draw(graphics);
+		for (Transition transition : pn.getTransitions()) {
+			GraphicalTransition elem = new GraphicalTransition();
+			transition.putExtension(GraphicalElement.EXTENSION_KEY, elem);
+			nodeMap.put(transition, elem);
+			add(elem, transition);
 		}
-		for (Flow flow : petriNet.getEdges()) {
-			GraphicalFlow elem = getGraphicalExtension(flow);
-			GraphicalNode source = getGraphicalExtension(flow.getSource());
-			GraphicalNode target = getGraphicalExtension(flow.getTarget());
-			elem.setSource(source);
-			elem.setTarget(target);
-			elem.setMultiplicity(10); // TODO
-			elem.draw(graphics);
+		for (Flow flow : pn.getEdges()) {
+			GraphicalNode source = nodeMap.get(flow.getSource());
+			GraphicalNode target = nodeMap.get(flow.getTarget());
+			GraphicalFlow elem = new GraphicalFlow(source, target);
+			flow.putExtension(GraphicalElement.EXTENSION_KEY, elem);
+			add(elem, flow);
 		}
-	}
-
-	@Override
-	public void applyLayout(Layout layout) {
-		layout.applyTo(petriNet, width, height);
-	}
-
-	@Override
-	public GraphicalElement getGraphicalElementAt(Point point) {
-		for (Place place : petriNet.getPlaces()) {
-			GraphicalPlace elem = getGraphicalExtension(place);
-			if (elem.containsPoint(point)) {
-				return elem;
-			}
-		}
-		for (Transition transition : petriNet.getTransitions()) {
-			GraphicalTransition elem = getGraphicalExtension(transition);
-			if (elem.containsPoint(point)) {
-				return elem;
-			}
-		}
-		for (Flow flow : petriNet.getEdges()) {
-			GraphicalFlow elem = getGraphicalExtension(flow);
-			if (elem.containsPoint(point)) {
-				return elem;
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public <T> T getModelElementAt(Point point) {
-		// TODO
-		return null;
 	}
 
 }

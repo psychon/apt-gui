@@ -46,14 +46,14 @@ public class CreateArcCommand implements Command {
 
 	@Override
 	public void execute() {
-		tsArc = document.getTransitionSystem().createArc(source, target, label);
+		tsArc = document.getModel().createArc(source, target, label);
 		tsArc.putExtension(GraphicalElement.EXTENSION_KEY, graphialArc);
 		document.fireDocumentDirty();
 	}
 
 	@Override
 	public void undo() {
-		document.getTransitionSystem().removeArc(tsArc);
+		document.getModel().removeArc(tsArc);
 	}
 
 	@Override

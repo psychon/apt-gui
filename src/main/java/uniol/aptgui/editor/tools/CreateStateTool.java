@@ -19,7 +19,6 @@
 
 package uniol.aptgui.editor.tools;
 
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
@@ -47,6 +46,16 @@ public class CreateStateTool extends Tool {
 	}
 
 	@Override
+	public void onActivated() {
+		document.add(state);
+	}
+
+	@Override
+	public void onDeactivated() {
+		document.remove(state);
+	}
+
+	@Override
 	public void mouseMoved(MouseEvent e) {
 		// Use view coordinates since the Tool draw method doesn't take the Document transform into account.
 		state.setCenter(e.getPoint());
@@ -65,11 +74,6 @@ public class CreateStateTool extends Tool {
 			history.execute(new CreateStateCommand(document, state));
 			initPlace();
 		}
-	}
-
-	@Override
-	public void draw(Graphics2D graphics) {
-		state.draw(graphics);
 	}
 
 }

@@ -19,14 +19,11 @@
 
 package uniol.aptgui.editor.layout;
 
-import uniol.apt.adt.pn.PetriNet;
-import uniol.apt.adt.ts.TransitionSystem;
+import uniol.aptgui.editor.document.Document;
 
 public interface Layout {
 
-	public void applyTo(PetriNet pn, int width, int height);
-
-	public void applyTo(TransitionSystem ts, int width, int height);
+	public void applyTo(Document<?> document, int width, int height);
 
 }
 

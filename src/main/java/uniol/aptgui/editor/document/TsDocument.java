@@ -19,81 +19,34 @@
 
 package uniol.aptgui.editor.document;
 
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.util.HashMap;
+import java.util.Map;
 
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
-import uniol.aptgui.editor.layout.Layout;
 
-public class TsDocument extends Document {
+public class TsDocument extends Document<TransitionSystem> {
 
-	private final TransitionSystem transitionSystem;
+	public TsDocument(TransitionSystem ts) {
+		setModel(ts);
+		setTitle(ts.getName());
 
-	public TsDocument(TransitionSystem transitionSystem) {
-		this.transitionSystem = transitionSystem;
-		setTitle(transitionSystem.getName());
-	}
-
-	public TransitionSystem getTransitionSystem() {
-		return transitionSystem;
-	}
-
-	@Override
-	public void applyLayout(Layout layout) {
-		layout.applyTo(transitionSystem, width, height);
-	}
-
-	@Override
-	protected void draw(Graphics2D graphics) {
-		for (State state : transitionSystem.getNodes()) {
-			GraphicalState elem = getGraphicalExtension(state);
-			elem.setId(state.getId());
-			elem.draw(graphics);
+		Map<State, GraphicalState> stateMap = new HashMap<>();
+		for (State state : ts.getNodes()) {
+			GraphicalState elem = new GraphicalState();
+			state.putExtension(GraphicalElement.EXTENSION_KEY, elem);
+			stateMap.put(state, elem);
+			add(elem, state);
 		}
-		for (Arc arc : transitionSystem.getEdges()) {
-			GraphicalArc elem = getGraphicalExtension(arc);
-			elem.setLabel(arc.getLabel());
-			elem.draw(graphics);
+		for (Arc arc : ts.getEdges()) {
+			GraphicalState source = stateMap.get(arc.getSource());
+			GraphicalState target = stateMap.get(arc.getTarget());
+			GraphicalArc elem = new GraphicalArc(source, target);
+			arc.putExtension(GraphicalElement.EXTENSION_KEY, elem);
+			add(elem, arc);
 		}
 	}
-
-	@Override
-	public GraphicalElement getGraphicalElementAt(Point point) {
-		for (State state : transitionSystem.getNodes()) {
-			GraphicalState elem = getGraphicalExtension(state);
-			if (elem.containsPoint(point)) {
-				return elem;
-			}
-		}
-		for (Arc arc : transitionSystem.getEdges()) {
-			GraphicalArc elem = getGraphicalExtension(arc);
-			if (elem.containsPoint(point)) {
-				return elem;
-			}
-		}
-		return null;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getModelElementAt(Point point) {
-		for (State state : transitionSystem.getNodes()) {
-			GraphicalState elem = getGraphicalExtension(state);
-			if (elem.containsPoint(point)) {
-				return (T) state;
-			}
-		}
-		for (Arc arc : transitionSystem.getEdges()) {
-			GraphicalArc elem = getGraphicalExtension(arc);
-			if (elem.containsPoint(point)) {
-				return (T) arc;
-			}
-		}
-		return null;
-	}
-
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

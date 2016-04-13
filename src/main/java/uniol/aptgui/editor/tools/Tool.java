@@ -20,20 +20,36 @@
 package uniol.aptgui.editor.tools;
 
 import java.awt.Cursor;
-import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 
 public abstract class Tool extends MouseAdapter {
 
+	/**
+	 * Returns the Cursor that should be shown by the editor while this tool
+	 * is active. Returns the default cursor unless overridden by
+	 * subclasses.
+	 *
+	 * @return the tool's cursor
+	 */
 	public Cursor getCursor() {
 		return Cursor.getDefaultCursor();
 	}
 
-	public void onActivated() {}
+	/**
+	 * Called by the editor when this tool is activated. Can be overridden
+	 * by subclasses to get informed when the tool is activated.
+	 */
+	public void onActivated() {
+		// By default, do nothing.
+	}
 
-	public void onDeactivated() {}
-
-	public void draw(Graphics2D graphics) {}
+	/**
+	 * Called by the editor when this tool is deactivated. Can be overridden
+	 * by subclasses to get informed when the tool is deactivated.
+	 */
+	public void onDeactivated() {
+		// By default, do nothing.
+	}
 
 }
 
