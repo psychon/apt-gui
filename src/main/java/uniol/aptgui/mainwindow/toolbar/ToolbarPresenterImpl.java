@@ -39,8 +39,8 @@ public class ToolbarPresenterImpl extends AbstractPresenter<ToolbarPresenter, To
 	public ToolbarPresenterImpl(ToolbarView view, EventBus eventBus) {
 		super(view);
 		this.eventBus = eventBus;
-		this.activePnTool = ToolId.PN_SELECTION;
-		this.activeTsTool = ToolId.TS_SELECTION;
+		this.activePnTool = ToolId.SELECTION;
+		this.activeTsTool = ToolId.SELECTION;
 
 		this.eventBus.register(this);
 		view.setPetriNetToolsVisible(false);
@@ -59,8 +59,8 @@ public class ToolbarPresenterImpl extends AbstractPresenter<ToolbarPresenter, To
 		case MODULE:
 			break;
 		case PETRI_NET:
-			view.setPetriNetToolsVisible(true);
 			view.setTransitionSystemToolsVisible(false);
+			view.setPetriNetToolsVisible(true);
 			view.setActiveTool(activePnTool);
 			break;
 		case TRANSITION_SYSTEM:

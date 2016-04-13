@@ -21,18 +21,21 @@ package uniol.aptgui.editor.tools;
 
 public enum ToolId {
 
-	PN_SELECTION, PN_CREATE_PLACE, PN_CREATE_TRANSITION, PN_CREATE_FLOW,
-	TS_SELECTION, TS_CREATE_STATE, TS_CREATE_ARC;
+	VIEWPORT, SELECTION,
+	PN_CREATE_PLACE, PN_CREATE_TRANSITION, PN_CREATE_FLOW,
+	TS_CREATE_STATE, TS_CREATE_ARC;
 
 	public boolean isPetriNetTool() {
-		return this == ToolId.PN_SELECTION
+		return this == ToolId.VIEWPORT
+		    || this == ToolId.SELECTION
 		    || this == ToolId.PN_CREATE_PLACE
 		    || this == ToolId.PN_CREATE_TRANSITION
 		    || this == ToolId.PN_CREATE_FLOW;
 	}
 
 	public boolean isTransitionSystemTool() {
-		return this == ToolId.TS_SELECTION
+		return this == ToolId.VIEWPORT
+		    || this == ToolId.SELECTION
 		    || this == TS_CREATE_STATE
 		    || this == TS_CREATE_ARC;
 	}

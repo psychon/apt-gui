@@ -31,14 +31,14 @@ import uniol.aptgui.events.ToolSelectedEvent;
 import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
-public class PnSelectionToolAction extends AbstractAction {
+public class ViewportToolAction extends AbstractAction {
 
 	private final EventBus eventBus;
 
 	@Inject
-	public PnSelectionToolAction(EventBus eventBus) {
+	public ViewportToolAction(EventBus eventBus) {
 		this.eventBus = eventBus;
-		String name = "Select";
+		String name = "Transform viewport";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconSelect());
 		putValue(SHORT_DESCRIPTION, name);
@@ -46,7 +46,7 @@ public class PnSelectionToolAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		eventBus.post(new ToolSelectedEvent(ToolId.PN_SELECTION));
+		eventBus.post(new ToolSelectedEvent(ToolId.VIEWPORT));
 	}
 
 }

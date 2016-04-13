@@ -21,7 +21,6 @@ package uniol.aptgui.editor.tools;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
 
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.Transform2D;
@@ -37,13 +36,8 @@ import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 public class SelectionTool extends Tool {
 
 	private static enum DragType {
-		NONE, VIEWPORT, NODE, EDGE
+		NONE, NODE, EDGE
 	}
-
-	/**
-	 * Scale factor that gets applied for a single mouse wheel click.
-	 */
-	private static final double SCALE_FACTOR = 1.1;
 
 	/**
 	 * Document this tool operates on.
@@ -57,13 +51,20 @@ public class SelectionTool extends Tool {
 
 	private DragType dragType;
 	private Object draggedElement;
-	private Point dragSource;
 
 	public SelectionTool(Document<?> document) {
 		this.document = document;
 		this.transform = document.getTransform();
 		this.dragType = DragType.NONE;
-		this.dragSource = null;
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if (e.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
+
+		// User clicked LMB: Select element under cursor.
 	}
 
 	@Override
@@ -72,6 +73,7 @@ public class SelectionTool extends Tool {
 			return;
 		}
 
+		// User pressed LMB: Either move view or element under cursor.
 		Point modelPosition = transform.applyInverse(e.getPoint());
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
 		if (elem instanceof GraphicalNode) {
@@ -81,10 +83,9 @@ public class SelectionTool extends Tool {
 			dragType = DragType.EDGE;
 			draggedElement = getOrCreateBreakpoint(e.getPoint(), (GraphicalEdge) elem);
 		} else {
-			dragType = DragType.VIEWPORT;
+			dragType = DragType.NONE;
 			draggedElement = null;
 		}
-		dragSource = e.getPoint();
 	}
 
 	@Override
@@ -100,31 +101,7 @@ public class SelectionTool extends Tool {
 			break;
 		case NONE:
 			break;
-		case VIEWPORT:
-			int dx = dragTarget.x - dragSource.x;
-			int dy = dragTarget.y - dragSource.y;
-			translateView(dx, dy);
-			break;
 		}
-
-		dragSource = dragTarget;
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		if (dragType == DragType.VIEWPORT) {
-			dragType = DragType.NONE;
-		}
-	}
-
-	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
-		if (e.getWheelRotation() < 0) {
-			scaleView(-1 / SCALE_FACTOR * e.getWheelRotation());
-		} else {
-			scaleView(SCALE_FACTOR * e.getWheelRotation());
-		}
-
 	}
 
 	/**
@@ -161,16 +138,6 @@ public class SelectionTool extends Tool {
 		GraphicalNode node = (GraphicalNode) draggedElement;
 		Point modelTarget = transform.applyInverse(dragTarget);
 		node.setCenter(modelTarget);
-		document.fireDocumentDirty();
-	}
-
-	private void translateView(int dx, int dy) {
-		document.getTransform().translateView(dx, dy);
-		document.fireDocumentDirty();
-	}
-
-	private void scaleView(double scale) {
-		document.getTransform().scaleView(scale);
 		document.fireDocumentDirty();
 	}
 
