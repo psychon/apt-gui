@@ -25,18 +25,18 @@ public enum FeatureId {
 	VIEWPORT, HOVER,
 
 	// TOOLS
-	SELECTION, PN_CREATE_PLACE, PN_CREATE_TRANSITION, PN_CREATE_FLOW,
-	TS_CREATE_STATE, TS_CREATE_ARC;
+	PN_SELECTION, PN_CREATE_PLACE, PN_CREATE_TRANSITION, PN_CREATE_FLOW,
+	TS_SELECTION, TS_CREATE_STATE, TS_CREATE_ARC;
 
 	public boolean isPetriNetTool() {
-		return this == FeatureId.SELECTION
-		    || this == FeatureId.PN_CREATE_PLACE
-		    || this == FeatureId.PN_CREATE_TRANSITION
-		    || this == FeatureId.PN_CREATE_FLOW;
+		return this == PN_SELECTION
+		    || this == PN_CREATE_PLACE
+		    || this == PN_CREATE_TRANSITION
+		    || this == PN_CREATE_FLOW;
 	}
 
 	public boolean isTransitionSystemTool() {
-		return this == FeatureId.SELECTION
+		return this == TS_SELECTION
 		    || this == TS_CREATE_STATE
 		    || this == TS_CREATE_ARC;
 	}

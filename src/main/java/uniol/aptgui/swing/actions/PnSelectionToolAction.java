@@ -17,35 +17,36 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.mainwindow;
+package uniol.aptgui.swing.actions;
 
-public class WindowId {
+import java.awt.event.ActionEvent;
 
-	private static int nextId = 0;
+import javax.swing.AbstractAction;
 
-	private final int id;
-	private final WindowType type;
+import com.google.common.eventbus.EventBus;
+import com.google.inject.Inject;
 
-	public WindowId(WindowType type) {
-		this.id = getNextId();
-		this.type = type;
-	}
+import uniol.aptgui.editor.features.base.FeatureId;
+import uniol.aptgui.events.ToolSelectedEvent;
+import uniol.aptgui.swing.Resource;
 
-	public int getId() {
-		return id;
-	}
+@SuppressWarnings("serial")
+public class PnSelectionToolAction extends AbstractAction {
 
-	public WindowType getType() {
-		return type;
+	private final EventBus eventBus;
+
+	@Inject
+	public PnSelectionToolAction(EventBus eventBus) {
+		this.eventBus = eventBus;
+		String name = "Select";
+		putValue(NAME, name);
+		putValue(SMALL_ICON, Resource.getIconSelect());
+		putValue(SHORT_DESCRIPTION, name);
 	}
 
 	@Override
-	public String toString() {
-		return "WindowId [id=" + id + ", type=" + type + "]";
-	}
-
-	private static synchronized int getNextId() {
-		return nextId++;
+	public void actionPerformed(ActionEvent e) {
+		eventBus.post(new ToolSelectedEvent(FeatureId.PN_SELECTION));
 	}
 
 }

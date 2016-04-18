@@ -39,8 +39,8 @@ public class ToolbarPresenterImpl extends AbstractPresenter<ToolbarPresenter, To
 	public ToolbarPresenterImpl(ToolbarView view, EventBus eventBus) {
 		super(view);
 		this.eventBus = eventBus;
-		this.activePnTool = FeatureId.SELECTION;
-		this.activeTsTool = FeatureId.SELECTION;
+		this.activePnTool = FeatureId.PN_SELECTION;
+		this.activeTsTool = FeatureId.TS_SELECTION;
 
 		this.eventBus.register(this);
 		view.setPetriNetToolsVisible(false);

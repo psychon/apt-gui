@@ -33,6 +33,11 @@ public class WindowFocusLostEvent {
 		return windowId;
 	}
 
+	@Override
+	public String toString() {
+		return "WindowFocusLostEvent [windowId=" + windowId + "]";
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

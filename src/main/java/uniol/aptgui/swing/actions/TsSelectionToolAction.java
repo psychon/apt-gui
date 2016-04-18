@@ -31,12 +31,12 @@ import uniol.aptgui.events.ToolSelectedEvent;
 import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
-public class SelectionToolAction extends AbstractAction {
+public class TsSelectionToolAction extends AbstractAction {
 
 	private final EventBus eventBus;
 
 	@Inject
-	public SelectionToolAction(EventBus eventBus) {
+	public TsSelectionToolAction(EventBus eventBus) {
 		this.eventBus = eventBus;
 		String name = "Select";
 		putValue(NAME, name);
@@ -46,7 +46,7 @@ public class SelectionToolAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		eventBus.post(new ToolSelectedEvent(FeatureId.SELECTION));
+		eventBus.post(new ToolSelectedEvent(FeatureId.TS_SELECTION));
 	}
 
 }
