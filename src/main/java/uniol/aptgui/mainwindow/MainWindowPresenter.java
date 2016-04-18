@@ -19,12 +19,17 @@
 
 package uniol.aptgui.mainwindow;
 
+import java.util.Collection;
+
+import uniol.apt.module.Module;
 import uniol.aptgui.Presenter;
 import uniol.aptgui.editor.document.Document;
 
 public interface MainWindowPresenter extends Presenter<MainWindowView> {
 
 	/// ACTIONS ///
+
+	public void setModules(Collection<Module> modules);
 
 	public void show();
 

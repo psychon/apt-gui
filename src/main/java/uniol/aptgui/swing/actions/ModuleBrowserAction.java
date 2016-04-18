@@ -17,37 +17,32 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.mainwindow.menu;
+package uniol.aptgui.swing.actions;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
 
 import com.google.inject.Inject;
 
-import uniol.apt.module.Category;
-import uniol.apt.module.Module;
-import uniol.aptgui.AbstractPresenter;
+import uniol.aptgui.Application;
 
-public class MenuPresenterImpl extends AbstractPresenter<MenuPresenter, MenuView> implements MenuPresenter {
+@SuppressWarnings("serial")
+public class ModuleBrowserAction extends AbstractAction {
 
-	private final Set<Category> categoriesFilter;
+	private final Application app;
 
 	@Inject
-	public MenuPresenterImpl(MenuView view) {
-		super(view);
-		categoriesFilter = new HashSet<>();
-		categoriesFilter.add(Category.PN);
-		categoriesFilter.add(Category.LTS);
-		categoriesFilter.add(Category.GENERATOR);
+	public ModuleBrowserAction(Application app) {
+		this.app = app;
+		String name = "Open module browser...";
+		putValue(NAME, name);
+		putValue(SHORT_DESCRIPTION, name);
 	}
 
 	@Override
-	public void setRecentlyUsedModule(Module module) {
-		for (Category cat : module.getCategories()) {
-			if (categoriesFilter.contains(cat)) {
-				view.setRecentlyUsedModule(module);
-			}
-		}
+	public void actionPerformed(ActionEvent e) {
+		// TODO
 	}
 
 }

@@ -23,6 +23,7 @@ import java.io.File;
 
 import com.google.common.eventbus.EventBus;
 
+import uniol.apt.module.Module;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.mainwindow.MainWindowPresenter;
@@ -51,6 +52,8 @@ public interface Application {
 	public void openFile(File file);
 
 	public void saveToFile(Document<?> document);
+
+	public void openModule(Module module);
 
 }
 

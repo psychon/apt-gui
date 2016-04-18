@@ -19,6 +19,7 @@
 
 package uniol.aptgui.mainwindow;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -27,6 +28,7 @@ import java.util.logging.Logger;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
+import uniol.apt.module.Module;
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Presenter;
 import uniol.aptgui.editor.EditorPresenter;
@@ -115,6 +117,13 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		createInternalWindow(id, editor);
 
 		return id;
+	}
+
+	@Override
+	public void setModules(Collection<Module> modules) {
+		for (Module mod : modules) {
+			menu.setRecentlyUsedModule(mod);
+		}
 	}
 
 }

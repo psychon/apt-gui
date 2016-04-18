@@ -23,6 +23,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 
+import uniol.apt.module.AptModuleRegistry;
+import uniol.apt.module.ModuleRegistry;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.EditorPresenter;
 import uniol.aptgui.editor.EditorPresenterImpl;
@@ -62,6 +64,7 @@ public class DependenyModule extends AbstractModule {
 		bind(ToolbarView.class).to(ToolbarViewImpl.class);
 		bind(History.class).in(Singleton.class);
 		bind(EventBus.class).in(Singleton.class);
+		bind(ModuleRegistry.class).toInstance(AptModuleRegistry.INSTANCE);
 	}
 
 }

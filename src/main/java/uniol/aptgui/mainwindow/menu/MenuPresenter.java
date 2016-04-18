@@ -19,11 +19,19 @@
 
 package uniol.aptgui.mainwindow.menu;
 
+import uniol.apt.module.Module;
 import uniol.aptgui.Presenter;
 
 public interface MenuPresenter extends Presenter<MenuView> {
 
-}
+	/**
+	 * Called when the given module was used so that the MenuPresenter can
+	 * show the recently used modules.
+	 *
+	 * @param module
+	 */
+	void setRecentlyUsedModule(Module module);
 
+}
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

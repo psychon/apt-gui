@@ -17,37 +17,32 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.mainwindow.menu;
+package uniol.aptgui.swing.actions;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.awt.event.ActionEvent;
 
-import com.google.inject.Inject;
+import javax.swing.AbstractAction;
 
-import uniol.apt.module.Category;
 import uniol.apt.module.Module;
-import uniol.aptgui.AbstractPresenter;
+import uniol.aptgui.Application;
 
-public class MenuPresenterImpl extends AbstractPresenter<MenuPresenter, MenuView> implements MenuPresenter {
+@SuppressWarnings("serial")
+public class ModuleAction extends AbstractAction {
 
-	private final Set<Category> categoriesFilter;
+	private final Application app;
+	private final Module module;
 
-	@Inject
-	public MenuPresenterImpl(MenuView view) {
-		super(view);
-		categoriesFilter = new HashSet<>();
-		categoriesFilter.add(Category.PN);
-		categoriesFilter.add(Category.LTS);
-		categoriesFilter.add(Category.GENERATOR);
+	public ModuleAction(Application app, Module module) {
+		this.app = app;
+		this.module = module;
+		putValue(NAME, module.getName());
+		putValue(SHORT_DESCRIPTION, module.getShortDescription());
+		putValue(LONG_DESCRIPTION, module.getLongDescription());
 	}
 
 	@Override
-	public void setRecentlyUsedModule(Module module) {
-		for (Category cat : module.getCategories()) {
-			if (categoriesFilter.contains(cat)) {
-				view.setRecentlyUsedModule(module);
-			}
-		}
+	public void actionPerformed(ActionEvent e) {
+		app.openModule(module);
 	}
 
 }

@@ -19,9 +19,12 @@
 
 package uniol.aptgui.mainwindow.menu;
 
+import uniol.apt.module.Module;
 import uniol.aptgui.View;
 
 public interface MenuView extends View<MenuPresenter> {
+
+	void setRecentlyUsedModule(Module module);
 
 }
 
