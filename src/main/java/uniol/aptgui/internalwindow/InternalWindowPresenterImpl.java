@@ -19,6 +19,8 @@
 
 package uniol.aptgui.internalwindow;
 
+import javax.swing.BorderFactory;
+
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -53,13 +55,16 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 		}
 
 		Document<?> doc = application.getDocument(id);
+		if (doc == null) {
+			return;
+		}
+
 		String title = doc.getTitle();
 		if (title.trim().isEmpty()) {
 			title = "$" + id;
 		} else {
 			title = title + "($" + id + ")";
 		}
-
 		view.setTitle(title);
 	}
 
@@ -92,6 +97,16 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	@Override
 	public void focus() {
 		view.focus();
+	}
+
+	@Override
+	public void setTitle(String title) {
+		view.setTitle(title);
+	}
+
+	@Override
+	public void setPadding(int padding) {
+		view.setPadding(padding);
 	}
 
 }

@@ -29,6 +29,8 @@ public interface InternalWindowView extends View<InternalWindowPresenter> {
 
 	public void focus();
 
+	public void setPadding(int padding);
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

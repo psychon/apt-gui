@@ -17,46 +17,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui;
+package uniol.aptgui.modulebrowser;
 
-import java.io.File;
+import uniol.aptgui.Presenter;
 
-import com.google.common.eventbus.EventBus;
-
-import uniol.apt.module.Module;
-import uniol.aptgui.commands.History;
-import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.mainwindow.MainWindowPresenter;
-import uniol.aptgui.mainwindow.WindowId;
-
-public interface Application {
-
-	public EventBus getEventBus();
-
-	public History getHistory();
-
-	public MainWindowPresenter getMainWindow();
-
-	public void show();
-
-	public void newPetriNet();
-
-	public void newTransitionSystem();
-
-	public void closeWindow(WindowId id);
-
-	public WindowId getActiveInternalWindow();
-
-	public Document<?> getDocument(WindowId id);
-
-	public void openFile(File file);
-
-	public void saveToFile(Document<?> document);
-
-	public void openModule(Module module);
-
-	public void openModuleBrowser();
+public interface ModuleBrowserPresenter extends Presenter<ModuleBrowserView> {
 
 }
+
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

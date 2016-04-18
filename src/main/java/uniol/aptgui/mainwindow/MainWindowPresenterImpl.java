@@ -19,7 +19,6 @@
 
 package uniol.aptgui.mainwindow;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -28,7 +27,6 @@ import java.util.logging.Logger;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-import uniol.apt.module.Module;
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Presenter;
 import uniol.aptgui.editor.EditorPresenter;
@@ -38,6 +36,7 @@ import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.internalwindow.InternalWindowPresenter;
 import uniol.aptgui.mainwindow.menu.MenuPresenter;
 import uniol.aptgui.mainwindow.toolbar.ToolbarPresenter;
+import uniol.aptgui.modulebrowser.ModuleBrowserPresenter;
 
 public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresenter, MainWindowView>
 		implements MainWindowPresenter {
@@ -49,15 +48,19 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	private final Map<WindowId, InternalWindowPresenter> internalWindows;
 	private final ToolbarPresenter toolbar;
 	private final MenuPresenter menu;
+	private final ModuleBrowserPresenter moduleBrowser;
+
+	private WindowId moduleBrowserWindowId;
 
 	@Inject
 	public MainWindowPresenterImpl(MainWindowView view, Injector injector, ToolbarPresenter toolbar,
-			MenuPresenter menu) {
+			MenuPresenter menu, ModuleBrowserPresenter moduleBrowser) {
 		super(view);
 		this.injector = injector;
 		this.internalWindows = new HashMap<>();
 		this.toolbar = toolbar;
 		this.menu = menu;
+		this.moduleBrowser = moduleBrowser;
 
 		view.setToolbar(toolbar.getView());
 		view.setMenu(menu.getView());
@@ -74,11 +77,12 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		getView().close();
 	}
 
-	private void createInternalWindow(WindowId id, Presenter<?> contentPresenter) {
+	private InternalWindowPresenter createInternalWindow(WindowId id, Presenter<?> contentPresenter) {
 		InternalWindowPresenter window = injector.getInstance(InternalWindowPresenter.class);
 		window.setWindowId(id);
 		window.setContentPresenter(contentPresenter);
 		internalWindows.put(id, window);
+		return window;
 	}
 
 	@Override
@@ -96,6 +100,11 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	public void showWindow(WindowId id) {
 		InternalWindowPresenter window = internalWindows.get(id);
 		getView().addInternalWindow(window.getView());
+	}
+
+	@Override
+	public void focus(WindowId id) {
+		InternalWindowPresenter window = internalWindows.get(id);
 		window.focus();
 	}
 
@@ -120,10 +129,16 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	}
 
 	@Override
-	public void setModules(Collection<Module> modules) {
-		for (Module mod : modules) {
-			menu.setRecentlyUsedModule(mod);
+	public void showModuleBrowser() {
+		if (moduleBrowserWindowId == null) {
+			moduleBrowserWindowId = new WindowId(WindowType.MODULE_BROWSER);
+			InternalWindowPresenter window = createInternalWindow(moduleBrowserWindowId, moduleBrowser);
+			window.setTitle("Module Browser");
+			window.setPadding(3);
+			showWindow(moduleBrowserWindowId);
 		}
+
+		focus(moduleBrowserWindowId);
 	}
 
 }

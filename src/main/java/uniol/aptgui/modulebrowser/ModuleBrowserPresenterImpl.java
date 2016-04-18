@@ -17,45 +17,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui;
+package uniol.aptgui.modulebrowser;
 
-import java.io.File;
+import com.google.inject.Inject;
 
-import com.google.common.eventbus.EventBus;
+import uniol.apt.module.ModuleRegistry;
+import uniol.aptgui.AbstractPresenter;
 
-import uniol.apt.module.Module;
-import uniol.aptgui.commands.History;
-import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.mainwindow.MainWindowPresenter;
-import uniol.aptgui.mainwindow.WindowId;
+public class ModuleBrowserPresenterImpl extends AbstractPresenter<ModuleBrowserPresenter, ModuleBrowserView>
+		implements ModuleBrowserPresenter {
 
-public interface Application {
-
-	public EventBus getEventBus();
-
-	public History getHistory();
-
-	public MainWindowPresenter getMainWindow();
-
-	public void show();
-
-	public void newPetriNet();
-
-	public void newTransitionSystem();
-
-	public void closeWindow(WindowId id);
-
-	public WindowId getActiveInternalWindow();
-
-	public Document<?> getDocument(WindowId id);
-
-	public void openFile(File file);
-
-	public void saveToFile(Document<?> document);
-
-	public void openModule(Module module);
-
-	public void openModuleBrowser();
+	@Inject
+	public ModuleBrowserPresenterImpl(ModuleBrowserView view, ModuleRegistry moduleRegistry) {
+		super(view);
+		view.setModules(moduleRegistry.getModules());
+	}
 
 }
 

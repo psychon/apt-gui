@@ -37,7 +37,6 @@ import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.io.parser.ParseException;
 import uniol.apt.io.renderer.RenderException;
 import uniol.apt.module.Module;
-import uniol.apt.module.ModuleRegistry;
 import uniol.aptgui.commands.ApplyLayoutCommand;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
@@ -56,21 +55,18 @@ public class ApplicationImpl implements Application {
 	private final MainWindowPresenter mainWindow;
 	private final EventBus eventBus;
 	private final History history;
-	private final ModuleRegistry moduleRegistry;
 
 	private final Map<WindowId, Document<?>> documents;
 
 	private WindowId activeWindow;
 
 	@Inject
-	public ApplicationImpl(MainWindowPresenter mainWindow, EventBus eventBus, History history, ModuleRegistry moduleRegistry) {
+	public ApplicationImpl(MainWindowPresenter mainWindow, EventBus eventBus, History history) {
 		this.mainWindow = mainWindow;
 		this.eventBus = eventBus;
 		this.history = history;
-		this.moduleRegistry = moduleRegistry;
 		this.documents = new HashMap<>();
 
-		mainWindow.setModules(moduleRegistry.getModules());
 		eventBus.register(this);
 	}
 
@@ -182,6 +178,11 @@ public class ApplicationImpl implements Application {
 	public void openModule(Module module) {
 		// TODO Auto-generated method stub
 		System.out.println("OPEN MODULE " + module);
+	}
+
+	@Override
+	public void openModuleBrowser() {
+		mainWindow.showModuleBrowser();
 	}
 
 }

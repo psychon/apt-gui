@@ -29,8 +29,6 @@ public interface MainWindowPresenter extends Presenter<MainWindowView> {
 
 	/// ACTIONS ///
 
-	public void setModules(Collection<Module> modules);
-
 	public void show();
 
 	public void close();
@@ -40,6 +38,10 @@ public interface MainWindowPresenter extends Presenter<MainWindowView> {
 	public void showWindow(WindowId id);
 
 	public void removeWindow(WindowId id);
+
+	public void focus(WindowId id);
+
+	public void showModuleBrowser();
 
 	/// VIEW EVENTS ///
 

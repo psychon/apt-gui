@@ -23,6 +23,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.beans.PropertyVetoException;
 
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.event.InternalFrameEvent;
 
@@ -33,8 +35,12 @@ import uniol.aptgui.swing.JInternalFrameView;
 @SuppressWarnings("serial")
 public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPresenter> implements InternalWindowView {
 
+	private final JPanel contentPanel;
+
 	public InternalWindowViewImpl() {
 		initWindowListener();
+		contentPanel = new JPanel();
+		getContentPane().add(contentPanel);
 	}
 
 	private void initWindowListener() {
@@ -54,9 +60,9 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 
 	@Override
 	public void setContent(View<?> view) {
-		getContentPane().removeAll();
-		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add((Component) view, BorderLayout.CENTER);
+		contentPanel.removeAll();
+		contentPanel.setLayout(new BorderLayout());
+		contentPanel.add((Component) view, BorderLayout.CENTER);
 		pack();
 		setVisible(true);
 	}
@@ -67,6 +73,11 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 			setSelected(true);
 		} catch (PropertyVetoException e) {
 		}
+	}
+
+	@Override
+	public void setPadding(int padding) {
+		contentPanel.setBorder(BorderFactory.createEmptyBorder(padding, padding, padding, padding));
 	}
 
 }
