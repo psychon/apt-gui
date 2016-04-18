@@ -22,10 +22,12 @@ package uniol.aptgui.swing.actions;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
+import com.google.common.io.Files;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
@@ -56,15 +58,29 @@ public class SaveAction extends AbstractAction {
 		if (document.getFile() != null) {
 			app.saveToFile(document);
 		} else {
-			JFileChooser fc = new JFileChooser();
-			fc.setFileFilter(new AptFileFilter());
-			int res = fc.showSaveDialog((Component) app.getMainWindow().getView());
-			if (res == JFileChooser.APPROVE_OPTION) {
-				document.setFile(fc.getSelectedFile());
+			File file = getSaveFile();
+			if (file != null) {
+				document.setFile(file);
 				app.saveToFile(document);
 			}
 		}
 
+	}
+
+	private File getSaveFile() {
+		JFileChooser fc = new JFileChooser();
+		fc.setFileFilter(new AptFileFilter());
+		int res = fc.showSaveDialog((Component) app.getMainWindow().getView());
+		if (res == JFileChooser.APPROVE_OPTION) {
+			File f = fc.getSelectedFile();
+			String ext = Files.getFileExtension(f.getAbsolutePath());
+			if (!ext.equalsIgnoreCase("apt")) {
+				f = new File(f.getAbsolutePath() + ".apt");
+			}
+			return f;
+		}
+
+		return null;
 	}
 
 }
