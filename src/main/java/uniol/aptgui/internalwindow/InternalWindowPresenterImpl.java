@@ -52,7 +52,7 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 			return;
 		}
 
-		Document doc = application.getDocument(id);
+		Document<?> doc = application.getDocument(id);
 		String title = doc.getTitle();
 		if (title.trim().isEmpty()) {
 			title = "$" + id;

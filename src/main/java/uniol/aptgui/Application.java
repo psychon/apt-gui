@@ -42,7 +42,7 @@ public interface Application {
 
 	public WindowId getActiveInternalWindow();
 
-	public Document getDocument(WindowId id);
+	public Document<?> getDocument(WindowId id);
 
 	public EventBus getEventBus();
 

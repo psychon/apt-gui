@@ -52,7 +52,7 @@ public class ApplicationImpl implements Application {
 	private final EventBus eventBus;
 	private final History history;
 
-	private final Map<WindowId, Document> documents;
+	private final Map<WindowId, Document<?>> documents;
 
 	private WindowId activeWindow;
 
@@ -145,16 +145,16 @@ public class ApplicationImpl implements Application {
 	}
 
 	private void openTransitionSystem(TransitionSystem ts) {
-		Document tsDoc = new TsDocument(ts);
+		Document<?> tsDoc = new TsDocument(ts);
 		openDocument(tsDoc);
 	}
 
 	private void openPetriNet(PetriNet pn) {
-		Document pnDoc = new PnDocument(pn);
+		Document<?> pnDoc = new PnDocument(pn);
 		openDocument(pnDoc);
 	}
 
-	private void openDocument(Document document) {
+	private void openDocument(Document<?> document) {
 		WindowId id = mainWindow.createWindow(document);
 		documents.put(id, document);
 		mainWindow.showWindow(id);
@@ -163,7 +163,7 @@ public class ApplicationImpl implements Application {
 	}
 
 	@Override
-	public Document getDocument(WindowId id) {
+	public Document<?> getDocument(WindowId id) {
 		return documents.get(id);
 	}
 

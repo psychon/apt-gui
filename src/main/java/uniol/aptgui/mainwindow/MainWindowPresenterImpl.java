@@ -98,7 +98,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	}
 
 	@Override
-	public WindowId createWindow(Document document) {
+	public WindowId createWindow(Document<?> document) {
 		WindowId id = null;
 		EditorPresenter editor = injector.getInstance(EditorPresenter.class);
 		editor.setDocument(document);

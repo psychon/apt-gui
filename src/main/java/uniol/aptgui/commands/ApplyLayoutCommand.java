@@ -24,10 +24,10 @@ import uniol.aptgui.editor.layout.Layout;
 
 public class ApplyLayoutCommand implements Command {
 
-	private final Document document;
+	private final Document<?> document;
 	private final Layout layout;
 
-	public ApplyLayoutCommand(Document document, Layout layout) {
+	public ApplyLayoutCommand(Document<?> document, Layout layout) {
 		this.document = document;
 		this.layout = layout;
 	}

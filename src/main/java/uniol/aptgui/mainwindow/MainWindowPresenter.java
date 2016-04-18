@@ -30,7 +30,7 @@ public interface MainWindowPresenter extends Presenter<MainWindowView> {
 
 	public void close();
 
-	public WindowId createWindow(Document document);
+	public WindowId createWindow(Document<?> document);
 
 	public void showWindow(WindowId id);
 
