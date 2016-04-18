@@ -17,40 +17,30 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui;
+package uniol.aptgui.swing.filechooser;
 
 import java.io.File;
 
-import com.google.common.eventbus.EventBus;
+import javax.swing.filechooser.FileFilter;
 
-import uniol.aptgui.commands.History;
-import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.mainwindow.MainWindowPresenter;
-import uniol.aptgui.mainwindow.WindowId;
+import com.google.common.io.Files;
 
-public interface Application {
+public class AptFileFilter extends FileFilter {
 
-	public EventBus getEventBus();
+	@Override
+	public String getDescription() {
+		return "APT-Files (.apt)";
+	}
 
-	public History getHistory();
+	@Override
+	public boolean accept(File f) {
+		if (f.isDirectory()) {
+			return true;
+		}
 
-	public MainWindowPresenter getMainWindow();
-
-	public void show();
-
-	public void newPetriNet();
-
-	public void newTransitionSystem();
-
-	public void closeWindow(WindowId id);
-
-	public WindowId getActiveInternalWindow();
-
-	public Document<?> getDocument(WindowId id);
-
-	public void openFile(File file);
-
-	public void saveToFile(Document<?> document);
+		String ext = Files.getFileExtension(f.getAbsolutePath());
+		return ext.equals("apt");
+	}
 
 }
 

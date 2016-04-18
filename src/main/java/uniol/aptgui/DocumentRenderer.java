@@ -17,37 +17,19 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.swing.filechooser;
+package uniol.aptgui;
 
 import java.io.File;
+import java.io.IOException;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
+import uniol.apt.io.renderer.RenderException;
+import uniol.aptgui.editor.document.Document;
 
-import com.google.common.io.Files;
+public interface DocumentRenderer {
 
-@SuppressWarnings("serial")
-public class OpenFileChooser extends JFileChooser {
-
-	public OpenFileChooser() {
-		setFileFilter(new FileFilter() {
-			@Override
-			public String getDescription() {
-				return "APT-Files (.apt)";
-			}
-
-			@Override
-			public boolean accept(File f) {
-				if (f.isDirectory()) {
-					return true;
-				}
-
-				String ext = Files.getFileExtension(f.getAbsolutePath());
-				return ext.equals("apt");
-			}
-		});
-	}
+	public void render(Document<?> document, File file) throws RenderException, IOException;
 
 }
+
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

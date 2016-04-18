@@ -35,6 +35,7 @@ import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.io.parser.ParseException;
+import uniol.apt.io.renderer.RenderException;
 import uniol.aptgui.commands.ApplyLayoutCommand;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
@@ -130,8 +131,7 @@ public class ApplicationImpl implements Application {
 			AptParser parser = new AptParser();
 			openDocument(parser.parse(file));
 		} catch (ParseException|IOException e) {
-			JOptionPane.showMessageDialog((Component) mainWindow, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
+			showException(e);
 		}
 	}
 
@@ -151,6 +151,23 @@ public class ApplicationImpl implements Application {
 	@Override
 	public Document<?> getDocument(WindowId id) {
 		return documents.get(id);
+	}
+
+	@Override
+	public void saveToFile(Document<?> document) {
+		assert document != null;
+		assert document.getFile() != null;
+		DocumentRenderer renderer = new AptDocumentRenderer();
+		try {
+			renderer.render(document, document.getFile());
+		} catch (RenderException | IOException e) {
+			showException(e);
+		}
+	}
+
+	private void showException(Exception e) {
+		JOptionPane.showMessageDialog((Component) mainWindow.getView(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		e.printStackTrace();
 	}
 
 }

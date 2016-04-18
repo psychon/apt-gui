@@ -23,6 +23,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,7 @@ import uniol.apt.adt.extension.IExtensible;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.layout.Layout;
 
-public class Document<T> {
+public abstract class Document<T> {
 
 	private final List<DocumentListener> listeners;
 
@@ -50,6 +51,7 @@ public class Document<T> {
 	private final Map<GraphicalElement, Object> elements;
 
 	protected String title;
+	protected File file;
 	protected boolean hasUnsavedChanges;
 	protected int width;
 	protected int height;
@@ -69,6 +71,14 @@ public class Document<T> {
 		this.hasUnsavedChanges = false;
 		this.transform = new Transform2D();
 		this.elements = new HashMap<>();
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
 	}
 
 	public T getModel() {

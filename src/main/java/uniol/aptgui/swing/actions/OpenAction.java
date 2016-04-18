@@ -24,12 +24,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.JFileChooser;
 
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.swing.Resource;
-import uniol.aptgui.swing.filechooser.OpenFileChooser;
+import uniol.aptgui.swing.filechooser.AptFileFilter;
 
 @SuppressWarnings("serial")
 public class OpenAction extends AbstractAction {
@@ -48,9 +49,10 @@ public class OpenAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		OpenFileChooser fc = new OpenFileChooser();
+		JFileChooser fc = new JFileChooser();
+		fc.setFileFilter(new AptFileFilter());
 		int res = fc.showOpenDialog((Component) app.getMainWindow().getView());
-		if (res == OpenFileChooser.APPROVE_OPTION) {
+		if (res == JFileChooser.APPROVE_OPTION) {
 			app.openFile(fc.getSelectedFile());
 		}
 	}

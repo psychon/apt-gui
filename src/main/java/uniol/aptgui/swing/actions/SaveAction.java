@@ -19,15 +19,20 @@
 
 package uniol.aptgui.swing.actions;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.JFileChooser;
 
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
+import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.Resource;
+import uniol.aptgui.swing.filechooser.AptFileFilter;
 
 @SuppressWarnings("serial")
 public class SaveAction extends AbstractAction {
@@ -46,7 +51,20 @@ public class SaveAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO
+		WindowId activeWindow = app.getActiveInternalWindow();
+		Document<?> document = app.getDocument(activeWindow);
+		if (document.getFile() != null) {
+			app.saveToFile(document);
+		} else {
+			JFileChooser fc = new JFileChooser();
+			fc.setFileFilter(new AptFileFilter());
+			int res = fc.showSaveDialog((Component) app.getMainWindow().getView());
+			if (res == JFileChooser.APPROVE_OPTION) {
+				document.setFile(fc.getSelectedFile());
+				app.saveToFile(document);
+			}
+		}
+
 	}
 
 }
