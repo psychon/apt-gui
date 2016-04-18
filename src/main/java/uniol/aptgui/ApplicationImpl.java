@@ -35,7 +35,6 @@ import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.io.parser.ParseException;
-import uniol.apt.io.parser.impl.AptPNParser;
 import uniol.aptgui.commands.ApplyLayoutCommand;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
@@ -81,7 +80,8 @@ public class ApplicationImpl implements Application {
 		pn.createFlow("p0", "t0", 1);
 		pn.createFlow("t0", "p1", 5);
 
-		openPetriNet(pn);
+		Document<?> pnDoc = new PnDocument(pn);
+		openDocument(pnDoc);
 	}
 
 	@Override
@@ -110,7 +110,8 @@ public class ApplicationImpl implements Application {
 		ts.createArc(s0, s1, "a");
 		ts.createArc(s1, s0, "b");
 
-		openTransitionSystem(ts);
+		Document<?> tsDoc = new TsDocument(ts);
+		openDocument(tsDoc);
 	}
 
 	@Override
@@ -125,16 +126,11 @@ public class ApplicationImpl implements Application {
 
 	@Override
 	public void openFile(File file) {
-		// TODO correctly handle different types of APT-files
-		AptPNParser parser = new AptPNParser();
 		try {
-			PetriNet pn = parser.parseFile(file);
-			openPetriNet(pn);
+			AptParser parser = new AptParser();
+			openDocument(parser.parse(file));
 		} catch (ParseException|IOException e) {
-			JOptionPane.showMessageDialog((Component) mainWindow,
-					e.getMessage(),
-					"Error",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog((Component) mainWindow, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}
@@ -142,16 +138,6 @@ public class ApplicationImpl implements Application {
 	@Override
 	public MainWindowPresenter getMainWindow() {
 		return mainWindow;
-	}
-
-	private void openTransitionSystem(TransitionSystem ts) {
-		Document<?> tsDoc = new TsDocument(ts);
-		openDocument(tsDoc);
-	}
-
-	private void openPetriNet(PetriNet pn) {
-		Document<?> pnDoc = new PnDocument(pn);
-		openDocument(pnDoc);
 	}
 
 	private void openDocument(Document<?> document) {
