@@ -43,6 +43,9 @@ import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.layout.RandomLayout;
 import uniol.aptgui.events.WindowFocusGainedEvent;
+import uniol.aptgui.io.AptDocumentRenderer;
+import uniol.aptgui.io.AptParser;
+import uniol.aptgui.io.DocumentRenderer;
 import uniol.aptgui.mainwindow.MainWindowPresenter;
 import uniol.aptgui.mainwindow.WindowId;
 
