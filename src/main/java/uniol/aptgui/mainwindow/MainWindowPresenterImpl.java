@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
+import uniol.apt.module.Module;
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Presenter;
 import uniol.aptgui.editor.EditorPresenter;
@@ -36,6 +37,7 @@ import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.internalwindow.InternalWindowPresenter;
 import uniol.aptgui.mainwindow.menu.MenuPresenter;
 import uniol.aptgui.mainwindow.toolbar.ToolbarPresenter;
+import uniol.aptgui.module.ModulePresenter;
 import uniol.aptgui.modulebrowser.ModuleBrowserPresenter;
 
 public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresenter, MainWindowView>
@@ -134,11 +136,23 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 			moduleBrowserWindowId = new WindowId(WindowType.MODULE_BROWSER);
 			InternalWindowPresenter window = createInternalWindow(moduleBrowserWindowId, moduleBrowser);
 			window.setTitle("Module Browser");
-			window.setPadding(3);
 			showWindow(moduleBrowserWindowId);
 		}
 
 		focus(moduleBrowserWindowId);
+	}
+
+	@Override
+	public void openModuleWindow(Module module) {
+		ModulePresenter modulePresenter = injector.getInstance(ModulePresenter.class);
+		modulePresenter.setModule(module);
+
+		WindowId id = new WindowId(WindowType.MODULE);
+		InternalWindowPresenter window = createInternalWindow(id, modulePresenter);
+		window.setTitle(module.getTitle());
+
+		showWindow(id);
+		focus(id);
 	}
 
 }

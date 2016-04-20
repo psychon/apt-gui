@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -176,13 +177,17 @@ public class ApplicationImpl implements Application {
 
 	@Override
 	public void openModule(Module module) {
-		// TODO Auto-generated method stub
-		System.out.println("OPEN MODULE " + module);
+		mainWindow.openModuleWindow(module);
 	}
 
 	@Override
 	public void openModuleBrowser() {
 		mainWindow.showModuleBrowser();
+	}
+
+	@Override
+	public Set<WindowId> getInteralWindows() {
+		return documents.keySet();
 	}
 
 }

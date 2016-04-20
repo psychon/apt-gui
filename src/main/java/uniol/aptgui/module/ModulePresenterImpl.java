@@ -17,16 +17,40 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.modulebrowser;
+package uniol.aptgui.module;
+
+import java.util.List;
+
+import com.google.inject.Inject;
 
 import uniol.apt.module.Module;
-import uniol.aptgui.Presenter;
+import uniol.apt.module.impl.ModuleUtils;
+import uniol.apt.module.impl.Parameter;
+import uniol.aptgui.AbstractPresenter;
+import uniol.aptgui.swing.parametertable.ParameterTableModel;
 
-public interface ModuleBrowserPresenter extends Presenter<ModuleBrowserView> {
+public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, ModuleView> implements ModulePresenter {
 
-	// VIEW EVENTS
+	private ParameterTableModel parameterTableModel;
 
-	public void onModuleRequestOpen(Module requestedModule);
+	@Inject
+	public ModulePresenterImpl(ModuleView view) {
+		super(view);
+	}
+
+	@Override
+	public void setModule(Module module) {
+		view.setDescription(module.getLongDescription());
+
+		List<Parameter> allParameters = ModuleUtils.getAllParameters(module);
+		parameterTableModel = new ParameterTableModel(allParameters);
+		view.setParameterTableModel(parameterTableModel);
+	}
+
+	@Override
+	public void onRunButtonClicked() {
+		System.out.println("RUN CLICKED");
+	}
 
 }
 

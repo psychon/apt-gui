@@ -21,6 +21,8 @@ package uniol.aptgui.modulebrowser;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Collection;
 
 import javax.swing.DefaultListModel;
@@ -28,6 +30,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 
 import uniol.apt.module.Module;
 import uniol.aptgui.swing.JPanelView;
@@ -38,9 +41,12 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 	private final JLabel header;
 	private final JTextField searchBox;
 
+	private JList<Module> list;
+	private DefaultListModel<Module> model;
+
 	public ModuleBrowserViewImpl() {
 		setLayout(new BorderLayout());
-		setPreferredSize(new Dimension(200, 400));
+		setPreferredSize(new Dimension(300, 400));
 
 		header = new JLabel("Double-click a module to open it...");
 		searchBox = new JTextField();
@@ -51,14 +57,32 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 
 	@Override
 	public void setModules(Collection<Module> modules) {
-		DefaultListModel<Module> model = new DefaultListModel<>();
+		model = new DefaultListModel<>();
 		for (Module module : modules) {
 			model.addElement(module);
 		}
 
-		JList<Module> list = new JList<>(model);
-		JScrollPane listScroller = new JScrollPane(list);
-		add(listScroller, BorderLayout.CENTER);
+		list = new JList<>(model);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		// Add double-click support to list.
+		list.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					onListDoubleClick();
+				}
+			}
+		});
+
+		// Replace list.
+		add(new JScrollPane(list), BorderLayout.CENTER);
+	}
+
+	private void onListDoubleClick() {
+		Module selection = list.getSelectedValue();
+		if (selection != null) {
+			getPresenter().onModuleRequestOpen(selection);
+		}
 	}
 
 }

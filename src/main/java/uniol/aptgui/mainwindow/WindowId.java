@@ -27,7 +27,11 @@ public class WindowId {
 	private final WindowType type;
 
 	public WindowId(WindowType type) {
-		this.id = getNextId();
+		this(getNextId(), type);
+	}
+
+	private WindowId(int id, WindowType type) {
+		this.id = id;
 		this.type = type;
 	}
 
@@ -46,6 +50,14 @@ public class WindowId {
 
 	private static synchronized int getNextId() {
 		return nextId++;
+	}
+
+	public String toStringWithTitle(String name) {
+		if (name.trim().isEmpty()) {
+			return "$" + id;
+		} else {
+			return name + "($" + id + ")";
+		}
 	}
 
 }

@@ -17,18 +17,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.modulebrowser;
+package uniol.aptgui.module;
 
 import uniol.apt.module.Module;
 import uniol.aptgui.Presenter;
 
-public interface ModuleBrowserPresenter extends Presenter<ModuleBrowserView> {
+public interface ModulePresenter extends Presenter<ModuleView> {
+
+	// ACTIONS
+
+	public void setModule(Module module);
 
 	// VIEW EVENTS
 
-	public void onModuleRequestOpen(Module requestedModule);
+	public void onRunButtonClicked();
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

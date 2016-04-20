@@ -21,7 +21,7 @@ package uniol.aptgui.mainwindow;
 
 public enum WindowType {
 
-	PETRI_NET, TRANSITION_SYSTEM, MODULE_BROWSER, MODULE
+	NONE, PETRI_NET, TRANSITION_SYSTEM, MODULE_BROWSER, MODULE
 
 }
 

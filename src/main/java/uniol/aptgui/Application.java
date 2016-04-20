@@ -20,6 +20,7 @@
 package uniol.aptgui;
 
 import java.io.File;
+import java.util.Set;
 
 import com.google.common.eventbus.EventBus;
 
@@ -46,6 +47,8 @@ public interface Application {
 	public void closeWindow(WindowId id);
 
 	public WindowId getActiveInternalWindow();
+
+	public Set<WindowId> getInteralWindows();
 
 	public Document<?> getDocument(WindowId id);
 

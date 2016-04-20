@@ -17,31 +17,44 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.modulebrowser;
+package uniol.aptgui.module;
 
-import com.google.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
-import uniol.apt.module.Module;
-import uniol.apt.module.ModuleRegistry;
-import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Application;
+import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.mainwindow.WindowId;
+import uniol.aptgui.mainwindow.WindowType;
+import uniol.aptgui.swing.parametertable.WindowReference;
+import uniol.aptgui.swing.parametertable.WindowReferenceProvider;
+import uniol.aptgui.swing.parametertable.WindowReferenceTs;
 
-public class ModuleBrowserPresenterImpl extends AbstractPresenter<ModuleBrowserPresenter, ModuleBrowserView>
-		implements ModuleBrowserPresenter {
+public class WindowReferenceTsProvider implements WindowReferenceProvider {
 
 	private final Application application;
 
-	@Inject
-	public ModuleBrowserPresenterImpl(ModuleBrowserView view, ModuleRegistry moduleRegistry,
-			Application application) {
-		super(view);
+	public WindowReferenceTsProvider(Application application) {
 		this.application = application;
-		view.setModules(moduleRegistry.getModules());
 	}
 
 	@Override
-	public void onModuleRequestOpen(Module requestedModule) {
-		application.openModule(requestedModule);
+	public List<WindowReference> getWindowReferences() {
+		List<WindowReference> refs = new ArrayList<>();
+
+		for (WindowId id : application.getInteralWindows()) {
+			if (id.getType() == WindowType.TRANSITION_SYSTEM) {
+				Document<?> doc = application.getDocument(id);
+				refs.add(new WindowReferenceTs(id, doc.getTitle()));
+			}
+		}
+
+		return refs;
+	}
+
+	@Override
+	public WindowReference getNotAvailableInstance() {
+		return new WindowReferenceTs(null);
 	}
 
 }

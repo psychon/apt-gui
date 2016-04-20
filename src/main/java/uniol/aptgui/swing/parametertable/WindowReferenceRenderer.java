@@ -17,18 +17,25 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.modulebrowser;
+package uniol.aptgui.swing.parametertable;
 
-import uniol.apt.module.Module;
-import uniol.aptgui.Presenter;
+import java.awt.Component;
 
-public interface ModuleBrowserPresenter extends Presenter<ModuleBrowserView> {
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
 
-	// VIEW EVENTS
+@SuppressWarnings("serial")
+public class WindowReferenceRenderer extends JLabel implements TableCellRenderer {
 
-	public void onModuleRequestOpen(Module requestedModule);
+	@Override
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+			int row, int column) {
+		WindowReference ref = (WindowReference) value;
+		setText(ref.toString());
+		return this;
+	}
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

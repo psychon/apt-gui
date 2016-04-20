@@ -17,16 +17,15 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.modulebrowser;
+package uniol.aptgui.swing.parametertable;
 
-import uniol.apt.module.Module;
-import uniol.aptgui.Presenter;
+import java.util.List;
 
-public interface ModuleBrowserPresenter extends Presenter<ModuleBrowserView> {
+public interface WindowReferenceProvider {
 
-	// VIEW EVENTS
+	public List<WindowReference> getWindowReferences();
 
-	public void onModuleRequestOpen(Module requestedModule);
+	public WindowReference getNotAvailableInstance();
 
 }
 

@@ -46,6 +46,10 @@ import uniol.aptgui.mainwindow.toolbar.ToolbarPresenter;
 import uniol.aptgui.mainwindow.toolbar.ToolbarPresenterImpl;
 import uniol.aptgui.mainwindow.toolbar.ToolbarView;
 import uniol.aptgui.mainwindow.toolbar.ToolbarViewImpl;
+import uniol.aptgui.module.ModulePresenter;
+import uniol.aptgui.module.ModulePresenterImpl;
+import uniol.aptgui.module.ModuleView;
+import uniol.aptgui.module.ModuleViewImpl;
 import uniol.aptgui.modulebrowser.ModuleBrowserPresenter;
 import uniol.aptgui.modulebrowser.ModuleBrowserPresenterImpl;
 import uniol.aptgui.modulebrowser.ModuleBrowserView;
@@ -71,6 +75,8 @@ public class DependenyModule extends AbstractModule {
 		bind(ModuleRegistry.class).toInstance(AptModuleRegistry.INSTANCE);
 		bind(ModuleBrowserPresenter.class).to(ModuleBrowserPresenterImpl.class);
 		bind(ModuleBrowserView.class).to(ModuleBrowserViewImpl.class);
+		bind(ModulePresenter.class).to(ModulePresenterImpl.class);
+		bind(ModuleView.class).to(ModuleViewImpl.class);
 	}
 
 }
