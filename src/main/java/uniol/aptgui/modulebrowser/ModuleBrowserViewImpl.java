@@ -23,17 +23,18 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableRowSorter;
 
-import uniol.apt.module.Module;
 import uniol.aptgui.swing.JPanelView;
+import uniol.aptgui.swing.moduletable.ModuleTableModel;
 
 @SuppressWarnings("serial")
 public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> implements ModuleBrowserView {
@@ -41,31 +42,17 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 	private final JLabel header;
 	private final JTextField searchBox;
 
-	private JList<Module> list;
-	private DefaultListModel<Module> model;
+	private JTable moduleTable;
+	private TableRowSorter<ModuleTableModel> rowSorter;
 
 	public ModuleBrowserViewImpl() {
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(300, 400));
 
 		header = new JLabel("Double-click a module to open it...");
-		searchBox = new JTextField();
 
-		add(header, BorderLayout.PAGE_START);
-		add(searchBox, BorderLayout.PAGE_END);
-	}
-
-	@Override
-	public void setModules(Collection<Module> modules) {
-		model = new DefaultListModel<>();
-		for (Module module : modules) {
-			model.addElement(module);
-		}
-
-		list = new JList<>(model);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		// Add double-click support to list.
-		list.addMouseListener(new MouseAdapter() {
+		moduleTable = new JTable();
+		moduleTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
@@ -74,15 +61,54 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 			}
 		});
 
-		// Replace list.
-		add(new JScrollPane(list), BorderLayout.CENTER);
+		searchBox = new JTextField();
+		searchBox.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				filter();
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				filter();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				filter();
+			}
+		});
+
+		add(header, BorderLayout.PAGE_START);
+		add(new JScrollPane(moduleTable), BorderLayout.CENTER);
+		add(searchBox, BorderLayout.PAGE_END);
 	}
 
 	private void onListDoubleClick() {
-		Module selection = list.getSelectedValue();
-		if (selection != null) {
-			getPresenter().onModuleRequestOpen(selection);
+		int viewRow = moduleTable.getSelectedRow();
+		int modelRow = moduleTable.convertRowIndexToModel(viewRow);
+		getPresenter().onModuleRequestOpen(modelRow);
+	}
+
+	/**
+	 * Called when the textfield content changes to filter the module table.
+	 */
+	private void filter() {
+		RowFilter<ModuleTableModel, Object> rf = null;
+		// If current expression doesn't parse, don't update.
+		try {
+			rf = RowFilter.regexFilter(searchBox.getText(), 0);
+		} catch (java.util.regex.PatternSyntaxException e) {
+			return;
 		}
+		rowSorter.setRowFilter(rf);
+	}
+
+	@Override
+	public void setModuleTableModel(ModuleTableModel tableModel) {
+		rowSorter = new TableRowSorter<>(tableModel);
+		moduleTable.setModel(tableModel);
+		moduleTable.setRowSorter(rowSorter);
 	}
 
 }

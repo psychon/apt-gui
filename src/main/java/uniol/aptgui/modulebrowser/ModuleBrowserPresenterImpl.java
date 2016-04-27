@@ -19,29 +19,51 @@
 
 package uniol.aptgui.modulebrowser;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import com.google.inject.Inject;
 
 import uniol.apt.module.Module;
 import uniol.apt.module.ModuleRegistry;
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Application;
+import uniol.aptgui.swing.moduletable.ModuleTableModel;
 
 public class ModuleBrowserPresenterImpl extends AbstractPresenter<ModuleBrowserPresenter, ModuleBrowserView>
 		implements ModuleBrowserPresenter {
 
 	private final Application application;
+	private final ModuleTableModel moduleTableModel;
 
 	@Inject
 	public ModuleBrowserPresenterImpl(ModuleBrowserView view, ModuleRegistry moduleRegistry,
 			Application application) {
 		super(view);
 		this.application = application;
-		view.setModules(moduleRegistry.getModules());
+		this.moduleTableModel = createTableModel(moduleRegistry.getModules());
+
+		view.setModuleTableModel(moduleTableModel);
+	}
+
+	private ModuleTableModel createTableModel(Collection<Module> moduleCollection) {
+		List<Module> moduleList = new ArrayList<>(moduleCollection);
+		Collections.sort(moduleList, new Comparator<Module>() {
+			@Override
+			public int compare(Module o1, Module o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		return new ModuleTableModel(moduleList);
 	}
 
 	@Override
-	public void onModuleRequestOpen(Module requestedModule) {
-		application.openModule(requestedModule);
+	public void onModuleRequestOpen(int tableRow) {
+		Module mod = moduleTableModel.getModuleAt(tableRow);
+		application.openModule(mod);
 	}
 
 }

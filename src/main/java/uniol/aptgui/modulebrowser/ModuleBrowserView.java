@@ -19,14 +19,12 @@
 
 package uniol.aptgui.modulebrowser;
 
-import java.util.Collection;
-
-import uniol.apt.module.Module;
 import uniol.aptgui.View;
+import uniol.aptgui.swing.moduletable.ModuleTableModel;
 
 public interface ModuleBrowserView extends View<ModuleBrowserPresenter> {
 
-	void setModules(Collection<Module> modules);
+	void setModuleTableModel(ModuleTableModel tableModel);
 
 }
 

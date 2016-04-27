@@ -19,14 +19,13 @@
 
 package uniol.aptgui.modulebrowser;
 
-import uniol.apt.module.Module;
 import uniol.aptgui.Presenter;
 
 public interface ModuleBrowserPresenter extends Presenter<ModuleBrowserView> {
 
 	// VIEW EVENTS
 
-	public void onModuleRequestOpen(Module requestedModule);
+	public void onModuleRequestOpen(int tableRow);
 
 }
 
