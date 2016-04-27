@@ -128,22 +128,6 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 	}
 
 	@Override
-	public void translateView(int dx, int dy) {
-		if (document.isVisible()) {
-			document.getTransform().translateView(dx, dy);
-			getView().repaint();
-		}
-	}
-
-	@Override
-	public void scaleView(double scale) {
-		if (document.isVisible()) {
-			document.getTransform().scaleView(scale);
-			getView().repaint();
-		}
-	}
-
-	@Override
 	public void onDocumentDirty() {
 		if (document.isVisible()) {
 			getView().repaint();

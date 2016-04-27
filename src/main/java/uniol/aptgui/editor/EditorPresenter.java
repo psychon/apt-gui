@@ -33,25 +33,6 @@ public interface EditorPresenter extends Presenter<EditorView> {
 
 	public void setDocument(Document<?> document);
 
-	/**
-	 * Translates the view by dx on the x-axis and dy on the y-axis. Scale
-	 * is always applied after any translation.
-	 *
-	 * @param dx
-	 *                x translation
-	 * @param dy
-	 *                y translation
-	 */
-	public void translateView(int dx, int dy);
-
-	/**
-	 * Scales the view. Scale is always applied after any translation.
-	 *
-	 * @param scale
-	 *                scaling factor
-	 */
-	public void scaleView(double scale);
-
 	/// VIEW EVENTS ///
 
 	public void onPaint(Graphics2D graphics);
