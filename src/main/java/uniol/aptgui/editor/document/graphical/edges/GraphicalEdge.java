@@ -29,8 +29,9 @@ import java.util.List;
 
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
+import uniol.aptgui.editor.document.graphical.traits.HasLabel;
 
-public abstract class GraphicalEdge extends GraphicalElement {
+public abstract class GraphicalEdge extends GraphicalElement implements HasLabel {
 
 	private static final double SELECTION_DISTANCE = 10;
 	protected GraphicalNode source;
@@ -207,7 +208,7 @@ public abstract class GraphicalEdge extends GraphicalElement {
 		return path;
 	}
 
-	protected static void drawPathWithArrowhead(Graphics2D graphics, List<Point> path) {
+	protected void drawPathWithArrowhead(Graphics2D graphics, List<Point> path) {
 		assert path.size() >= 2;
 		drawPath(graphics, path);
 		drawArrowhead(
@@ -217,7 +218,7 @@ public abstract class GraphicalEdge extends GraphicalElement {
 		);
 	}
 
-	protected static void drawPath(Graphics2D graphics, List<Point> path) {
+	protected void drawPath(Graphics2D graphics, List<Point> path) {
 		if (path.isEmpty()) {
 			return;
 		}
@@ -229,7 +230,7 @@ public abstract class GraphicalEdge extends GraphicalElement {
 		}
 	}
 
-	protected static void drawArrowhead(Graphics2D graphics, Point source, Point target) {
+	protected void drawArrowhead(Graphics2D graphics, Point source, Point target) {
 		int x = target.x;
 		int y = target.y;
 		int i1 = 12;

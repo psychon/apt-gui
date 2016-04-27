@@ -24,7 +24,7 @@ import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
 
-public class CreateStateCommand implements Command {
+public class CreateStateCommand extends Command {
 
 	private final TsDocument tsDocument;
 	private final GraphicalState graphicalState;
@@ -48,11 +48,6 @@ public class CreateStateCommand implements Command {
 		tsDocument.getModel().removeState(tsState);
 		tsDocument.remove(graphicalState);
 		tsDocument.fireDocumentDirty();
-	}
-
-	@Override
-	public void redo() {
-		execute();
 	}
 
 }

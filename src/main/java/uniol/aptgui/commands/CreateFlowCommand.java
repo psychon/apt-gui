@@ -25,7 +25,7 @@ import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalFlow;
 
-public class CreateFlowCommand implements Command {
+public class CreateFlowCommand extends Command {
 
 	private final PnDocument pnDocument;
 	private final Node source;
@@ -62,11 +62,6 @@ public class CreateFlowCommand implements Command {
 		pnDocument.getModel().removeFlow(pnFlow);
 		pnDocument.remove(graphialFlow);
 		pnDocument.fireDocumentDirty();
-	}
-
-	@Override
-	public void redo() {
-		execute();
 	}
 
 }

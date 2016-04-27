@@ -25,7 +25,7 @@ import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalArc;
 
-public class CreateArcCommand implements Command {
+public class CreateArcCommand extends Command {
 
 	private final TsDocument tsDocument;
 	private final State source;
@@ -62,11 +62,6 @@ public class CreateArcCommand implements Command {
 		tsDocument.getModel().removeArc(tsArc);
 		tsDocument.remove(graphialArc);
 		tsDocument.fireDocumentDirty();
-	}
-
-	@Override
-	public void redo() {
-		execute();
 	}
 
 }

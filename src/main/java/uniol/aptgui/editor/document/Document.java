@@ -26,12 +26,14 @@ import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import uniol.apt.adt.extension.IExtensible;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 import uniol.aptgui.editor.layout.Layout;
 
 public abstract class Document<T> {
@@ -49,6 +51,11 @@ public abstract class Document<T> {
 	 * object.
 	 */
 	private final Map<GraphicalElement, Object> elements;
+
+	/**
+	 * A set of selected elements.
+	 */
+	private final Set<GraphicalElement> selection;
 
 	protected String title;
 	protected File file;
@@ -71,6 +78,62 @@ public abstract class Document<T> {
 		this.hasUnsavedChanges = false;
 		this.transform = new Transform2D();
 		this.elements = new HashMap<>();
+		this.selection = new HashSet<>();
+	}
+
+	/**
+	 * Returns a set of all selected elements.
+	 *
+	 * @return
+	 */
+	public Set<GraphicalElement> getSelection() {
+		return selection;
+	}
+
+	/**
+	 * Toggles selection status on the element. If it was previously
+	 * unselected, it will be selected afterwards and the other way around.
+	 *
+	 * @param elem
+	 */
+	public void toggleSelection(GraphicalElement elem) {
+		if (elem.isSelected()) {
+			removeFromSelection(elem);
+		} else {
+			addToSelection(elem);
+		}
+	}
+
+	/**
+	 * Adds the given element to the selection.
+	 *
+	 * @param elem
+	 *                newly selected element
+	 */
+	public void addToSelection(GraphicalElement elem) {
+		selection.add(elem);
+		elem.setSelected(true);
+	}
+
+	/**
+	 * Removes the given element from the selection.
+	 *
+	 * @param elem
+	 *                the element to unselect
+	 */
+	public void removeFromSelection(GraphicalElement elem) {
+		selection.remove(elem);
+		elem.setSelected(false);
+	}
+
+	/**
+	 * Clears the current selection.
+	 */
+	public void clearSelection() {
+		for (GraphicalElement ge : selection) {
+			ge.setSelected(false);
+		}
+		selection.clear();
 	}
 
 	public File getFile() {

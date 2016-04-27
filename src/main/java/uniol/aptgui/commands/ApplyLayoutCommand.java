@@ -22,7 +22,7 @@ package uniol.aptgui.commands;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.layout.Layout;
 
-public class ApplyLayoutCommand implements Command {
+public class ApplyLayoutCommand extends Command {
 
 	private final Document<?> document;
 	private final Layout layout;
@@ -39,12 +39,6 @@ public class ApplyLayoutCommand implements Command {
 
 	@Override
 	public void undo() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void redo() {
 		// TODO Auto-generated method stub
 
 	}

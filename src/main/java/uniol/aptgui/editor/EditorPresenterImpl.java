@@ -30,6 +30,7 @@ import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.DocumentListener;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
+import uniol.aptgui.editor.features.ContextMenuFeature;
 import uniol.aptgui.editor.features.HoverFeature;
 import uniol.aptgui.editor.features.SelectionTool;
 import uniol.aptgui.editor.features.ViewportFeature;
@@ -84,6 +85,7 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 		features.onDeactivated();
 		features.put(FeatureId.VIEWPORT, new ViewportFeature(document));
 		features.put(FeatureId.HOVER, new HoverFeature(document));
+		features.put(FeatureId.CONTEXT_MENU, new ContextMenuFeature(document, view));
 		features.onActivated();
 		features.setListening(true);
 

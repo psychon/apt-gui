@@ -54,6 +54,14 @@ public interface Application {
 
 	public Document<?> getDocument(WindowId id);
 
+	/**
+	 * Returns the focused editor's document object or null if no editor is
+	 * focused.
+	 *
+	 * @return
+	 */
+	public Document<?> getActiveDocument();
+
 	public WindowId openFile(File file);
 
 	public void saveToFile(Document<?> document);

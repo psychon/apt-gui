@@ -19,10 +19,13 @@
 
 package uniol.aptgui.editor.document.graphical.nodes;
 
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-public class GraphicalTransition extends GraphicalNode {
+import uniol.aptgui.editor.document.graphical.traits.HasLabel;
+
+public class GraphicalTransition extends GraphicalNode implements HasLabel {
 
 	private static final int RADIUS = 20;
 
@@ -38,7 +41,7 @@ public class GraphicalTransition extends GraphicalNode {
 
 	@Override
 	public Point getBoundaryIntersection(Point point) {
-		return center; // TODO
+		return getSquareBoundaryIntersection(center, RADIUS, point);
 	}
 
 	@Override
@@ -48,9 +51,17 @@ public class GraphicalTransition extends GraphicalNode {
 		}
 		super.draw(graphics);
 		drawSquare(graphics, center, 20);
+		drawLabel(graphics);
 		if (selected) {
 			drawSelectionMarkers(graphics, center, RADIUS + 2);
 		}
+	}
+
+	private void drawLabel(Graphics2D graphics) {
+		FontMetrics metrics = graphics.getFontMetrics();
+		int xOffset = metrics.stringWidth(label) / 2;
+		int yOffset = metrics.getHeight() / 2;
+		graphics.drawString(label, center.x - xOffset, center.y + yOffset);
 	}
 
 	@Override

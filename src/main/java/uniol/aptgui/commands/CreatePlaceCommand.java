@@ -24,7 +24,7 @@ import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalPlace;
 
-public class CreatePlaceCommand implements Command {
+public class CreatePlaceCommand extends Command {
 
 	private final PnDocument pnDocument;
 	private final GraphicalPlace graphicalPlace;

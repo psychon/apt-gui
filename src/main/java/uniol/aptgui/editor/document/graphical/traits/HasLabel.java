@@ -17,17 +17,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.commands;
+package uniol.aptgui.editor.document.graphical.traits;
 
-public abstract class Command {
+/**
+ * Interface for all GraphicalElements that have labels.
+ */
+public interface HasLabel {
 
-	public abstract void execute();
+	String getLabel();
 
-	public abstract void undo();
-
-	public void redo() {
-		execute();
-	}
+	void setLabel(String label);
 
 }
 

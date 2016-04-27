@@ -24,7 +24,7 @@ import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalTransition;
 
-public class CreateTransitionCommand implements Command {
+public class CreateTransitionCommand extends Command {
 
 	private final PnDocument pnDocument;
 	private final GraphicalTransition graphicalTransition;
@@ -50,12 +50,6 @@ public class CreateTransitionCommand implements Command {
 		pnDocument.fireDocumentDirty();
 	}
 
-	@Override
-	public void redo() {
-		execute();
-	}
-
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

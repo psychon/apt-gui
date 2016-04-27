@@ -25,15 +25,36 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+
 import uniol.aptgui.swing.JPanelView;
+import uniol.aptgui.swing.actions.SetLabelAction;
 
 @SuppressWarnings("serial")
 public class EditorViewImpl extends JPanelView<EditorPresenter> implements EditorView {
 
-	public EditorViewImpl() {
+	private final Injector injector;
+	private final JPopupMenu popupMenuForNodes;
+
+	@Inject
+	public EditorViewImpl(Injector injector) {
+		this.injector = injector;
 		setBackground(Color.WHITE);
 		setPreferredSize(new Dimension(400, 300));
+		popupMenuForNodes = createPopupMenuForNodes();
+	}
 
+	private JPopupMenu createPopupMenuForNodes() {
+		JPopupMenu popup = new JPopupMenu();
+		JMenuItem menuItem = new JMenuItem(injector.getInstance(SetLabelAction.class));
+		popup.add(menuItem);
+		menuItem = new JMenuItem("Another popup menu item");
+		popup.add(menuItem);
+		return popup;
 	}
 
 	@Override
@@ -57,6 +78,11 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 		addMouseListener(mouseEventListener);
 		addMouseMotionListener(mouseEventListener);
 		addMouseWheelListener(mouseEventListener);
+	}
+
+	@Override
+	public void showPopupMenuForNodes(int x, int y) {
+		popupMenuForNodes.show(this, x, y);
 	}
 
 }

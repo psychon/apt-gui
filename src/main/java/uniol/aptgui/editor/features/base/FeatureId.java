@@ -22,7 +22,7 @@ package uniol.aptgui.editor.features.base;
 public enum FeatureId {
 
 	// FEATURES
-	VIEWPORT, HOVER,
+	VIEWPORT, HOVER, CONTEXT_MENU,
 
 	// TOOLS
 	PN_SELECTION, PN_CREATE_PLACE, PN_CREATE_TRANSITION, PN_CREATE_FLOW,

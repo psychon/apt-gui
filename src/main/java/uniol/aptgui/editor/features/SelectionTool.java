@@ -21,8 +21,6 @@ package uniol.aptgui.editor.features;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.util.HashSet;
-import java.util.Set;
 
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.Transform2D;
@@ -53,11 +51,6 @@ public class SelectionTool extends Feature {
 	private final Transform2D transform;
 
 	/**
-	 * A set of selected elements.
-	 */
-	private final Set<GraphicalNode> selection;
-
-	/**
 	 * Differentiates on what element the drag began.
 	 */
 	private DragType dragType;
@@ -82,7 +75,6 @@ public class SelectionTool extends Feature {
 		this.transform = document.getTransform();
 		this.dragType = DragType.NONE;
 		this.dragSource = null;
-		this.selection = new HashSet<>();
 	}
 
 	@Override
@@ -99,60 +91,14 @@ public class SelectionTool extends Feature {
 			if (e.isControlDown()) {
 				// If CTRL was pressed, add to/remove from
 				// selection.
-				toggleSelection(node);
+				document.toggleSelection(node);
 			} else {
 				// Otherwise replace selection.
-				clearSelection();
-				addToSelection(node);
+				document.clearSelection();
+				document.addToSelection(node);
 			}
 			document.fireDocumentDirty();
 		}
-	}
-
-	/**
-	 * Toggles selection status on the element. If it was previously
-	 * unselected, it will be selected afterwards and the other way around.
-	 *
-	 * @param elem
-	 */
-	private void toggleSelection(GraphicalNode elem) {
-		if (elem.isSelected()) {
-			removeFromSelection(elem);
-		} else {
-			addToSelection(elem);
-		}
-	}
-
-	/**
-	 * Adds the given element to the selection.
-	 *
-	 * @param elem
-	 *                newly selected element
-	 */
-	private void addToSelection(GraphicalNode elem) {
-		selection.add(elem);
-		elem.setSelected(true);
-	}
-
-	/**
-	 * Removes the given element from the selection.
-	 *
-	 * @param elem
-	 *                the element to unselect
-	 */
-	private void removeFromSelection(GraphicalNode elem) {
-		selection.add(elem);
-		elem.setSelected(true);
-	}
-
-	/**
-	 * Clears the current selection.
-	 */
-	private void clearSelection() {
-		for (GraphicalNode ge : selection) {
-			ge.setSelected(false);
-		}
-		selection.clear();
 	}
 
 	@Override
@@ -165,23 +111,24 @@ public class SelectionTool extends Feature {
 		Point modelPosition = transform.applyInverse(e.getPoint());
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
 		if (elem instanceof GraphicalNode) {
-			if (selection.isEmpty()) {
+			if (document.getSelection().isEmpty()) {
 				dragType = DragType.NODE;
 				draggedElement = elem;
-			} else if (selection.contains(elem)) {
+			} else if (document.getSelection().contains(elem)) {
 				dragType = DragType.SELECTION;
 			} else {
 				dragType = DragType.NONE;
 				draggedElement = null;
+				document.clearSelection();
 			}
 		} else if (elem instanceof GraphicalEdge) {
 			dragType = DragType.EDGE;
 			draggedElement = getOrCreateBreakpoint(e.getPoint(), (GraphicalEdge) elem);
-			clearSelection();
+			document.clearSelection();
 		} else {
 			dragType = DragType.NONE;
 			draggedElement = null;
-			clearSelection();
+			document.clearSelection();
 		}
 
 		dragSource = e.getPoint();
@@ -212,8 +159,11 @@ public class SelectionTool extends Feature {
 
 	private void translateSelection(int dx, int dy) {
 		// TODO encapsulate in history command
-		for (GraphicalNode node : selection) {
-			node.translate(dx, dy);
+		for (GraphicalElement elem : document.getSelection()) {
+			if (elem instanceof GraphicalNode) {
+				GraphicalNode node = (GraphicalNode) elem;
+				node.translate(dx, dy);
+			}
 		}
 		document.fireDocumentDirty();
 	}
