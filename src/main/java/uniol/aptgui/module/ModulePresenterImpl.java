@@ -76,6 +76,7 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 		returnValues = ModuleUtils.getReturnValues(module);
 
 		parameterTableModel = new PropertyTableModel("Parameter", "Value", allParameters.size());
+		parameterTableModel.setEditable(true);
 		for (int i = 0; i < allParameters.size(); i++) {
 			Parameter param = allParameters.get(i);
 			parameterTableModel.setProperty(i, PropertyType.fromModelType(param.getKlass()),
@@ -100,7 +101,7 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 
 			ModuleInvoker invoker = new ModuleInvoker();
 			List<Object> filledReturnValues = invoker.invoke(module, paramValues);
-			application.getEventBus().post(new ModuleExecutedEvent(module, filledReturnValues));
+			application.getEventBus().post(new ModuleExecutedEvent(this, module, filledReturnValues));
 		} catch (ModuleException e) {
 			view.showErrorModuleException(e.getMessage());
 			e.printStackTrace();
@@ -147,10 +148,13 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 
 	@Subscribe
 	public void onModuleExecutedEvent(ModuleExecutedEvent e) {
+		if (e.getSource() != this) {
+			return;
+		}
+
 		List<Object> filledReturnValues = e.getReturnValues();
 
 		resultTableModel = new PropertyTableModel("Result", "Value", filledReturnValues.size());
-		resultTableModel.setEditable(false);
 		for (int row = 0; row < filledReturnValues.size(); row++) {
 			Object retVal = filledReturnValues.get(row);
 			Class<?> retClass = retVal.getClass();
@@ -183,6 +187,7 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 		}
 
 		view.setResultTableModel(resultTableModel);
+		view.showResultsPane();
 	}
 
 	private WindowRef openDocument(Document<?> document) {

@@ -39,6 +39,8 @@ public interface ModuleView extends View<ModulePresenter> {
 
 	void showErrorModuleException(String message);
 
+	void showResultsPane();
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

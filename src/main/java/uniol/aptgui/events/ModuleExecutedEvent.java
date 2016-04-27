@@ -22,15 +22,22 @@ package uniol.aptgui.events;
 import java.util.List;
 
 import uniol.apt.module.Module;
+import uniol.aptgui.module.ModulePresenter;
 
 public class ModuleExecutedEvent {
 
+	private final ModulePresenter source;
 	private final Module module;
 	private final List<Object> returnValues;
 
-	public ModuleExecutedEvent(Module module, List<Object> returnValues) {
+	public ModuleExecutedEvent(ModulePresenter source, Module module, List<Object> returnValues) {
+		this.source = source;
 		this.module = module;
 		this.returnValues = returnValues;
+	}
+
+	public ModulePresenter getSource() {
+		return source;
 	}
 
 	public Module getModule() {

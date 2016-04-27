@@ -159,6 +159,11 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 		parametersTable.setTransitionSystemWindowRefProvider(refProvider);
 	}
 
+	@Override
+	public void showResultsPane() {
+		tabbedPane.setSelectedIndex(1);
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120
