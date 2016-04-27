@@ -125,7 +125,8 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		}
 
 		editor.setWindowId(id);
-		createInternalWindow(id, editor);
+		InternalWindowPresenter window = createInternalWindow(id, editor);
+		window.setTitle(id.toStringWithTitle(document.getTitle()));
 
 		return id;
 	}
