@@ -157,6 +157,14 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 		resultsTable.setModel(resultTableModel);
 	}
 
+	@Override
+	public void invalidateWindowDropdowns() {
+		for (int row = 0; row < parametersTable.getModel().getRowCount(); row++) {
+			parametersTable.editCellAt(row, 1);
+		}
+		parametersTable.removeEditor();
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

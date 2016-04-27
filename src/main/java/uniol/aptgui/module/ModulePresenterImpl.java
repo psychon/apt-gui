@@ -35,6 +35,7 @@ import uniol.apt.module.impl.ReturnValue;
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Application;
 import uniol.aptgui.events.ModuleExecutedEvent;
+import uniol.aptgui.events.WindowClosedEvent;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.parametertable.ParameterTableModel;
 import uniol.aptgui.swing.parametertable.ResultTableModel;
@@ -110,6 +111,11 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 
 		resultTableModel = new ResultTableModel(returnValues, filledReturnValues);
 		view.setResultTableModel(resultTableModel);
+	}
+
+	@Subscribe
+	public void onWindowClosedEvent(WindowClosedEvent e) {
+		view.invalidateWindowDropdowns();
 	}
 
 }

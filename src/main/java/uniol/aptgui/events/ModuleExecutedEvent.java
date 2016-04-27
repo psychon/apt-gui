@@ -41,6 +41,11 @@ public class ModuleExecutedEvent {
 		return returnValues;
 	}
 
+	@Override
+	public String toString() {
+		return "ModuleExecutedEvent [module=" + module + ", returnValues=" + returnValues + "]";
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

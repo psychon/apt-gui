@@ -35,6 +35,13 @@ public interface ModuleView extends View<ModulePresenter> {
 
 	void showErrorModuleException(String message);
 
+	/**
+	 * Causes the parameter drop-down boxes which allow to select PN/LTS
+	 * windows to be invalidated. This means the set of available windows is
+	 * refreshed.
+	 */
+	void invalidateWindowDropdowns();
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

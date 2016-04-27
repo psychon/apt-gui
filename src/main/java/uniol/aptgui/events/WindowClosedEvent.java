@@ -17,56 +17,25 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.mainwindow;
+package uniol.aptgui.events;
 
-public class WindowId {
+import uniol.aptgui.mainwindow.WindowId;
 
-	private static int nextId = 0;
+public class WindowClosedEvent {
 
-	private final int id;
-	private final WindowType type;
+	private final WindowId windowId;
 
-	public WindowId(WindowType type) {
-		this(getNextId(), type);
+	public WindowClosedEvent(WindowId windowId) {
+		this.windowId = windowId;
 	}
 
-	private WindowId(int id, WindowType type) {
-		this.id = id;
-		this.type = type;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public WindowType getType() {
-		return type;
+	public WindowId getWindowId() {
+		return windowId;
 	}
 
 	@Override
 	public String toString() {
-		return "WindowId [id=" + id + ", type=" + type + "]";
-	}
-
-	private static synchronized int getNextId() {
-		return nextId++;
-	}
-
-	public String toStringWithTitle(String name) {
-		String nameString = name.trim().isEmpty() ? "UNNAMED" : name;
-		String typeString;
-		switch (type) {
-		case PETRI_NET:
-			typeString = "PN";
-			break;
-		case TRANSITION_SYSTEM:
-			typeString = "LTS";
-			break;
-		default:
-			typeString = "OTHER";
-			break;
-		}
-		return String.format("%s (%s %d)", nameString, typeString, id);
+		return "WindowClosedEvent [windowId=" + windowId + "]";
 	}
 
 }

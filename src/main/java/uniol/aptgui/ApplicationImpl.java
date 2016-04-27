@@ -44,6 +44,7 @@ import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.layout.RandomLayout;
+import uniol.aptgui.events.WindowClosedEvent;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.io.AptDocumentRenderer;
 import uniol.aptgui.io.AptParser;
@@ -93,6 +94,7 @@ public class ApplicationImpl implements Application {
 	public void closeWindow(WindowId id) {
 		mainWindow.removeWindow(id);
 		documents.remove(id);
+		eventBus.post(new WindowClosedEvent(id));
 	}
 
 	@Override
