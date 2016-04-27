@@ -19,8 +19,11 @@
 
 package uniol.aptgui.editor.document;
 
+import java.awt.Graphics2D;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.stringtemplate.v4.ModelAdaptor;
 
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
@@ -50,6 +53,19 @@ public class TsDocument extends Document<TransitionSystem> {
 			add(elem, arc);
 		}
 	}
+
+	@Override
+	public void draw(Graphics2D graphics) {
+		for (State state : getModel().getNodes()) {
+			GraphicalState elem = getGraphicalExtension(state);
+		}
+		for (Arc arc : getModel().getEdges()) {
+			GraphicalArc elem = getGraphicalExtension(arc);
+			elem.setLabel(arc.getLabel());
+		}
+		super.draw(graphics);
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

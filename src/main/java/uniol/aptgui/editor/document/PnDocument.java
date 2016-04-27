@@ -19,6 +19,7 @@
 
 package uniol.aptgui.editor.document;
 
+import java.awt.Graphics2D;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,6 +60,24 @@ public class PnDocument extends Document<PetriNet> {
 			flow.putExtension(GraphicalElement.EXTENSION_KEY, elem);
 			add(elem, flow);
 		}
+	}
+
+	@Override
+	public void draw(Graphics2D graphics) {
+		for (Place place : getModel().getPlaces()) {
+			GraphicalPlace elem = getGraphicalExtension(place);
+			elem.setTokens(10); // TODO get correct token count
+		}
+		for (Transition transition : getModel().getTransitions()) {
+			GraphicalTransition elem = getGraphicalExtension(transition);
+			elem.setId(transition.getId());
+			elem.setLabel(transition.getLabel());
+		}
+		for (Flow flow : getModel().getEdges()) {
+			GraphicalFlow elem = getGraphicalExtension(flow);
+			elem.setMultiplicity(flow.getWeight());
+		}
+		super.draw(graphics);
 	}
 
 }

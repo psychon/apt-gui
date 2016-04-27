@@ -44,6 +44,7 @@ public abstract class GraphicalEdge extends GraphicalElement {
 		this.source = source;
 		this.target = target;
 		this.breakpoints = new ArrayList<>();
+		this.label = "";
 	}
 
 	public GraphicalNode getSource() {
@@ -84,7 +85,32 @@ public abstract class GraphicalEdge extends GraphicalElement {
 			return;
 		}
 		super.draw(graphics);
-		drawPathWithArrowhead(graphics, getPath());
+		List<Point> path = getPath();
+		drawPathWithArrowhead(graphics, path);
+		drawLabel(graphics, path);
+	}
+
+	private void drawLabel(Graphics2D graphics, List<Point> path) {
+		Point labelPoint = getLabelPoint(path.get(path.size() - 2), path.get(path.size() - 1));
+		graphics.drawString(label, labelPoint.x, labelPoint.y);
+	}
+
+	/**
+	 * Returns the position where the label should be drawn.
+	 *
+	 * @param segmentSource
+	 *                source point of the segment that the label should be
+	 *                drawn next to
+	 * @param segmentDestination
+	 *                destination point of the segment that the label should
+	 *                be drawn next to
+	 * @return label position
+	 */
+	protected Point getLabelPoint(Point segmentSource, Point segmentDestination) {
+		final Point labelPoint = new Point();
+		labelPoint.x = segmentSource.x + (segmentDestination.x - segmentSource.x) * 2 / 3;
+		labelPoint.y = segmentSource.y + (segmentDestination.y - segmentSource.y) * 2 / 3 - 3;
+		return labelPoint;
 	}
 
 	@Override
