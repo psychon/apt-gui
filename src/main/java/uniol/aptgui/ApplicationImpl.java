@@ -77,7 +77,7 @@ public class ApplicationImpl implements Application {
 	}
 
 	@Override
-	public void newPetriNet() {
+	public WindowId newPetriNet() {
 		// TODO: open dialog (using MainWindow) and ask for a name
 		PetriNet pn = new PetriNet();
 		pn.createPlace("p0");
@@ -86,8 +86,7 @@ public class ApplicationImpl implements Application {
 		pn.createFlow("p0", "t0", 1);
 		pn.createFlow("t0", "p1", 5);
 
-		Document<?> pnDoc = new PnDocument(pn);
-		openDocument(pnDoc);
+		return openPetriNet(pn);
 	}
 
 	@Override
@@ -107,7 +106,7 @@ public class ApplicationImpl implements Application {
 	}
 
 	@Override
-	public void newTransitionSystem() {
+	public WindowId newTransitionSystem() {
 		// TODO open dialog (using MainWindow) and ask for a name
 		TransitionSystem ts = new TransitionSystem();
 		State s0 = ts.createState();
@@ -116,8 +115,7 @@ public class ApplicationImpl implements Application {
 		ts.createArc(s0, s1, "a");
 		ts.createArc(s1, s0, "b");
 
-		Document<?> tsDoc = new TsDocument(ts);
-		openDocument(tsDoc);
+		return openTransitionSystem(ts);
 	}
 
 	@Override
@@ -131,12 +129,13 @@ public class ApplicationImpl implements Application {
 	}
 
 	@Override
-	public void openFile(File file) {
+	public WindowId openFile(File file) {
 		try {
 			AptParser parser = new AptParser();
-			openDocument(parser.parse(file));
+			return openDocument(parser.parse(file));
 		} catch (ParseException|IOException e) {
 			showException(e);
+			return null;
 		}
 	}
 
@@ -145,12 +144,13 @@ public class ApplicationImpl implements Application {
 		return mainWindow;
 	}
 
-	private void openDocument(Document<?> document) {
+	private WindowId openDocument(Document<?> document) {
 		WindowId id = mainWindow.createWindow(document);
 		documents.put(id, document);
 		mainWindow.showWindow(id);
 		history.execute(new ApplyLayoutCommand(document, new RandomLayout()));
 		document.setVisible(true);
+		return id;
 	}
 
 	@Override
@@ -188,6 +188,18 @@ public class ApplicationImpl implements Application {
 	@Override
 	public Set<WindowId> getInteralWindows() {
 		return documents.keySet();
+	}
+
+	@Override
+	public WindowId openPetriNet(PetriNet pn) {
+		Document<?> pnDoc = new PnDocument(pn);
+		return openDocument(pnDoc);
+	}
+
+	@Override
+	public WindowId openTransitionSystem(TransitionSystem ts) {
+		Document<?> tsDoc = new TsDocument(ts);
+		return openDocument(tsDoc);
 	}
 
 }

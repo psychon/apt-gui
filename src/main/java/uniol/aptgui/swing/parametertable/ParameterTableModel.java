@@ -19,6 +19,7 @@
 
 package uniol.aptgui.swing.parametertable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -31,10 +32,17 @@ import uniol.apt.module.impl.Parameter;
 @SuppressWarnings("serial")
 public class ParameterTableModel extends AbstractTableModel {
 
+	private final String defaultString = new String();
+	private final Word defaultWord = new Word();
+	private final WindowReferencePn defaultWindowReferencePn = new WindowReferencePn(null);
+	private final WindowReferenceTs defaultWindowReferenceTs = new WindowReferenceTs(null);
+
+	private final List<Parameter> parameters;
 	private final String[] columnNames = { "Parameter", "Value" };
 	private final Object[][] values;
 
 	public ParameterTableModel(List<Parameter> parameters) {
+		this.parameters = parameters;
 		values = new Object[parameters.size()][columnNames.length];
 		for (int i = 0; i < parameters.size(); i++) {
 			values[i][0] = parameters.get(i).getName();
@@ -44,18 +52,44 @@ public class ParameterTableModel extends AbstractTableModel {
 
 	private Object getDefaultInstance(Class<?> clazz) {
 		if (clazz.equals(String.class)) {
-			return new String();
+			return defaultString;
 		}
 		if (clazz.equals(Word.class)) {
-			return new Word();
+			return defaultWord;
 		}
 		if (clazz.equals(PetriNet.class)) {
-			return new WindowReferencePn(null);
+			return defaultWindowReferencePn;
 		}
 		if (clazz.equals(TransitionSystem.class)) {
-			return new WindowReferenceTs(null);
+			return defaultWindowReferenceTs;
 		}
 		return null;
+	}
+
+	public boolean isParameterSet(int rowIndex) {
+		return values[rowIndex][1] != getDefaultInstance(parameters.get(rowIndex).getKlass());
+	}
+
+	public Object getParameterValueAt(int rowIndex) {
+		if (parameters.get(rowIndex).getKlass().equals(PetriNet.class)) {
+			WindowReferencePn pnRef = (WindowReferencePn) values[rowIndex][1];
+			return pnRef.getPetriNet();
+		} else if (parameters.get(rowIndex).getKlass().equals(TransitionSystem.class)) {
+			WindowReferenceTs tsRef = (WindowReferenceTs) values[rowIndex][1];
+			return tsRef.getTransitionSystem();
+		} else {
+			return values[rowIndex][1];
+		}
+	}
+
+	public Object[] getParameterValues() {
+		List<Object> parameterValues = new ArrayList<>();
+		for (int i = 0; i < values.length; i++) {
+			if (isParameterSet(i)) {
+				parameterValues.add(getParameterValueAt(i));
+			}
+		}
+		return parameterValues.toArray();
 	}
 
 	@Override

@@ -24,6 +24,8 @@ import java.util.Set;
 
 import com.google.common.eventbus.EventBus;
 
+import uniol.apt.adt.pn.PetriNet;
+import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.module.Module;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
@@ -40,9 +42,9 @@ public interface Application {
 
 	public void show();
 
-	public void newPetriNet();
+	public WindowId newPetriNet();
 
-	public void newTransitionSystem();
+	public WindowId newTransitionSystem();
 
 	public void closeWindow(WindowId id);
 
@@ -52,13 +54,17 @@ public interface Application {
 
 	public Document<?> getDocument(WindowId id);
 
-	public void openFile(File file);
+	public WindowId openFile(File file);
 
 	public void saveToFile(Document<?> document);
 
 	public void openModule(Module module);
 
 	public void openModuleBrowser();
+
+	public WindowId openPetriNet(PetriNet pn);
+
+	public WindowId openTransitionSystem(TransitionSystem ts);
 
 }
 

@@ -28,6 +28,10 @@ public class PropertyTable extends JTable {
 
 	private Class<?> editingClass;
 
+	public PropertyTable() {
+		setDefaultRenderer(WindowReference.class, new WindowReferenceRenderer());
+	}
+
 	public PropertyTable(WindowReferenceProvider pnRefProvider, WindowReferenceProvider tsRefProvider) {
 		setDefaultRenderer(WindowReference.class, new WindowReferenceRenderer());
 		setDefaultEditor(WindowReferencePn.class, new WindowReferenceEditor(pnRefProvider));

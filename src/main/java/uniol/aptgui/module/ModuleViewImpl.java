@@ -29,6 +29,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -40,6 +41,7 @@ import uniol.aptgui.Application;
 import uniol.aptgui.swing.JPanelView;
 import uniol.aptgui.swing.parametertable.ParameterTableModel;
 import uniol.aptgui.swing.parametertable.PropertyTable;
+import uniol.aptgui.swing.parametertable.ResultTableModel;
 
 @SuppressWarnings("serial")
 public class ModuleViewImpl extends JPanelView<ModulePresenter> implements ModuleView {
@@ -55,6 +57,7 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	private JPanel parametersContainer;
 	private PropertyTable parametersTable;
 	private JPanel resultsContainer;
+	private PropertyTable resultsTable;
 
 	private JPanel bottomPanel;
 	private JButton runButton;
@@ -80,8 +83,7 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	}
 
 	private void setupParametersContainer() {
-		parametersTable = new PropertyTable(
-				new WindowReferencePnProvider(application),
+		parametersTable = new PropertyTable(new WindowReferencePnProvider(application),
 				new WindowReferenceTsProvider(application));
 		parametersTable.setFillsViewportHeight(true);
 
@@ -92,9 +94,13 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	}
 
 	private void setupResultsContainer() {
+		resultsTable = new PropertyTable();
+		resultsTable.setFillsViewportHeight(true);
+
 		resultsContainer = new JPanel();
 		resultsContainer.setLayout(new BorderLayout());
 		resultsContainer.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+		resultsContainer.add(new JScrollPane(resultsTable), BorderLayout.CENTER);
 	}
 
 	private void setupTabbedPane() {
@@ -133,6 +139,22 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	@Override
 	public void setParameterTableModel(ParameterTableModel model) {
 		parametersTable.setModel(model);
+	}
+
+	@Override
+	public void showErrorTooFewParameters() {
+		JOptionPane.showMessageDialog(this, "Too few parameters supplied.", "Cannot run module",
+				JOptionPane.ERROR_MESSAGE);
+	}
+
+	@Override
+	public void showErrorModuleException(String message) {
+		JOptionPane.showMessageDialog(this, message, "Module exception", JOptionPane.ERROR_MESSAGE);
+	}
+
+	@Override
+	public void setResultTableModel(ResultTableModel resultTableModel) {
+		resultsTable.setModel(resultTableModel);
 	}
 
 }

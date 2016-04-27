@@ -19,28 +19,44 @@
 
 package uniol.aptgui.swing.parametertable;
 
-import uniol.apt.adt.pn.PetriNet;
-import uniol.aptgui.mainwindow.WindowId;
+import java.util.List;
 
-public class WindowReferencePn extends WindowReference {
+import javax.swing.table.AbstractTableModel;
 
-	private final PetriNet petriNet;
+import uniol.apt.module.impl.ReturnValue;
 
-	public WindowReferencePn(WindowId id, String name, PetriNet petriNet) {
-		super(id, name);
-		this.petriNet = petriNet;
+@SuppressWarnings("serial")
+public class ResultTableModel extends AbstractTableModel {
+
+	private final String[] columnNames = { "Return value", "Value" };
+	private final Object[][] values;
+
+	public ResultTableModel(List<ReturnValue> returnValues, List<Object> filledValues) {
+		values = new Object[returnValues.size()][columnNames.length];
+		for (int i = 0; i < returnValues.size(); i++) {
+			values[i][0] = returnValues.get(i).getName();
+			values[i][1] = filledValues.get(i);
+		}
 	}
 
-	public WindowReferencePn(WindowId id, String name) {
-		this(id, name, null);
+	@Override
+	public String getColumnName(int col) {
+		return columnNames[col];
 	}
 
-	public WindowReferencePn(WindowId id) {
-		this(id, "", null);
+	@Override
+	public int getRowCount() {
+		return values.length;
 	}
 
-	public PetriNet getPetriNet() {
-		return petriNet;
+	@Override
+	public int getColumnCount() {
+		return 2;
+	}
+
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		return values[rowIndex][columnIndex];
 	}
 
 }

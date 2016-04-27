@@ -17,23 +17,29 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.module;
+package uniol.aptgui.events;
 
-import uniol.aptgui.View;
-import uniol.aptgui.swing.parametertable.ParameterTableModel;
-import uniol.aptgui.swing.parametertable.ResultTableModel;
+import java.util.List;
 
-public interface ModuleView extends View<ModulePresenter> {
+import uniol.apt.module.Module;
 
-	void setDescription(String description);
+public class ModuleExecutedEvent {
 
-	void setParameterTableModel(ParameterTableModel model);
+	private final Module module;
+	private final List<Object> returnValues;
 
-	void setResultTableModel(ResultTableModel resultTableModel);
+	public ModuleExecutedEvent(Module module, List<Object> returnValues) {
+		this.module = module;
+		this.returnValues = returnValues;
+	}
 
-	void showErrorTooFewParameters();
+	public Module getModule() {
+		return module;
+	}
 
-	void showErrorModuleException(String message);
+	public List<Object> getReturnValues() {
+		return returnValues;
+	}
 
 }
 

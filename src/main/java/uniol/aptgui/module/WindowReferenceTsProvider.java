@@ -22,6 +22,7 @@ package uniol.aptgui.module;
 import java.util.ArrayList;
 import java.util.List;
 
+import uniol.apt.adt.ts.TransitionSystem;
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.mainwindow.WindowId;
@@ -45,7 +46,7 @@ public class WindowReferenceTsProvider implements WindowReferenceProvider {
 		for (WindowId id : application.getInteralWindows()) {
 			if (id.getType() == WindowType.TRANSITION_SYSTEM) {
 				Document<?> doc = application.getDocument(id);
-				refs.add(new WindowReferenceTs(id, doc.getTitle()));
+				refs.add(new WindowReferenceTs(id, doc.getTitle(), (TransitionSystem) doc.getModel()));
 			}
 		}
 

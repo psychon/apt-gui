@@ -19,16 +19,28 @@
 
 package uniol.aptgui.swing.parametertable;
 
+import uniol.apt.adt.ts.TransitionSystem;
 import uniol.aptgui.mainwindow.WindowId;
 
 public class WindowReferenceTs extends WindowReference {
 
-	public WindowReferenceTs(WindowId id, String name) {
+	private final TransitionSystem transitionSystem;
+
+	public WindowReferenceTs(WindowId id, String name, TransitionSystem transitionSystem) {
 		super(id, name);
+		this.transitionSystem = transitionSystem;
+	}
+
+	public WindowReferenceTs(WindowId id, String name) {
+		this(id, name, null);
 	}
 
 	public WindowReferenceTs(WindowId id) {
-		super(id);
+		this(id, "", null);
+	}
+
+	public TransitionSystem getTransitionSystem() {
+		return transitionSystem;
 	}
 
 }
