@@ -168,10 +168,12 @@ public class SelectionTool extends Feature {
 			if (selection.isEmpty()) {
 				dragType = DragType.NODE;
 				draggedElement = elem;
-			} else {
+			} else if (selection.contains(elem)) {
 				dragType = DragType.SELECTION;
+			} else {
+				dragType = DragType.NONE;
+				draggedElement = null;
 			}
-
 		} else if (elem instanceof GraphicalEdge) {
 			dragType = DragType.EDGE;
 			draggedElement = getOrCreateBreakpoint(e.getPoint(), (GraphicalEdge) elem);
