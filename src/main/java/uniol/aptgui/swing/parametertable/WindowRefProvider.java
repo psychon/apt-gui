@@ -19,22 +19,20 @@
 
 package uniol.aptgui.swing.parametertable;
 
-import java.awt.Component;
+import java.util.List;
 
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
+public interface WindowRefProvider {
 
-@SuppressWarnings("serial")
-public class WindowReferenceRenderer extends JLabel implements TableCellRenderer {
+	List<WindowRef> getWindowReferences();
 
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		WindowReference ref = (WindowReference) value;
-		setText(ref.toString());
-		return this;
-	}
+	/**
+	 * Returns the WindowReference instance that is used whenever no window
+	 * is available for selection, e.g. when a PN window is needed but none
+	 * is open.
+	 *
+	 * @return
+	 */
+//	WindowReference getNotAvailableInstance();
 
 }
 

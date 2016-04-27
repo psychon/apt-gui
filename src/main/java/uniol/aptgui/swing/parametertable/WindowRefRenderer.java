@@ -19,32 +19,21 @@
 
 package uniol.aptgui.swing.parametertable;
 
-import uniol.aptgui.mainwindow.WindowId;
+import java.awt.Component;
 
-public class WindowReference {
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
 
-	private final WindowId id;
-	private final String name;
-
-	public WindowReference(WindowId id) {
-		this(id, "");
-	}
-
-	public WindowReference(WindowId id, String name) {
-		this.id = id;
-		this.name = name;
-	}
-
-	public WindowId getId() {
-		return id;
-	}
+@SuppressWarnings("serial")
+public class WindowRefRenderer extends JLabel implements TableCellRenderer {
 
 	@Override
-	public String toString() {
-		if (id == null) {
-			return "N/A";
-		}
-		return id.toStringWithTitle(name);
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+			int row, int column) {
+		WindowRef ref = (WindowRef) value;
+		setText(ref.toString());
+		return this;
 	}
 
 }

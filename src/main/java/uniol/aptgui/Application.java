@@ -66,6 +66,8 @@ public interface Application {
 
 	public WindowId openTransitionSystem(TransitionSystem ts);
 
+	public WindowId openDocument(Document<?> document);
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

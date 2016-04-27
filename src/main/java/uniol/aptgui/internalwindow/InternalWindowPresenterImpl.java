@@ -30,7 +30,7 @@ import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.events.WindowFocusLostEvent;
 import uniol.aptgui.mainwindow.WindowId;
-import uniol.aptgui.swing.parametertable.WindowReference;
+import uniol.aptgui.swing.parametertable.WindowRef;
 
 public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindowPresenter, InternalWindowView>
 		implements InternalWindowPresenter {

@@ -19,6 +19,7 @@
 
 package uniol.aptgui.module;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.eventbus.Subscribe;
@@ -32,27 +33,33 @@ import uniol.apt.module.impl.ModuleInvoker;
 import uniol.apt.module.impl.ModuleUtils;
 import uniol.apt.module.impl.Parameter;
 import uniol.apt.module.impl.ReturnValue;
+import uniol.apt.ui.ParametersTransformer;
+import uniol.apt.ui.impl.AptParametersTransformer;
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Application;
+import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.PnDocument;
+import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.events.ModuleExecutedEvent;
 import uniol.aptgui.events.WindowClosedEvent;
 import uniol.aptgui.mainwindow.WindowId;
-import uniol.aptgui.swing.parametertable.ParameterTableModel;
-import uniol.aptgui.swing.parametertable.ResultTableModel;
-import uniol.aptgui.swing.parametertable.WindowReferencePn;
-import uniol.aptgui.swing.parametertable.WindowReferenceTs;
+import uniol.aptgui.mainwindow.WindowType;
+import uniol.aptgui.swing.parametertable.PropertyTableModel;
+import uniol.aptgui.swing.parametertable.PropertyType;
+import uniol.aptgui.swing.parametertable.WindowRef;
 
 public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, ModuleView> implements ModulePresenter {
 
 	private final Application application;
+	ParametersTransformer parametersTransformer = AptParametersTransformer.INSTANCE;
 
 	private Module module;
 	private List<Parameter> parameters;
 	private List<Parameter> allParameters;
 	private List<ReturnValue> returnValues;
 
-	private ParameterTableModel parameterTableModel;
-	private ResultTableModel resultTableModel;
+	private PropertyTableModel parameterTableModel;
+	private PropertyTableModel resultTableModel;
 
 	@Inject
 	public ModulePresenterImpl(ModuleView view, Application application) {
@@ -68,57 +75,135 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 		allParameters = ModuleUtils.getAllParameters(module);
 		returnValues = ModuleUtils.getReturnValues(module);
 
-		parameterTableModel = new ParameterTableModel(allParameters);
+		parameterTableModel = new PropertyTableModel("Parameter", "Value", allParameters.size());
+		for (int i = 0; i < allParameters.size(); i++) {
+			Parameter param = allParameters.get(i);
+			parameterTableModel.setProperty(i, PropertyType.fromModelType(param.getKlass()),
+					param.getName());
+		}
+
 		view.setDescription(module.getLongDescription());
+		view.setPetriNetWindowRefProvider(new WindowRefProviderImpl(application, WindowType.PETRI_NET));
+		view.setTransitionSystemWindowRefProvider(
+				new WindowRefProviderImpl(application, WindowType.TRANSITION_SYSTEM));
 		view.setParameterTableModel(parameterTableModel);
 	}
 
 	@Override
 	public void onRunButtonClicked() {
-		Object[] paramValues = parameterTableModel.getParameterValues();
-
-		if (paramValues.length < parameters.size()) {
-			view.showErrorTooFewParameters();
-			return;
-		}
-
 		try {
+			Object[] paramValues = getParameterValues();
+			if (paramValues.length < parameters.size()) {
+				view.showErrorTooFewParameters();
+				return;
+			}
+
 			ModuleInvoker invoker = new ModuleInvoker();
 			List<Object> filledReturnValues = invoker.invoke(module, paramValues);
 			application.getEventBus().post(new ModuleExecutedEvent(module, filledReturnValues));
 		} catch (ModuleException e) {
 			view.showErrorModuleException(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Returns an array of non-null parameter values as model objects.
+	 *
+	 * @return
+	 * @throws ModuleException
+	 */
+	private Object[] getParameterValues() throws ModuleException {
+		List<Object> result = new ArrayList<>();
+		for (int row = 0; row < parameterTableModel.getRowCount(); row++) {
+			if (parameterTableModel.getPropertyValueAt(row) != null) {
+				result.add(getParameterValueAt(row));
+			}
+		}
+		return result.toArray();
+	}
+
+	/**
+	 * Returns the parameter value from the parameter table.
+	 *
+	 * @param row
+	 *                parameter row
+	 * @return parameter value as model object
+	 * @throws ModuleException
+	 */
+	private Object getParameterValueAt(int row) throws ModuleException {
+		PropertyType type = parameterTableModel.getPropertyTypeAt(row);
+		switch (type) {
+		case PETRI_NET:
+		case TRANSITION_SYSTEM:
+			WindowRef ref = parameterTableModel.getPropertyValueAt(row);
+			return ref.getDocument().getModel();
+		default:
+			String value = parameterTableModel.getPropertyValueAt(row);
+			Object modelValue = parametersTransformer.transform(value, allParameters.get(row).getKlass());
+			return modelValue;
 		}
 	}
 
 	@Subscribe
 	public void onModuleExecutedEvent(ModuleExecutedEvent e) {
 		List<Object> filledReturnValues = e.getReturnValues();
-		for (int i = 0; i < filledReturnValues.size(); i++) {
-			Object retVal = filledReturnValues.get(i);
-			if (retVal.getClass().equals(PetriNet.class)) {
+
+		resultTableModel = new PropertyTableModel("Result", "Value", filledReturnValues.size());
+		resultTableModel.setEditable(false);
+		for (int row = 0; row < filledReturnValues.size(); row++) {
+			Object retVal = filledReturnValues.get(row);
+			Class<?> retClass = retVal.getClass();
+			String name = returnValues.get(row).getName();
+			PropertyType type = PropertyType.fromModelType(retClass);
+
+			// Transform model objects to their proxy counterparts
+			// for display.
+			switch (type) {
+			case PETRI_NET: {
 				PetriNet pn = (PetriNet) retVal;
-				WindowId id = application.openPetriNet(pn);
-				WindowReferencePn ref = new WindowReferencePn(id);
-				filledReturnValues.set(i, ref);
-			} else if (retVal.getClass().equals(TransitionSystem.class)) {
+				Document<?> doc = new PnDocument(pn);
+				WindowRef ref = openDocument(doc);
+				resultTableModel.setProperty(row, type, name, ref);
+				break;
+			}
+			case TRANSITION_SYSTEM: {
 				TransitionSystem ts = (TransitionSystem) retVal;
-				WindowId id = application.openTransitionSystem(ts);
-				WindowReferenceTs ref = new WindowReferenceTs(id);
-				filledReturnValues.set(i, ref);
+				Document<?> doc = new TsDocument(ts);
+
+				WindowRef ref = openDocument(doc);
+				resultTableModel.setProperty(row, type, name, ref);
+				break;
+			}
+			default:
+				String proxy = retVal.toString();
+				resultTableModel.setProperty(row, type, name, proxy);
+				break;
 			}
 		}
 
-		resultTableModel = new ResultTableModel(returnValues, filledReturnValues);
 		view.setResultTableModel(resultTableModel);
+	}
+
+	private WindowRef openDocument(Document<?> document) {
+		WindowId id = application.openDocument(document);
+		WindowRef ref = new WindowRef(id, document);
+		return ref;
 	}
 
 	@Subscribe
 	public void onWindowClosedEvent(WindowClosedEvent e) {
-		view.invalidateWindowDropdowns();
+		for (int row = 0; row < parameterTableModel.getRowCount(); row++) {
+			PropertyType type = parameterTableModel.getPropertyTypeAt(row);
+			if (type == PropertyType.PETRI_NET || type == PropertyType.TRANSITION_SYSTEM) {
+				WindowRef ref = parameterTableModel.getPropertyValueAt(row);
+				if (ref != null && ref.getWindowId() == e.getWindowId()) {
+					parameterTableModel.setPropertyValue(row, null);
+				}
+			}
+		}
 	}
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

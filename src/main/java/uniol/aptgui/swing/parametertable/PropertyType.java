@@ -19,28 +19,39 @@
 
 package uniol.aptgui.swing.parametertable;
 
+import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.ts.TransitionSystem;
-import uniol.aptgui.mainwindow.WindowId;
 
-public class WindowReferenceTs extends WindowReference {
+public enum PropertyType {
 
-	private final TransitionSystem transitionSystem;
+	PETRI_NET(PetriNet.class, WindowRef.class),
+	TRANSITION_SYSTEM(TransitionSystem.class, WindowRef.class),
+	BOOLEAN(Boolean.class, Boolean.class),
+	OTHER(Object.class, String.class);
 
-	public WindowReferenceTs(WindowId id, String name, TransitionSystem transitionSystem) {
-		super(id, name);
-		this.transitionSystem = transitionSystem;
+	private final Class<?> modelType;
+	private final Class<?> proxyType;
+
+	private PropertyType(Class<?> modelType, Class<?> proxyType) {
+		this.modelType = modelType;
+		this.proxyType = proxyType;
 	}
 
-	public WindowReferenceTs(WindowId id, String name) {
-		this(id, name, null);
+	public Class<?> getModelType() {
+		return modelType;
 	}
 
-	public WindowReferenceTs(WindowId id) {
-		this(id, "", null);
+	public Class<?> getProxyType() {
+		return proxyType;
 	}
 
-	public TransitionSystem getTransitionSystem() {
-		return transitionSystem;
+	public static PropertyType fromModelType(Class<?> modelClass) {
+		for (PropertyType pt : PropertyType.values()) {
+			if (pt.getModelType().equals(modelClass)) {
+				return pt;
+			}
+		}
+		return OTHER;
 	}
 
 }

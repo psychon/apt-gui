@@ -19,28 +19,31 @@
 
 package uniol.aptgui.swing.parametertable;
 
-import uniol.apt.adt.pn.PetriNet;
+import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.mainwindow.WindowId;
 
-public class WindowReferencePn extends WindowReference {
+public class WindowRef {
 
-	private final PetriNet petriNet;
+	private final WindowId windowId;
 
-	public WindowReferencePn(WindowId id, String name, PetriNet petriNet) {
-		super(id, name);
-		this.petriNet = petriNet;
+	private final Document<?> document;
+
+	public WindowRef(WindowId windowId, Document<?> document) {
+		this.windowId = windowId;
+		this.document = document;
 	}
 
-	public WindowReferencePn(WindowId id, String name) {
-		this(id, name, null);
+	public WindowId getWindowId() {
+		return windowId;
 	}
 
-	public WindowReferencePn(WindowId id) {
-		this(id, "", null);
+	public Document<?> getDocument() {
+		return document;
 	}
 
-	public PetriNet getPetriNet() {
-		return petriNet;
+	@Override
+	public String toString() {
+		return windowId.toStringWithTitle(document.getTitle());
 	}
 
 }

@@ -21,58 +21,45 @@ package uniol.aptgui.swing.parametertable;
 
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 
 @SuppressWarnings("serial")
 public class PropertyTable extends JTable {
 
-	private Class<?> editingClass;
+	private PropertyTableModel dataModel;
 
-	public PropertyTable() {
-		setDefaultRenderer(WindowReference.class, new WindowReferenceRenderer());
+	private WindowRefEditor pnEditor;
+	private WindowRefEditor tsEditor;
+
+	public void setPetriNetWindowRefProvider(WindowRefProvider refProvider) {
+		this.pnEditor = new WindowRefEditor(refProvider);
 	}
 
-	public PropertyTable(WindowReferenceProvider pnRefProvider, WindowReferenceProvider tsRefProvider) {
-		setDefaultRenderer(WindowReference.class, new WindowReferenceRenderer());
-		setDefaultEditor(WindowReferencePn.class, new WindowReferenceEditor(pnRefProvider));
-		setDefaultEditor(WindowReferenceTs.class, new WindowReferenceEditor(tsRefProvider));
+	public void setTransitionSystemWindowRefProvider(WindowRefProvider refProvider) {
+		this.tsEditor = new WindowRefEditor(refProvider);
 	}
 
-	@Override
-	public TableCellRenderer getCellRenderer(int row, int column) {
-		editingClass = null;
-		int modelColumn = convertColumnIndexToModel(column);
-		if (modelColumn == 1) {
-			Object obj = getModel().getValueAt(row, modelColumn);
-			Class<?> cellClass = Object.class;
-			if (obj != null) {
-				cellClass = obj.getClass();
-			}
-			return getDefaultRenderer(cellClass);
-		} else {
-			return super.getCellRenderer(row, column);
-		}
+	public void setModel(PropertyTableModel dataModel) {
+		this.dataModel = dataModel;
+		super.setModel(dataModel);
 	}
 
 	@Override
 	public TableCellEditor getCellEditor(int row, int column) {
-		editingClass = null;
 		int modelColumn = convertColumnIndexToModel(column);
-		if (modelColumn == 1) {
-			Object obj = getModel().getValueAt(row, modelColumn);
-			editingClass = Object.class;
-			if (obj != null) {
-				editingClass = obj.getClass();
+		if (modelColumn == 1 && dataModel != null) {
+			int modelRow = convertRowIndexToModel(row);
+			PropertyType type = dataModel.getPropertyTypeAt(modelRow);
+			switch (type) {
+			case PETRI_NET:
+				return pnEditor;
+			case TRANSITION_SYSTEM:
+				return tsEditor;
+			default:
+				return getDefaultEditor(type.getProxyType());
 			}
-			return getDefaultEditor(editingClass);
-		} else {
-			return super.getCellEditor(row, column);
 		}
-	}
 
-	@Override
-	public Class<?> getColumnClass(int column) {
-		return editingClass != null ? editingClass : super.getColumnClass(column);
+		return super.getCellEditor(row, column);
 	}
 
 }

@@ -22,41 +22,43 @@ package uniol.aptgui.module;
 import java.util.ArrayList;
 import java.util.List;
 
-import uniol.apt.adt.pn.PetriNet;
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.mainwindow.WindowType;
-import uniol.aptgui.swing.parametertable.WindowReference;
-import uniol.aptgui.swing.parametertable.WindowReferencePn;
-import uniol.aptgui.swing.parametertable.WindowReferenceProvider;
+import uniol.aptgui.swing.parametertable.WindowRef;
+import uniol.aptgui.swing.parametertable.WindowRefProvider;
 
-public class WindowReferencePnProvider implements WindowReferenceProvider {
+public class WindowRefProviderImpl implements WindowRefProvider {
 
 	private final Application application;
+	private final WindowType filter;
+//	private final WindowReference notAvailableInstance;
 
-	public WindowReferencePnProvider(Application application) {
+	public WindowRefProviderImpl(Application application, WindowType filter) {
 		this.application = application;
+		this.filter = filter;
+//		this.notAvailableInstance = new WindowReference();
 	}
 
 	@Override
-	public List<WindowReference> getWindowReferences() {
-		List<WindowReference> refs = new ArrayList<>();
+	public List<WindowRef> getWindowReferences() {
+		List<WindowRef> refs = new ArrayList<>();
 
 		for (WindowId id : application.getInteralWindows()) {
-			if (id.getType() == WindowType.PETRI_NET) {
+			if (id.getType() == filter) {
 				Document<?> doc = application.getDocument(id);
-				refs.add(new WindowReferencePn(id, doc.getTitle(), (PetriNet) doc.getModel()));
+				refs.add(new WindowRef(id, doc));
 			}
 		}
 
 		return refs;
 	}
 
-	@Override
-	public WindowReference getNotAvailableInstance() {
-		return new WindowReferencePn(null);
-	}
+//	@Override
+//	public WindowReference getNotAvailableInstance() {
+//		return new WindowReferencePn(null);
+//	}
 
 }
 

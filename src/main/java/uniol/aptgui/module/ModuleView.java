@@ -20,27 +20,24 @@
 package uniol.aptgui.module;
 
 import uniol.aptgui.View;
-import uniol.aptgui.swing.parametertable.ParameterTableModel;
-import uniol.aptgui.swing.parametertable.ResultTableModel;
+import uniol.aptgui.swing.parametertable.PropertyTableModel;
+import uniol.aptgui.swing.parametertable.WindowRefProvider;
 
 public interface ModuleView extends View<ModulePresenter> {
 
 	void setDescription(String description);
 
-	void setParameterTableModel(ParameterTableModel model);
+	void setPetriNetWindowRefProvider(WindowRefProvider refProvider);
 
-	void setResultTableModel(ResultTableModel resultTableModel);
+	void setTransitionSystemWindowRefProvider(WindowRefProvider refProvider);
+
+	void setParameterTableModel(PropertyTableModel parameterTableModel);
+
+	void setResultTableModel(PropertyTableModel resultTableModel);
 
 	void showErrorTooFewParameters();
 
 	void showErrorModuleException(String message);
-
-	/**
-	 * Causes the parameter drop-down boxes which allow to select PN/LTS
-	 * windows to be invalidated. This means the set of available windows is
-	 * refreshed.
-	 */
-	void invalidateWindowDropdowns();
 
 }
 

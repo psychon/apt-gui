@@ -35,21 +35,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
 
-import com.google.inject.Inject;
-
-import uniol.aptgui.Application;
 import uniol.aptgui.swing.JPanelView;
-import uniol.aptgui.swing.parametertable.ParameterTableModel;
 import uniol.aptgui.swing.parametertable.PropertyTable;
-import uniol.aptgui.swing.parametertable.ResultTableModel;
+import uniol.aptgui.swing.parametertable.PropertyTableModel;
+import uniol.aptgui.swing.parametertable.WindowRefProvider;
 
 @SuppressWarnings("serial")
 public class ModuleViewImpl extends JPanelView<ModulePresenter> implements ModuleView {
 
 	private static final int WIDTH = 250;
 	private static final int HEIGHT = 350;
-
-	private final Application application;
 
 	private JEditorPane descriptionPane;
 
@@ -62,9 +57,7 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	private JPanel bottomPanel;
 	private JButton runButton;
 
-	@Inject
-	public ModuleViewImpl(Application application) {
-		this.application = application;
+	public ModuleViewImpl() {
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
@@ -83,8 +76,7 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	}
 
 	private void setupParametersContainer() {
-		parametersTable = new PropertyTable(new WindowReferencePnProvider(application),
-				new WindowReferenceTsProvider(application));
+		parametersTable = new PropertyTable();
 		parametersTable.setFillsViewportHeight(true);
 
 		parametersContainer = new JPanel();
@@ -137,7 +129,7 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	}
 
 	@Override
-	public void setParameterTableModel(ParameterTableModel model) {
+	public void setParameterTableModel(PropertyTableModel model) {
 		parametersTable.setModel(model);
 	}
 
@@ -153,16 +145,18 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	}
 
 	@Override
-	public void setResultTableModel(ResultTableModel resultTableModel) {
+	public void setResultTableModel(PropertyTableModel resultTableModel) {
 		resultsTable.setModel(resultTableModel);
 	}
 
 	@Override
-	public void invalidateWindowDropdowns() {
-		for (int row = 0; row < parametersTable.getModel().getRowCount(); row++) {
-			parametersTable.editCellAt(row, 1);
-		}
-		parametersTable.removeEditor();
+	public void setPetriNetWindowRefProvider(WindowRefProvider refProvider) {
+		parametersTable.setPetriNetWindowRefProvider(refProvider);
+	}
+
+	@Override
+	public void setTransitionSystemWindowRefProvider(WindowRefProvider refProvider) {
+		parametersTable.setTransitionSystemWindowRefProvider(refProvider);
 	}
 
 }

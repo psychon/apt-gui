@@ -19,15 +19,37 @@
 
 package uniol.aptgui.swing.parametertable;
 
-import java.util.List;
+import java.awt.Component;
 
-public interface WindowReferenceProvider {
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
+import javax.swing.JTable;
 
-	public List<WindowReference> getWindowReferences();
+@SuppressWarnings("serial")
+public class WindowRefEditor extends DefaultCellEditor {
 
-	public WindowReference getNotAvailableInstance();
+	private final WindowRefProvider provider;
+
+	public WindowRefEditor(WindowRefProvider provider) {
+		super(new JComboBox<WindowRef>());
+		this.provider = provider;
+	}
+
+	@Override
+	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
+			int column) {
+		@SuppressWarnings("unchecked")
+		JComboBox<WindowRef> comboBox = (JComboBox<WindowRef>) editorComponent;
+		comboBox.removeAllItems();
+		for (WindowRef ref : provider.getWindowReferences()) {
+			comboBox.addItem(ref);
+		}
+//		if (comboBox.getItemCount() == 0) {
+//			comboBox.addItem(provider.getNotAvailableInstance());
+//		}
+		return super.getTableCellEditorComponent(table, value, isSelected, row, column);
+	}
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

@@ -146,7 +146,8 @@ public class ApplicationImpl implements Application {
 		return mainWindow;
 	}
 
-	private WindowId openDocument(Document<?> document) {
+	@Override
+	public WindowId openDocument(Document<?> document) {
 		WindowId id = mainWindow.createWindow(document);
 		documents.put(id, document);
 		mainWindow.showWindow(id);
