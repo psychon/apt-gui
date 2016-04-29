@@ -154,11 +154,24 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 
 		List<Object> filledReturnValues = e.getReturnValues();
 
-		resultTableModel = new PropertyTableModel("Result", "Value", filledReturnValues.size());
+		// Filter null-results.
+		List<String> nonNullReturnNames = new ArrayList<>();
+		List<Object> nonNullReturnValues = new ArrayList<>();
 		for (int row = 0; row < filledReturnValues.size(); row++) {
 			Object retVal = filledReturnValues.get(row);
+			if (retVal != null) {
+				String name = returnValues.get(row).getName();
+				nonNullReturnNames.add(name);
+				nonNullReturnValues.add(retVal);
+			}
+		}
+
+		// Fill table model.
+		resultTableModel = new PropertyTableModel("Result", "Value", nonNullReturnValues.size());
+		for (int i = 0; i < nonNullReturnValues.size(); i++) {
+			Object retVal = nonNullReturnValues.get(i);
 			Class<?> retClass = retVal.getClass();
-			String name = returnValues.get(row).getName();
+			String name = nonNullReturnNames.get(i);
 			PropertyType type = PropertyType.fromModelType(retClass);
 
 			// Transform model objects to their proxy counterparts
@@ -168,20 +181,19 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 				PetriNet pn = (PetriNet) retVal;
 				Document<?> doc = new PnDocument(pn);
 				WindowRef ref = openDocument(doc);
-				resultTableModel.setProperty(row, type, name, ref);
+				resultTableModel.setProperty(i, type, name, ref);
 				break;
 			}
 			case TRANSITION_SYSTEM: {
 				TransitionSystem ts = (TransitionSystem) retVal;
 				Document<?> doc = new TsDocument(ts);
-
 				WindowRef ref = openDocument(doc);
-				resultTableModel.setProperty(row, type, name, ref);
+				resultTableModel.setProperty(i, type, name, ref);
 				break;
 			}
 			default:
 				String proxy = retVal.toString();
-				resultTableModel.setProperty(row, type, name, proxy);
+				resultTableModel.setProperty(i, type, name, proxy);
 				break;
 			}
 		}
