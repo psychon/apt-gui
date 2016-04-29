@@ -17,47 +17,42 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.document.graphical.nodes;
+package uniol.aptgui.commands;
 
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
-import uniol.aptgui.editor.document.graphical.traits.HasTokens;
+import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.graphical.traits.HasMultiplicity;
 
-public class GraphicalPlace extends GraphicalNode implements HasTokens {
+public class SetMultiplicityCommand extends SetAttributeCommand<HasMultiplicity, Integer> {
 
-	private static final int RADIUS = 20;
-	protected long tokens;
-
-	public long getTokens() {
-		return tokens;
-	}
-
-	public void setTokens(long tokens) {
-		this.tokens = tokens;
+	public SetMultiplicityCommand(Document<?> document, List<HasMultiplicity> elements, Integer newValue) {
+		super(document, elements, newValue);
 	}
 
 	@Override
-	public Point getBoundaryIntersection(Point point) {
-		return getCircleBoundaryIntersection(center, RADIUS, point);
+	public String getName() {
+		return "Set Label";
 	}
 
 	@Override
-	public void draw(Graphics2D graphics) {
-		if (!visible) {
-			return;
+	protected List<Integer> getAttributeValues(List<HasMultiplicity> elements) {
+		List<Integer> oldValues = new ArrayList<>();
+		for (HasMultiplicity e : elements) {
+			oldValues.add(e.getMultiplicity());
 		}
-		super.draw(graphics);
-		drawCircle(graphics, center, RADIUS);
-		// TODO draw tokens
-		if (selected) {
-			drawSelectionMarkers(graphics, center, RADIUS + 2);
-		}
+		return oldValues;
 	}
 
 	@Override
-	public boolean coversPoint(Point point) {
-		return super.coversPoint(point) && center.distance(point.x, point.y) < RADIUS;
+	protected Class<?> getModelAttributeClass() {
+		return int.class;
+	}
+
+	@Override
+	protected String getModelAttributeSetterName() {
+		return "setWeight";
 	}
 
 }

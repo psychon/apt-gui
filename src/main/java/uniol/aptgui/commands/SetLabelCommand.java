@@ -23,53 +23,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.traits.HasLabel;
 
-public class SetLabelCommand extends Command {
+public class SetLabelCommand extends SetAttributeCommand<HasLabel, String> {
 
-	private final Document<?> document;
-	private final List<HasLabel> elements;
-	private final String newLabel;
-	private final List<String> oldLabels;
-
-	public SetLabelCommand(Document<?> document, List<HasLabel> elements, String newLabel) {
-		this.document = document;
-		this.elements = elements;
-		this.newLabel = newLabel;
-		this.oldLabels = new ArrayList<>();
-		for (HasLabel labelElem : elements) {
-			this.oldLabels.add(labelElem.getLabel());
-		}
-	}
-
-	@Override
-	public void execute() {
-		for (HasLabel labelElem : elements) {
-			invokeSetLabelOnModelElem(labelElem, newLabel);
-		}
-		document.fireDocumentDirty();
-	}
-
-	private void invokeSetLabelOnModelElem(HasLabel elem, String arg) {
-		Object modelElem = document.getAssociatedModelElement((GraphicalElement) elem);
-		try {
-			modelElem.getClass().getMethod("setLabel", String.class).invoke(modelElem, arg);
-		} catch (Exception e) {
-			throw new AssertionError("The setLabel method of the associated model element for a HasLabel graphical element could not be invoked.", e);
-		}
-	}
-
-	@Override
-	public void undo() {
-		for (int i = 0; i < elements.size(); i++) {
-			invokeSetLabelOnModelElem(elements.get(i), oldLabels.get(i));
-		}
+	public SetLabelCommand(Document<?> document, List<HasLabel> elements, String newValue) {
+		super(document, elements, newValue);
 	}
 
 	@Override
 	public String getName() {
 		return "Set Label";
+	}
+
+	@Override
+	protected List<String> getAttributeValues(List<HasLabel> elements) {
+		List<String> oldValues = new ArrayList<>();
+		for (HasLabel e : elements) {
+			oldValues.add(e.getLabel());
+		}
+		return oldValues;
+	}
+
+	@Override
+	protected Class<?> getModelAttributeClass() {
+		return String.class;
+	}
+
+	@Override
+	protected String getModelAttributeSetterName() {
+		return "setLabel";
 	}
 
 }

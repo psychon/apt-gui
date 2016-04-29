@@ -33,28 +33,37 @@ import com.google.inject.Injector;
 
 import uniol.aptgui.swing.JPanelView;
 import uniol.aptgui.swing.actions.SetLabelAction;
+import uniol.aptgui.swing.actions.SetMultiplicityAction;
+import uniol.aptgui.swing.actions.SetTokensAction;
 
 @SuppressWarnings("serial")
 public class EditorViewImpl extends JPanelView<EditorPresenter> implements EditorView {
 
 	private final Injector injector;
-	private final JPopupMenu popupMenuForNodes;
+
+	private JPopupMenu popupMenu;
+	private JMenuItem setLabel;
+	private JMenuItem setTokens;
+	private JMenuItem setMultiplicity;
 
 	@Inject
 	public EditorViewImpl(Injector injector) {
 		this.injector = injector;
 		setBackground(Color.WHITE);
 		setPreferredSize(new Dimension(400, 300));
-		popupMenuForNodes = createPopupMenuForNodes();
+		createPopupMenu();
 	}
 
-	private JPopupMenu createPopupMenuForNodes() {
-		JPopupMenu popup = new JPopupMenu();
-		JMenuItem menuItem = new JMenuItem(injector.getInstance(SetLabelAction.class));
-		popup.add(menuItem);
-		menuItem = new JMenuItem("Another popup menu item");
-		popup.add(menuItem);
-		return popup;
+	private void createPopupMenu() {
+		popupMenu = new JPopupMenu();
+		setLabel = new JMenuItem(injector.getInstance(SetLabelAction.class));
+		setTokens = new JMenuItem(injector.getInstance(SetTokensAction.class));
+		setMultiplicity = new JMenuItem(injector.getInstance(SetMultiplicityAction.class));
+
+		popupMenu.add(setLabel);
+		popupMenu.add(setTokens);
+		popupMenu.add(setMultiplicity);
+		popupMenu.add(new JMenuItem("Another popup menu item"));
 	}
 
 	@Override
@@ -81,8 +90,27 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 	}
 
 	@Override
-	public void showPopupMenuForNodes(int x, int y) {
-		popupMenuForNodes.show(this, x, y);
+	public void showPopupMenu(int x, int y) {
+		popupMenu.show(this, x, y);
+	}
+
+	@Override
+	public void setMenuActionActive(MenuAction action, boolean active) {
+		// TODO Auto-generated method stub
+		switch(action) {
+		case SET_LABEL:
+			setLabel.setEnabled(active);
+			break;
+		case SET_TOKENS:
+			setTokens.setEnabled(active);
+			break;
+		case SET_MULTIPLICITY:
+			setMultiplicity.setEnabled(active);
+			break;
+		default:
+			break;
+
+		}
 	}
 
 }

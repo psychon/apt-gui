@@ -17,25 +17,36 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.document;
+package uniol.aptgui.swing.actions;
 
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import java.awt.event.ActionEvent;
 
-public interface DocumentListener {
+import javax.swing.AbstractAction;
 
-	/**
-	 * Called when the document changes and a redraw is necessary.
-	 */
-	void onDocumentDirty();
+import com.google.inject.Inject;
 
-	/**
-	 * Called when the selection changes.
-	 *
-	 * @param commonBaseClass
-	 *                most specific base class that all selected elements
-	 *                are assignable to
-	 */
-	void onSelectionChanged(Class<? extends GraphicalElement> commonBaseClass);
+import uniol.aptgui.Application;
+import uniol.aptgui.editor.document.Document;
+
+@SuppressWarnings("serial")
+public class SetTokensAction extends AbstractAction {
+
+	private final Application app;
+
+	@Inject
+	public SetTokensAction(Application app) {
+		this.app = app;
+		String name = "Set tokens";
+		putValue(NAME, name);
+		putValue(SHORT_DESCRIPTION, name);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Document<?> document = app.getActiveDocument();
+		// TODO implement
+	}
+
 
 }
 

@@ -20,8 +20,9 @@
 package uniol.aptgui.editor.document.graphical.edges;
 
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
+import uniol.aptgui.editor.document.graphical.traits.HasLabel;
 
-public class GraphicalArc extends GraphicalEdge {
+public class GraphicalArc extends GraphicalEdge implements HasLabel {
 
 	public GraphicalArc(GraphicalNode source, GraphicalNode target) {
 		super(source, target);

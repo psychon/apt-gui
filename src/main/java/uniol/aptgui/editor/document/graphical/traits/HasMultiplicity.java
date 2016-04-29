@@ -17,25 +17,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.document;
+package uniol.aptgui.editor.document.graphical.traits;
 
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
+public interface HasMultiplicity {
 
-public interface DocumentListener {
+	Integer getMultiplicity();
 
-	/**
-	 * Called when the document changes and a redraw is necessary.
-	 */
-	void onDocumentDirty();
-
-	/**
-	 * Called when the selection changes.
-	 *
-	 * @param commonBaseClass
-	 *                most specific base class that all selected elements
-	 *                are assignable to
-	 */
-	void onSelectionChanged(Class<? extends GraphicalElement> commonBaseClass);
+	void setMultiplicity(Integer multiplicity);
 
 }
 

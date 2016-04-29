@@ -97,6 +97,7 @@ public class SelectionTool extends Feature {
 				document.clearSelection();
 				document.addToSelection(node);
 			}
+			document.fireSelectionChanged();
 			document.fireDocumentDirty();
 		}
 	}
@@ -119,19 +120,24 @@ public class SelectionTool extends Feature {
 			} else {
 				dragType = DragType.NONE;
 				draggedElement = null;
-				document.clearSelection();
 			}
 		} else if (elem instanceof GraphicalEdge) {
 			dragType = DragType.EDGE;
 			draggedElement = getOrCreateBreakpoint(e.getPoint(), (GraphicalEdge) elem);
 			document.clearSelection();
+			document.fireSelectionChanged();
 		} else {
-			dragType = DragType.NONE;
-			draggedElement = null;
-			document.clearSelection();
+			clearSelection();
 		}
 
 		dragSource = e.getPoint();
+	}
+
+	private void clearSelection() {
+		dragType = DragType.NONE;
+		draggedElement = null;
+		document.clearSelection();
+		document.fireSelectionChanged();
 	}
 
 	@Override

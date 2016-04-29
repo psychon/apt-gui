@@ -26,7 +26,6 @@ import uniol.aptgui.editor.EditorView;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.Transform2D;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
-import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 import uniol.aptgui.editor.features.base.Feature;
 
 /**
@@ -65,13 +64,14 @@ public class ContextMenuFeature extends Feature {
 
 		Point modelPosition = transform.applyInverse(e.getPoint());
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
-		if (elem instanceof GraphicalNode) {
+		if (elem instanceof GraphicalElement) {
 			if (!document.getSelection().contains(elem)) {
 				document.clearSelection();
 				document.addToSelection(elem);
+				document.fireSelectionChanged();
 				document.fireDocumentDirty();
 			}
-			view.showPopupMenuForNodes(e.getX(), e.getY());
+			view.showPopupMenu(e.getX(), e.getY());
 		}
 	}
 

@@ -20,20 +20,21 @@
 package uniol.aptgui.editor.document.graphical.edges;
 
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
+import uniol.aptgui.editor.document.graphical.traits.HasMultiplicity;
 
-public class GraphicalFlow extends GraphicalEdge {
+public class GraphicalFlow extends GraphicalEdge implements HasMultiplicity {
 
-	protected long multiplicity;
+	protected Integer multiplicity;
 
 	public GraphicalFlow(GraphicalNode source, GraphicalNode target) {
 		super(source, target);
 	}
 
-	public long getMultiplicity() {
+	public Integer getMultiplicity() {
 		return multiplicity;
 	}
 
-	public void setMultiplicity(long multiplicity) {
+	public void setMultiplicity(Integer multiplicity) {
 		this.multiplicity = multiplicity;
 		setLabel(String.valueOf(multiplicity));
 	}

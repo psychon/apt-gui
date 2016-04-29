@@ -26,6 +26,10 @@ import uniol.aptgui.View;
 
 public interface EditorView extends View<EditorPresenter> {
 
+	public static enum MenuAction {
+		SET_LABEL, SET_TOKENS, SET_MULTIPLICITY
+	}
+
 	public int getCanvasWidth();
 
 	public int getCanvasHeight();
@@ -36,7 +40,9 @@ public interface EditorView extends View<EditorPresenter> {
 
 	public void repaint();
 
-	public void showPopupMenuForNodes(int x, int y);
+	public void showPopupMenu(int x, int y);
+
+	public void setMenuActionActive(MenuAction action, boolean active);
 
 }
 

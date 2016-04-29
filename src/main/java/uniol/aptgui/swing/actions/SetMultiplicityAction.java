@@ -25,28 +25,31 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.commands.Command;
-import uniol.aptgui.commands.SetLabelCommand;
+import uniol.aptgui.commands.SetMultiplicityCommand;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.graphical.traits.HasLabel;
+import uniol.aptgui.editor.document.graphical.traits.HasMultiplicity;
 
 @SuppressWarnings("serial")
-public class SetLabelAction extends SimpleSetAttributeAction<HasLabel, String> {
+public class SetMultiplicityAction extends SimpleSetAttributeAction<HasMultiplicity, Integer> {
 
 	@Inject
-	public SetLabelAction(Application app) {
-		super("Set label", "New label:", app);
-
+	public SetMultiplicityAction(Application app) {
+		super("Set Multiplicity", "New multiplicity:", app);
 	}
 
 	@Override
-	protected String getAttribute(HasLabel element) {
-		return element.getLabel();
+	protected Command createCommand(Document<?> document, List<HasMultiplicity> selection, String userInput) {
+		try {
+			Integer value = Integer.valueOf(userInput);
+			return new SetMultiplicityCommand(document, selection, value);
+		} catch (NumberFormatException e) {
+			return null;
+		}
 	}
 
 	@Override
-	protected Command createCommand(Document<?> document, List<HasLabel> selection, String userInput) {
-		// TODO validation
-		return new SetLabelCommand(document, selection, userInput);
+	protected Integer getAttribute(HasMultiplicity element) {
+		return element.getMultiplicity();
 	}
 
 }

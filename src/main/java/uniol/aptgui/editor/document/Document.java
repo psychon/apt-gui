@@ -26,7 +26,6 @@ import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -51,10 +50,7 @@ public abstract class Document<T> {
 	 */
 	private final Map<GraphicalElement, Object> elements;
 
-	/**
-	 * A set of selected elements.
-	 */
-	private final Set<GraphicalElement> selection;
+	private final Selection selection;
 
 	protected String title;
 	protected File file;
@@ -77,7 +73,7 @@ public abstract class Document<T> {
 		this.hasUnsavedChanges = false;
 		this.transform = new Transform2D();
 		this.elements = new HashMap<>();
-		this.selection = new HashSet<>();
+		this.selection = new Selection();
 	}
 
 	/**
@@ -86,7 +82,7 @@ public abstract class Document<T> {
 	 * @return
 	 */
 	public Set<GraphicalElement> getSelection() {
-		return selection;
+		return selection.getSelection();
 	}
 
 	/**
@@ -96,11 +92,7 @@ public abstract class Document<T> {
 	 * @param elem
 	 */
 	public void toggleSelection(GraphicalElement elem) {
-		if (elem.isSelected()) {
-			removeFromSelection(elem);
-		} else {
-			addToSelection(elem);
-		}
+		selection.toggleSelection(elem);
 	}
 
 	/**
@@ -110,8 +102,7 @@ public abstract class Document<T> {
 	 *                newly selected element
 	 */
 	public void addToSelection(GraphicalElement elem) {
-		selection.add(elem);
-		elem.setSelected(true);
+		selection.addToSelection(elem);
 	}
 
 	/**
@@ -121,18 +112,14 @@ public abstract class Document<T> {
 	 *                the element to unselect
 	 */
 	public void removeFromSelection(GraphicalElement elem) {
-		selection.remove(elem);
-		elem.setSelected(false);
+		selection.removeFromSelection(elem);
 	}
 
 	/**
 	 * Clears the current selection.
 	 */
 	public void clearSelection() {
-		for (GraphicalElement ge : selection) {
-			ge.setSelected(false);
-		}
-		selection.clear();
+		selection.clearSelection();
 	}
 
 	public File getFile() {
@@ -239,9 +226,22 @@ public abstract class Document<T> {
 		this.hasUnsavedChanges = hasUnsavedChanges;
 	}
 
+	/**
+	 * Calls onDocumentDirty for every listener.
+	 */
 	public void fireDocumentDirty() {
 		for (DocumentListener l : listeners) {
 			l.onDocumentDirty();
+		}
+	}
+
+	/**
+	 * Calls onSelectionChanged for every listener.
+	 */
+	public void fireSelectionChanged() {
+		Class<? extends GraphicalElement> commonBase = selection.getCommonBaseClass();
+		for (DocumentListener l : listeners) {
+			l.onSelectionChanged(commonBase);
 		}
 	}
 

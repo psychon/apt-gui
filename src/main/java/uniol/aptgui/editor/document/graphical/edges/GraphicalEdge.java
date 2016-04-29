@@ -29,9 +29,8 @@ import java.util.List;
 
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
-import uniol.aptgui.editor.document.graphical.traits.HasLabel;
 
-public abstract class GraphicalEdge extends GraphicalElement implements HasLabel {
+public abstract class GraphicalEdge extends GraphicalElement {
 
 	private static final double SELECTION_DISTANCE = 10;
 	protected GraphicalNode source;
