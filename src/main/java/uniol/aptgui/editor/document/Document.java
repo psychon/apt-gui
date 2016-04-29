@@ -33,7 +33,6 @@ import java.util.Set;
 
 import uniol.apt.adt.extension.IExtensible;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
-import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 import uniol.aptgui.editor.layout.Layout;
 
 public abstract class Document<T> {
@@ -247,7 +246,7 @@ public abstract class Document<T> {
 	}
 
 	public void applyLayout(Layout layout) {
-		layout.applyTo(this, width, height);
+		layout.applyTo(this);
 	}
 
 	public void draw(Graphics2D graphics) {

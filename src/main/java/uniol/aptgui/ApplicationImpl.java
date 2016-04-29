@@ -22,6 +22,8 @@ package uniol.aptgui;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -70,6 +72,12 @@ public class ApplicationImpl implements Application {
 		this.documents = new HashMap<>();
 
 		eventBus.register(this);
+	}
+
+	@Subscribe
+	public void onEvent(Object e) {
+		String timeStamp = new SimpleDateFormat("yyyyMMdd HHmmss").format(Calendar.getInstance().getTime());
+		System.out.println(timeStamp + "\t" + e);
 	}
 
 	@Subscribe
@@ -151,7 +159,8 @@ public class ApplicationImpl implements Application {
 		WindowId id = mainWindow.createWindow(document);
 		documents.put(id, document);
 		mainWindow.showWindow(id);
-		history.execute(new ApplyLayoutCommand(document, new RandomLayout()));
+		document.applyLayout(new RandomLayout());
+//		history.execute(new ApplyLayoutCommand(document, new RandomLayout()));
 		document.setVisible(true);
 		return id;
 	}

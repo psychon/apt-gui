@@ -67,6 +67,11 @@ public class SetLabelCommand extends Command {
 		}
 	}
 
+	@Override
+	public String getName() {
+		return "Set Label";
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

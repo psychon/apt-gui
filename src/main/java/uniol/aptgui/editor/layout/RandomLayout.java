@@ -32,16 +32,21 @@ public class RandomLayout implements Layout {
 	}
 
 	@Override
-	public void applyTo(Document<?> document, int width, int height) {
+	public void applyTo(Document<?> document) {
 		for (GraphicalElement elem : document.getGraphicalElements()) {
 			// Only nodes are positioned directly.
 			if (elem instanceof GraphicalNode) {
 				GraphicalNode node = (GraphicalNode) elem;
-				int x = randomInt(width);
-				int y = randomInt(height);
+				int x = randomInt(document.getWidth());
+				int y = randomInt(document.getHeight());
 				node.setCenter(new Point(x, y));
 			}
 		}
+	}
+
+	@Override
+	public String getName() {
+		return "Random";
 	}
 
 }

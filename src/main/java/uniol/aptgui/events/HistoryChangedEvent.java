@@ -17,40 +17,24 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.commands;
+package uniol.aptgui.events;
 
-import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.layout.Layout;
+import uniol.aptgui.commands.History;
 
-public class ApplyLayoutCommand extends Command {
+/**
+ * Event that is published when the command history has been modified by
+ * executing a command, undoing or redoing.
+ */
+public class HistoryChangedEvent {
 
-	private final Document<?> document;
-	private final Layout layout;
+	private final History histoy;
 
-	public ApplyLayoutCommand(Document<?> document, Layout layout) {
-		this.document = document;
-		this.layout = layout;
+	public HistoryChangedEvent(History histoy) {
+		this.histoy = histoy;
 	}
 
-	@Override
-	public void execute() {
-		document.applyLayout(layout);
-		document.fireDocumentDirty();
-	}
-
-	@Override
-	public void undo() {
-		// Empty
-	}
-
-	@Override
-	public boolean canUndo() {
-		return false;
-	}
-
-	@Override
-	public String getName() {
-		return "Apply " + layout.getName() + " Layout";
+	public History getHistory() {
+		return histoy;
 	}
 
 }

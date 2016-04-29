@@ -36,11 +36,13 @@ import uniol.aptgui.swing.actions.PnCreateFlowToolAction;
 import uniol.aptgui.swing.actions.PnCreatePlaceToolAction;
 import uniol.aptgui.swing.actions.PnCreateTransitionToolAction;
 import uniol.aptgui.swing.actions.PnSelectionToolAction;
+import uniol.aptgui.swing.actions.RedoAction;
 import uniol.aptgui.swing.actions.SaveAction;
 import uniol.aptgui.swing.actions.SaveAllAction;
 import uniol.aptgui.swing.actions.TsCreateArcToolAction;
 import uniol.aptgui.swing.actions.TsCreateStateToolAction;
 import uniol.aptgui.swing.actions.TsSelectionToolAction;
+import uniol.aptgui.swing.actions.UndoAction;
 
 @SuppressWarnings("serial")
 public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements ToolbarView {
@@ -51,6 +53,8 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 	private final JButton open;
 	private final JButton save;
 	private final JButton saveAll;
+	private final JButton undo;
+	private final JButton redo;
 
 	// PN AND TS GROUPS
 	private final ButtonGroup pnToolGroup;
@@ -77,16 +81,25 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 		open = new JButton(injector.getInstance(OpenAction.class));
 		save = new JButton(injector.getInstance(SaveAction.class));
 		saveAll = new JButton(injector.getInstance(SaveAllAction.class));
+		undo = new JButton(injector.getInstance(UndoAction.class));
+		redo = new JButton(injector.getInstance(RedoAction.class));
 
 		open.setHideActionText(true);
 		save.setHideActionText(true);
 		saveAll.setHideActionText(true);
+		undo.setHideActionText(true);
+		redo.setHideActionText(true);
 
 		add(newPetriNet);
 		add(newTransitionSystem);
 		add(open);
 		add(save);
 		add(saveAll);
+
+		addSeparator();
+
+		add(undo);
+		add(redo);
 
 		addSeparator();
 

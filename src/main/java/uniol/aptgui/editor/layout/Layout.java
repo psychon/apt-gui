@@ -23,7 +23,19 @@ import uniol.aptgui.editor.document.Document;
 
 public interface Layout {
 
-	public void applyTo(Document<?> document, int width, int height);
+	/**
+	 * Applies this layout algorithm to the given document.
+	 *
+	 * @param document
+	 */
+	public void applyTo(Document<?> document);
+
+	/**
+	 * Returns a user-friendly name of this layout algorithm.
+	 *
+	 * @return
+	 */
+	public String getName();
 
 }
 

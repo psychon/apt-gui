@@ -64,6 +64,11 @@ public class CreateFlowCommand extends Command {
 		pnDocument.fireDocumentDirty();
 	}
 
+	@Override
+	public String getName() {
+		return "Create Flow";
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

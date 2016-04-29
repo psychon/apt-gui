@@ -50,6 +50,11 @@ public class CreateTransitionCommand extends Command {
 		pnDocument.fireDocumentDirty();
 	}
 
+	@Override
+	public String getName() {
+		return "Create Transition";
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

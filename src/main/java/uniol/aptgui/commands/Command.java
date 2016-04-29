@@ -21,9 +21,36 @@ package uniol.aptgui.commands;
 
 public abstract class Command {
 
+	/**
+	 * Returns the Command's user-readable name.
+	 *
+	 * @return user-friendly name
+	 */
+	public abstract String getName();
+
+	/**
+	 * Executes this Command. Must be implemented by subclasses to provide
+	 * the Command's functionality.
+	 */
 	public abstract void execute();
 
+	/**
+	 * Undoes everything the Command did when it was executed. Must be
+	 * implemented by subclasses to provide the Command's undo
+	 * functionality.
+	 */
 	public abstract void undo();
+
+	/**
+	 * Returns true, if this Command can be undo. By default every command
+	 * can be undo. This method should be overwritten by subclasses if the
+	 * implemented Command cannot be undo.
+	 *
+	 * @return true, if undo is available for this Command
+	 */
+	public boolean canUndo() {
+		return true;
+	}
 
 	public void redo() {
 		execute();

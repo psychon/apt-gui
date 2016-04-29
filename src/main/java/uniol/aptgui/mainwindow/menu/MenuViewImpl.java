@@ -37,9 +37,11 @@ import uniol.aptgui.swing.actions.ModuleBrowserAction;
 import uniol.aptgui.swing.actions.NewPetriNetAction;
 import uniol.aptgui.swing.actions.NewTransitionSystemAction;
 import uniol.aptgui.swing.actions.OpenAction;
+import uniol.aptgui.swing.actions.RedoAction;
 import uniol.aptgui.swing.actions.SaveAction;
 import uniol.aptgui.swing.actions.SaveAllAction;
 import uniol.aptgui.swing.actions.SaveAsAction;
+import uniol.aptgui.swing.actions.UndoAction;
 
 @SuppressWarnings("serial")
 public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuView {
@@ -56,6 +58,10 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private final JMenuItem saveAs;
 	private final JMenuItem saveAll;
 	private final JMenuItem exit;
+
+	private final JMenu editMenu;
+	private final JMenuItem undo;
+	private final JMenuItem redo;
 
 	private final JMenu moduleMenu;
 	private final JMenuItem moduleBrowser;
@@ -75,6 +81,10 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		saveAll = new JMenuItem(injector.getInstance(SaveAllAction.class));
 		exit = new JMenuItem(injector.getInstance(ExitAction.class));
 
+		editMenu = new JMenu("Edit");
+		undo = new JMenuItem(injector.getInstance(UndoAction.class));
+		redo = new JMenuItem(injector.getInstance(RedoAction.class));
+
 		moduleMenu = new JMenu("Modules");
 		moduleBrowser = new JMenuItem(injector.getInstance(ModuleBrowserAction.class));
 		recentlyUsedHeader = new JMenuItem("Recently used");
@@ -82,6 +92,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		recentlyUsedModules = new LinkedList<>();
 
 		setupFileMenu();
+		setupEditMenu();
 		setupModuleMenu();
 	}
 
@@ -98,6 +109,14 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		fileMenu.addSeparator();
 		fileMenu.add(exit);
 	}
+
+	private void setupEditMenu() {
+		add(editMenu);
+
+		editMenu.add(undo);
+		editMenu.add(redo);
+	}
+
 
 	private void setupModuleMenu() {
 		add(moduleMenu);

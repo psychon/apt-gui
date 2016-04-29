@@ -85,6 +85,15 @@ public class Resource {
 		return getIcon("/Arc16.gif");
 	}
 
+	public static ImageIcon getIconUndo() {
+		return getIcon("/Undo16.gif");
+	}
+
+	public static ImageIcon getIconRedo() {
+		return getIcon("/Redo16.gif");
+	}
+
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120
