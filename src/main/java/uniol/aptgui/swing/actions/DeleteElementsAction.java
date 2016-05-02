@@ -28,7 +28,8 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.commands.Command;
-import uniol.aptgui.commands.RemovePetriNetElementsCommand;
+import uniol.aptgui.commands.RemovePnElementsCommand;
+import uniol.aptgui.commands.RemoveTsElementsCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
@@ -60,10 +61,9 @@ public class DeleteElementsAction extends AbstractAction {
 			Set<GraphicalElement> selection = document.getSelection();
 			Command cmd = null;
 			if (document instanceof PnDocument) {
-				cmd = new RemovePetriNetElementsCommand((PnDocument) document, selection);
+				cmd = new RemovePnElementsCommand((PnDocument) document, selection);
 			} else if (document instanceof TsDocument) {
-				// TODO
-				cmd = null;
+				cmd = new RemoveTsElementsCommand((TsDocument) document, selection);
 			}
 			app.getHistory().execute(cmd);
 		}

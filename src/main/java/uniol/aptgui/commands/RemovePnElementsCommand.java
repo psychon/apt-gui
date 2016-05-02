@@ -40,7 +40,7 @@ import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
  * Command that removes a set of GraphicalElements from a Petri net document and
  * also updates the underlying model.
  */
-public class RemovePetriNetElementsCommand extends Command {
+public class RemovePnElementsCommand extends Command {
 
 	private final PnDocument document;
 	private final Set<GraphicalElement> elements;
@@ -49,7 +49,7 @@ public class RemovePetriNetElementsCommand extends Command {
 	private final Map<Flow, GraphicalFlow> removedFlows;
 	private final Map<Node, GraphicalNode> removedNodes;
 
-	public RemovePetriNetElementsCommand(PnDocument document, Set<GraphicalElement> elements) {
+	public RemovePnElementsCommand(PnDocument document, Set<GraphicalElement> elements) {
 		this.document = document;
 		this.elements = new HashSet<>(elements);
 		model = document.getModel();
