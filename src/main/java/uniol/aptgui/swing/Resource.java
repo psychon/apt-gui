@@ -93,6 +93,17 @@ public class Resource {
 		return getIcon("/Redo16.gif");
 	}
 
+	public static ImageIcon getIconDelete() {
+		return getIcon("/Delete16.gif");
+	}
+
+	public static ImageIcon getIconLayout() {
+		return getIcon("/Layout16.gif");
+	}
+
+	public static ImageIcon getIconLabel() {
+		return getIcon("/Label16.gif");
+	}
 
 }
 

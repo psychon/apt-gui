@@ -42,14 +42,14 @@ import uniol.aptgui.editor.document.Document;
  *                attribute type
  */
 @SuppressWarnings("serial")
-public abstract class SimpleSetAttributeAction<T, U> extends AbstractAction {
+public abstract class SetSimpleAttributeAction<T, U> extends AbstractAction {
 
 	private final String name;
 	private final String inputMessage;
 
 	protected final Application app;
 
-	public SimpleSetAttributeAction(String name, String inputMessage, Application app) {
+	public SetSimpleAttributeAction(String name, String inputMessage, Application app) {
 		this.name = name;
 		this.inputMessage = inputMessage;
 		this.app = app;

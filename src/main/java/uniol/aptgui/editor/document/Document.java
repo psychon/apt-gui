@@ -154,8 +154,11 @@ public abstract class Document<T> {
 	 * @param graphicalElem
 	 * @param modelElem
 	 */
-	public void add(GraphicalElement graphicalElem, Object modelElem) {
+	public void add(GraphicalElement graphicalElem, IExtensible modelElem) {
 		elements.put(graphicalElem, modelElem);
+		if (modelElem != null) {
+			modelElem.putExtension(GraphicalElement.EXTENSION_KEY, graphicalElem);
+		}
 	}
 
 	/**
@@ -164,6 +167,7 @@ public abstract class Document<T> {
 	 */
 	public void remove(GraphicalElement graphicalElem) {
 		elements.remove(graphicalElem);
+		removeFromSelection(graphicalElem);
 	}
 
 	/**
@@ -274,7 +278,7 @@ public abstract class Document<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static <T> T getGraphicalExtension(IExtensible obj) {
+	public static <T> T getGraphicalExtension(IExtensible obj) {
 		return (T) obj.getExtension(GraphicalElement.EXTENSION_KEY);
 	}
 

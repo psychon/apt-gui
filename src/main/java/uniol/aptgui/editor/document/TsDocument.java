@@ -23,12 +23,9 @@ import java.awt.Graphics2D;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.stringtemplate.v4.ModelAdaptor;
-
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalArc;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
 
@@ -41,7 +38,6 @@ public class TsDocument extends Document<TransitionSystem> {
 		Map<State, GraphicalState> stateMap = new HashMap<>();
 		for (State state : ts.getNodes()) {
 			GraphicalState elem = new GraphicalState();
-			state.putExtension(GraphicalElement.EXTENSION_KEY, elem);
 			stateMap.put(state, elem);
 			add(elem, state);
 		}
@@ -49,7 +45,6 @@ public class TsDocument extends Document<TransitionSystem> {
 			GraphicalState source = stateMap.get(arc.getSource());
 			GraphicalState target = stateMap.get(arc.getTarget());
 			GraphicalArc elem = new GraphicalArc(source, target);
-			arc.putExtension(GraphicalElement.EXTENSION_KEY, elem);
 			add(elem, arc);
 		}
 	}

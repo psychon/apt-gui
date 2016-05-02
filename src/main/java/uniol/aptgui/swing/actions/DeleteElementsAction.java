@@ -20,58 +20,53 @@
 package uniol.aptgui.swing.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
-import uniol.aptgui.commands.ApplyLayoutCommand;
+import uniol.aptgui.commands.Command;
+import uniol.aptgui.commands.RemovePetriNetElementsCommand;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.layout.RandomLayout;
-import uniol.aptgui.events.WindowClosedEvent;
-import uniol.aptgui.events.WindowFocusGainedEvent;
-import uniol.aptgui.mainwindow.WindowType;
+import uniol.aptgui.editor.document.PnDocument;
+import uniol.aptgui.editor.document.TsDocument;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.swing.Resource;
 
+/**
+ * Action that deletes all currently selected elements in the currently active
+ * document.
+ */
 @SuppressWarnings("serial")
-public class RandomLayoutAction extends AbstractAction {
+public class DeleteElementsAction extends AbstractAction {
 
 	private final Application app;
 
 	@Inject
-	public RandomLayoutAction(Application app, EventBus eventBus) {
+	public DeleteElementsAction(Application app) {
 		this.app = app;
-		String name = "Random Layout";
+		String name = "Delete";
 		putValue(NAME, name);
+		putValue(SMALL_ICON, Resource.getIconDelete());
 		putValue(SHORT_DESCRIPTION, name);
-		putValue(SMALL_ICON, Resource.getIconLayout());
-		putValue(MNEMONIC_KEY, KeyEvent.VK_R);
-		setEnabled(false);
-		eventBus.register(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Document<?> document = app.getActiveDocument();
 		if (document != null) {
-			app.getHistory().execute(new ApplyLayoutCommand(document, new RandomLayout()));
+			Set<GraphicalElement> selection = document.getSelection();
+			Command cmd = null;
+			if (document instanceof PnDocument) {
+				cmd = new RemovePetriNetElementsCommand((PnDocument) document, selection);
+			} else if (document instanceof TsDocument) {
+				// TODO
+				cmd = null;
+			}
+			app.getHistory().execute(cmd);
 		}
-	}
-
-	@Subscribe
-	public void onWindowFocusGainedEvent(WindowFocusGainedEvent e) {
-		WindowType type = e.getWindowId().getType();
-		setEnabled(type.isEditorWindow());
-	}
-
-	@Subscribe
-	public void onWindowClosedEvent(WindowClosedEvent e) {
-		Document<?> document = app.getActiveDocument();
-		setEnabled(document != null);
 	}
 
 }

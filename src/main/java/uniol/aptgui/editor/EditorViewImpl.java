@@ -32,6 +32,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 import uniol.aptgui.swing.JPanelView;
+import uniol.aptgui.swing.actions.DeleteElementsAction;
 import uniol.aptgui.swing.actions.SetLabelAction;
 import uniol.aptgui.swing.actions.SetMultiplicityAction;
 import uniol.aptgui.swing.actions.SetTokensAction;
@@ -45,6 +46,7 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 	private JMenuItem setLabel;
 	private JMenuItem setTokens;
 	private JMenuItem setMultiplicity;
+	private JMenuItem delete;
 
 	@Inject
 	public EditorViewImpl(Injector injector) {
@@ -59,11 +61,12 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 		setLabel = new JMenuItem(injector.getInstance(SetLabelAction.class));
 		setTokens = new JMenuItem(injector.getInstance(SetTokensAction.class));
 		setMultiplicity = new JMenuItem(injector.getInstance(SetMultiplicityAction.class));
+		delete = new JMenuItem(injector.getInstance(DeleteElementsAction.class));
 
 		popupMenu.add(setLabel);
 		popupMenu.add(setTokens);
 		popupMenu.add(setMultiplicity);
-		popupMenu.add(new JMenuItem("Another popup menu item"));
+		popupMenu.add(delete);
 	}
 
 	@Override
@@ -96,8 +99,7 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 
 	@Override
 	public void setMenuActionActive(MenuAction action, boolean active) {
-		// TODO Auto-generated method stub
-		switch(action) {
+		switch (action) {
 		case SET_LABEL:
 			setLabel.setEnabled(active);
 			break;
@@ -106,6 +108,9 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 			break;
 		case SET_MULTIPLICITY:
 			setMultiplicity.setEnabled(active);
+			break;
+		case DELETE:
+			delete.setEnabled(active);
 			break;
 		default:
 			break;

@@ -28,7 +28,6 @@ import uniol.apt.adt.pn.Node;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalFlow;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalPlace;
@@ -43,13 +42,11 @@ public class PnDocument extends Document<PetriNet> {
 		Map<Node, GraphicalNode> nodeMap = new HashMap<>();
 		for (Place place : pn.getPlaces()) {
 			GraphicalPlace elem = new GraphicalPlace();
-			place.putExtension(GraphicalElement.EXTENSION_KEY, elem);
 			nodeMap.put(place, elem);
 			add(elem, place);
 		}
 		for (Transition transition : pn.getTransitions()) {
 			GraphicalTransition elem = new GraphicalTransition();
-			transition.putExtension(GraphicalElement.EXTENSION_KEY, elem);
 			nodeMap.put(transition, elem);
 			add(elem, transition);
 		}
@@ -57,7 +54,6 @@ public class PnDocument extends Document<PetriNet> {
 			GraphicalNode source = nodeMap.get(flow.getSource());
 			GraphicalNode target = nodeMap.get(flow.getTarget());
 			GraphicalFlow elem = new GraphicalFlow(source, target);
-			flow.putExtension(GraphicalElement.EXTENSION_KEY, elem);
 			add(elem, flow);
 		}
 	}

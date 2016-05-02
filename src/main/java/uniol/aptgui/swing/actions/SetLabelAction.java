@@ -28,14 +28,15 @@ import uniol.aptgui.commands.Command;
 import uniol.aptgui.commands.SetLabelCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.graphical.traits.HasLabel;
+import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
-public class SetLabelAction extends SimpleSetAttributeAction<HasLabel, String> {
+public class SetLabelAction extends SetSimpleAttributeAction<HasLabel, String> {
 
 	@Inject
 	public SetLabelAction(Application app) {
 		super("Set label", "New label:", app);
-
+		putValue(SMALL_ICON, Resource.getIconLabel());
 	}
 
 	@Override

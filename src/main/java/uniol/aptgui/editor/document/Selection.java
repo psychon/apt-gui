@@ -20,6 +20,7 @@
 package uniol.aptgui.editor.document;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,12 +35,12 @@ public class Selection {
 	private final Set<GraphicalElement> selection = new HashSet<>();
 
 	/**
-	 * Returns a set of all selected elements.
+	 * Returns an unmodifiable set of all selected elements.
 	 *
-	 * @return
+	 * @return unmodifiable view into the selection set
 	 */
 	public Set<GraphicalElement> getSelection() {
-		return selection;
+		return Collections.unmodifiableSet(selection);
 	}
 
 	/**

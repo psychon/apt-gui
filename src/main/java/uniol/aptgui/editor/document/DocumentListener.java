@@ -29,11 +29,11 @@ public interface DocumentListener {
 	void onDocumentDirty();
 
 	/**
-	 * Called when the selection changes.
+	 * Called when the selection in this Document changes.
 	 *
 	 * @param commonBaseClass
 	 *                most specific base class that all selected elements
-	 *                are assignable to
+	 *                are assignable to or null if nothing is selected
 	 */
 	void onSelectionChanged(Class<? extends GraphicalElement> commonBaseClass);
 

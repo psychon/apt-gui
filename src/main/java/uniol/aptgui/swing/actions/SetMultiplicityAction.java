@@ -30,7 +30,7 @@ import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.graphical.traits.HasMultiplicity;
 
 @SuppressWarnings("serial")
-public class SetMultiplicityAction extends SimpleSetAttributeAction<HasMultiplicity, Integer> {
+public class SetMultiplicityAction extends SetSimpleAttributeAction<HasMultiplicity, Integer> {
 
 	@Inject
 	public SetMultiplicityAction(Application app) {
