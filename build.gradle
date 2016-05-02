@@ -16,7 +16,7 @@ dependencies {
 	compile files('../apt/lib/commons-io-2.4/commons-io-2.4.jar')
 	compile files('../apt/lib/antlr-4.5.1/antlr-4.5.1-complete.jar')
 	compile files('../apt/lib/antlr-4.5.1/antlr-runtime-4.5.1.jar')
-	
+
 	// APT-GUI dependencies
 	compile 'com.google.inject:guice:4.0'
 	compile 'com.google.guava:guava:19.0'
@@ -34,4 +34,5 @@ jar {
     manifest {
         attributes 'Main-Class': 'uniol.aptgui.Main'
     }
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
 }
