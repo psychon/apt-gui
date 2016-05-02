@@ -30,10 +30,11 @@ import javax.swing.ImageIcon;
 public class Resource {
 
 	public static Cursor getCursorCreateEdge() {
-		return getCursor("/Arc32.gif");
+		return getCursor("Arc32.gif");
 	}
 
 	private static Cursor getCursor(String path) {
+		path = "/cursors/" + path;
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		URL url = Resource.class.getResource(path);
 		Image image = tk.getImage(url);
@@ -41,24 +42,25 @@ public class Resource {
 	}
 
 	private static ImageIcon getIcon(String path) {
+		path = "/icons/" + path;
 		URL url = Resource.class.getResource(path);
 		return new ImageIcon(url);
 	}
 
 	public static ImageIcon getIconOpenFile() {
-		return getIcon("/Open16.gif");
+		return getIcon("Open16.gif");
 	}
 
 	public static ImageIcon getIconSaveFile() {
-		return getIcon("/Save16.gif");
+		return getIcon("Save16.gif");
 	}
 
 	public static ImageIcon getIconSaveFileAs() {
-		return getIcon("/SaveAs16.gif");
+		return getIcon("SaveAs16.gif");
 	}
 
 	public static ImageIcon getIconNewFile() {
-		return getIcon("/New16.gif");
+		return getIcon("New16.gif");
 	}
 
 	public static ImageIcon getIconFlow() {
@@ -66,15 +68,15 @@ public class Resource {
 	}
 
 	public static ImageIcon getIconPlace() {
-		return getIcon("/Place16.gif");
+		return getIcon("Place16.gif");
 	}
 
 	public static ImageIcon getIconSelect() {
-		return getIcon("/Select16.gif");
+		return getIcon("Select16.gif");
 	}
 
 	public static ImageIcon getIconTransition() {
-		return getIcon("/Transition16.gif");
+		return getIcon("Transition16.gif");
 	}
 
 	public static ImageIcon getIconState() {
@@ -82,27 +84,35 @@ public class Resource {
 	}
 
 	public static ImageIcon getIconArc() {
-		return getIcon("/Arc16.gif");
+		return getIcon("Arc16.gif");
 	}
 
 	public static ImageIcon getIconUndo() {
-		return getIcon("/Undo16.gif");
+		return getIcon("Undo16.gif");
 	}
 
 	public static ImageIcon getIconRedo() {
-		return getIcon("/Redo16.gif");
+		return getIcon("Redo16.gif");
 	}
 
 	public static ImageIcon getIconDelete() {
-		return getIcon("/Delete16.gif");
+		return getIcon("Delete16.gif");
 	}
 
 	public static ImageIcon getIconLayout() {
-		return getIcon("/Layout16.gif");
+		return getIcon("Layout16.gif");
 	}
 
 	public static ImageIcon getIconLabel() {
-		return getIcon("/Label16.gif");
+		return getIcon("Label16.gif");
+	}
+
+	public static ImageIcon getIconZoomIn() {
+		return getIcon("ZoomIn16.gif");
+	}
+
+	public static ImageIcon getIconZoomOut() {
+		return getIcon("ZoomOut16.gif");
 	}
 
 }

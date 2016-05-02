@@ -25,6 +25,11 @@ import java.awt.geom.Point2D;
 
 public class Transform2D {
 
+	/**
+	 * Scale factor that gets used for increase/decrease scale methods.
+	 */
+	private static final double SCALE_FACTOR = 1.1;
+
 	private int translationX = 0;
 	private int translationY = 0;
 	private double scaleXY = 1.0;
@@ -51,6 +56,28 @@ public class Transform2D {
 
 	public void setScale(double scale) {
 		this.scaleXY = scale;
+	}
+
+	/**
+	 * Increases the scale by a constant factor multiplied by the given
+	 * level.
+	 *
+	 * @param levels
+	 *                amount of "zoom-levels" to zoom in
+	 */
+	public void increaseScale(int levels) {
+		scaleView(SCALE_FACTOR * levels);
+	}
+
+	/**
+	 * Decreases the scale by a constant factor multiplied by the given
+	 * level.
+	 *
+	 * @param levels
+	 *                amount of "zoom-levels" to zoom out
+	 */
+	public void decreaseScale(int levels) {
+		scaleView(levels / SCALE_FACTOR);
 	}
 
 	public void translateView(int dx, int dy) {

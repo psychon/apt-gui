@@ -5,4 +5,20 @@ licensed under GPL 3, see  gpl-3.0.txt. On source files it has been noted which
 license applies. The following binary files are GPL 3 licensed because they
 originate from PNEditor:
 
-/src/main/resources/*
+/src/main/resources/
+	Arc16.gif
+	Arc32.gif
+	Copy16.gif
+	Cut16.gif
+	Delete16.gif
+	Label16.gif
+	Layout16.gif
+	New16.gif
+	Open16.gif
+	Place16.gif
+	Redo16.gif
+	Save16.gif
+	SaveAs16.gif
+	Select16.gif
+	Transition16.gif
+	Undo16.gif

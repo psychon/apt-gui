@@ -29,11 +29,6 @@ import uniol.aptgui.editor.features.base.Feature;
 public class ViewportFeature extends Feature {
 
 	/**
-	 * Scale factor that gets applied for a single mouse wheel click.
-	 */
-	private static final double SCALE_FACTOR = 1.1;
-
-	/**
 	 * Document this tool operates on.
 	 */
 	private final Document<?> document;
@@ -90,21 +85,16 @@ public class ViewportFeature extends Feature {
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		if (e.getWheelRotation() < 0) {
-			scaleView(-1 / SCALE_FACTOR * e.getWheelRotation());
+		if (e.getWheelRotation() > 0) {
+			document.getTransform().decreaseScale(e.getWheelRotation());
 		} else {
-			scaleView(SCALE_FACTOR * e.getWheelRotation());
+			document.getTransform().increaseScale(e.getWheelRotation());
 		}
-
+		document.fireDocumentDirty();
 	}
 
 	private void translateView(int dx, int dy) {
 		document.getTransform().translateView(dx, dy);
-		document.fireDocumentDirty();
-	}
-
-	private void scaleView(double scale) {
-		document.getTransform().scaleView(scale);
 		document.fireDocumentDirty();
 	}
 
