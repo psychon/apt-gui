@@ -34,8 +34,6 @@ public interface InternalWindowPresenter extends Presenter<InternalWindowView> {
 
 	public void focus();
 
-	public void setTitle(String title);
-
 	public void setPadding(int padding);
 
 	/// VIEW EVENTS ///

@@ -91,6 +91,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	public void removeWindow(WindowId id) {
 		InternalWindowPresenter window = internalWindows.remove(id);
 		getView().removeInternalWindow(window.getView());
+		menu.setInternalWindows(internalWindows.keySet());
 	}
 
 	@Override
@@ -102,6 +103,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	public void showWindow(WindowId id) {
 		InternalWindowPresenter window = internalWindows.get(id);
 		getView().addInternalWindow(window.getView());
+		menu.setInternalWindows(internalWindows.keySet());
 	}
 
 	@Override
@@ -124,9 +126,9 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 			logger.log(Level.SEVERE, "Unknown document type.");
 		}
 
+		id.setTitle(document.getTitle());
 		editor.setWindowId(id);
-		InternalWindowPresenter window = createInternalWindow(id, editor);
-		window.setTitle(id.toStringWithTitle(document.getTitle()));
+		createInternalWindow(id, editor);
 
 		return id;
 	}
@@ -135,8 +137,8 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	public void showModuleBrowser() {
 		if (moduleBrowserWindowId == null) {
 			moduleBrowserWindowId = new WindowId(WindowType.MODULE_BROWSER);
-			InternalWindowPresenter window = createInternalWindow(moduleBrowserWindowId, moduleBrowser);
-			window.setTitle("Module Browser");
+			moduleBrowserWindowId.setTitle("Module Browser");
+			createInternalWindow(moduleBrowserWindowId, moduleBrowser);
 			showWindow(moduleBrowserWindowId);
 		}
 
@@ -149,8 +151,8 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		modulePresenter.setModule(module);
 
 		WindowId id = new WindowId(WindowType.MODULE);
-		InternalWindowPresenter window = createInternalWindow(id, modulePresenter);
-		window.setTitle(module.getTitle());
+		id.setTitle(module.getTitle());
+		createInternalWindow(id, modulePresenter);
 
 		showWindow(id);
 		focus(id);

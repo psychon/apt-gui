@@ -30,6 +30,7 @@ import com.google.inject.Injector;
 
 import uniol.apt.module.Module;
 import uniol.aptgui.Application;
+import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.JMenuBarView;
 import uniol.aptgui.swing.actions.ExitAction;
 import uniol.aptgui.swing.actions.ModuleAction;
@@ -42,6 +43,7 @@ import uniol.aptgui.swing.actions.RedoAction;
 import uniol.aptgui.swing.actions.SaveAction;
 import uniol.aptgui.swing.actions.SaveAllAction;
 import uniol.aptgui.swing.actions.SaveAsAction;
+import uniol.aptgui.swing.actions.ShowWindowAction;
 import uniol.aptgui.swing.actions.UndoAction;
 
 @SuppressWarnings("serial")
@@ -64,7 +66,12 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private final JMenu moduleMenu;
 	private final JMenuItem moduleBrowser;
 	private final JMenuItem recentlyUsedHeader;
-	private final List<JMenuItem> recentlyUsedModuleMenuItems;
+	private final List<JMenuItem> recentlyUsedModulesMenuItems;
+
+	private final JMenu windowMenu;
+	private final JMenuItem tileEditorWindows;
+	private final JMenuItem openWindowsHeader;
+	private final List<JMenuItem> openWindowsMenuItems;
 
 	@Inject
 	public MenuViewImpl(Injector injector) {
@@ -84,13 +91,20 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 
 		moduleMenu = new JMenu("Modules");
 		moduleBrowser = new JMenuItem(injector.getInstance(ModuleBrowserAction.class));
-		recentlyUsedHeader = new JMenuItem("Recently used");
+		recentlyUsedHeader = new JMenuItem("Recently Used");
 		recentlyUsedHeader.setEnabled(false);
-		recentlyUsedModuleMenuItems = new ArrayList<>();
+		recentlyUsedModulesMenuItems = new ArrayList<>();
+
+		windowMenu = new JMenu("Windows");
+		tileEditorWindows = new JMenuItem("Tile Editor Windows");
+		openWindowsHeader = new JMenuItem("Currently Opened Windows");
+		openWindowsHeader.setEnabled(false);
+		openWindowsMenuItems = new ArrayList<>();
 
 		setupFileMenu();
 		setupEditMenu();
 		setupModuleMenu();
+		setupWindowMenu();
 	}
 
 	private void setupFileMenu() {
@@ -124,19 +138,43 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		moduleMenu.add(recentlyUsedHeader);
 	}
 
+	private void setupWindowMenu() {
+		add(windowMenu);
+
+		windowMenu.add(tileEditorWindows);
+		windowMenu.addSeparator();
+		windowMenu.add(openWindowsHeader);
+	}
+
 	@Override
 	public void setRecentlyUsedModule(Application app, List<Module> recentlyUsedModules) {
 		// Remove old menu entries.
-		for (JMenuItem item : recentlyUsedModuleMenuItems) {
+		for (JMenuItem item : recentlyUsedModulesMenuItems) {
 			moduleMenu.remove(item);
 		}
-		recentlyUsedModuleMenuItems.clear();
+		recentlyUsedModulesMenuItems.clear();
 		// Set new menu entries.
 		for (Module module : recentlyUsedModules) {
 			ModuleAction action = new ModuleAction(app, module);
 			JMenuItem item = new JMenuItem(action);
-			recentlyUsedModuleMenuItems.add(item);
+			recentlyUsedModulesMenuItems.add(item);
 			moduleMenu.add(item);
+		}
+	}
+
+	@Override
+	public void setWindows(Application app, List<WindowId> windows) {
+		// Remove old menu entries.
+		for (JMenuItem item : openWindowsMenuItems) {
+			windowMenu.remove(item);
+		}
+		openWindowsMenuItems.clear();
+		// Set new menu entries.
+		for (WindowId windowId : windows) {
+			ShowWindowAction action = new ShowWindowAction(app, windowId);
+			JMenuItem item = new JMenuItem(action);
+			openWindowsMenuItems.add(item);
+			windowMenu.add(item);
 		}
 	}
 

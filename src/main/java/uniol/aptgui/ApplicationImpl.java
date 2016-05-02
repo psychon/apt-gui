@@ -197,7 +197,7 @@ public class ApplicationImpl implements Application {
 	}
 
 	@Override
-	public Set<WindowId> getInteralWindows() {
+	public Set<WindowId> getDocumentWindows() {
 		return documents.keySet();
 	}
 
@@ -216,6 +216,11 @@ public class ApplicationImpl implements Application {
 	@Override
 	public Document<?> getActiveDocument() {
 		return documents.get(activeWindow);
+	}
+
+	@Override
+	public void focusWindow(WindowId id) {
+		mainWindow.focus(id);
 	}
 
 }

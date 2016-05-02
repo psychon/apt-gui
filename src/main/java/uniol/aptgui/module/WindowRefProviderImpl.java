@@ -45,7 +45,7 @@ public class WindowRefProviderImpl implements WindowRefProvider {
 	public List<WindowRef> getWindowReferences() {
 		List<WindowRef> refs = new ArrayList<>();
 
-		for (WindowId id : application.getInteralWindows()) {
+		for (WindowId id : application.getDocumentWindows()) {
 			if (id.getType() == filter) {
 				Document<?> doc = application.getDocument(id);
 				refs.add(new WindowRef(id, doc));

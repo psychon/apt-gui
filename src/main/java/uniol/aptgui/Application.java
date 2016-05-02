@@ -48,9 +48,11 @@ public interface Application {
 
 	public void closeWindow(WindowId id);
 
+	public void focusWindow(WindowId id);
+
 	public WindowId getActiveInternalWindow();
 
-	public Set<WindowId> getInteralWindows();
+	public Set<WindowId> getDocumentWindows();
 
 	public Document<?> getDocument(WindowId id);
 

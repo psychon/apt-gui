@@ -24,10 +24,13 @@ import java.util.List;
 import uniol.apt.module.Module;
 import uniol.aptgui.Application;
 import uniol.aptgui.View;
+import uniol.aptgui.mainwindow.WindowId;
 
 public interface MenuView extends View<MenuPresenter> {
 
 	void setRecentlyUsedModule(Application app, List<Module> recentlyUsedModules);
+
+	void setWindows(Application app, List<WindowId> windows);
 
 }
 

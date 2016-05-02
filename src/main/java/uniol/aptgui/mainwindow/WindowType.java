@@ -21,10 +21,10 @@ package uniol.aptgui.mainwindow;
 
 public enum WindowType {
 
-	NONE, PETRI_NET, TRANSITION_SYSTEM, MODULE_BROWSER, MODULE;
+	NONE, MODULE_BROWSER, MODULE, PETRI_NET, TRANSITION_SYSTEM;
 
 	public boolean isEditorWindow() {
-		return this == TRANSITION_SYSTEM || this == PETRI_NET;
+		return this == PETRI_NET || this == TRANSITION_SYSTEM;
 	}
 
 }

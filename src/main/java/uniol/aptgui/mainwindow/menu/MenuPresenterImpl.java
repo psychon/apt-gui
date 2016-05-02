@@ -20,6 +20,8 @@
 package uniol.aptgui.mainwindow.menu;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +35,7 @@ import uniol.apt.module.Module;
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Application;
 import uniol.aptgui.events.ModuleExecutedEvent;
+import uniol.aptgui.mainwindow.WindowId;
 
 public class MenuPresenterImpl extends AbstractPresenter<MenuPresenter, MenuView> implements MenuPresenter {
 
@@ -58,7 +61,8 @@ public class MenuPresenterImpl extends AbstractPresenter<MenuPresenter, MenuView
 	public void onModuleExecutedEvent(ModuleExecutedEvent e) {
 		Module module = e.getModule();
 		if (recentlyUsedModules.contains(module)) {
-			// Remove module from the middle of the list if it already exists in the list.
+			// Remove module from the middle of the list if it
+			// already exists in the list.
 			recentlyUsedModules.remove(module);
 		} else if (recentlyUsedModules.size() >= MAX_RECENTLY_USED) {
 			// Remove last module if the list is full.
@@ -68,6 +72,18 @@ public class MenuPresenterImpl extends AbstractPresenter<MenuPresenter, MenuView
 		recentlyUsedModules.add(0, module);
 		// Show new module list.
 		view.setRecentlyUsedModule(app, recentlyUsedModules);
+	}
+
+	@Override
+	public void setInternalWindows(Set<WindowId> windows) {
+		List<WindowId> sortedWindows = new ArrayList<>(windows);
+		Collections.sort(sortedWindows, new Comparator<WindowId>() {
+			@Override
+			public int compare(WindowId o1, WindowId o2) {
+				return o1.getType().ordinal() - o2.getType().ordinal();
+			}
+		});
+		view.setWindows(app, sortedWindows);
 	}
 
 }

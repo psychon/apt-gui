@@ -17,24 +17,33 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.mainwindow.menu;
+package uniol.aptgui.swing.actions;
 
-import java.util.Set;
+import java.awt.event.ActionEvent;
 
-import uniol.aptgui.Presenter;
+import javax.swing.AbstractAction;
+
+import uniol.aptgui.Application;
 import uniol.aptgui.mainwindow.WindowId;
 
-public interface MenuPresenter extends Presenter<MenuView> {
+@SuppressWarnings("serial")
+public class ShowWindowAction extends AbstractAction {
 
-	// ACTIONS
+	private final Application app;
+	private final WindowId id;
 
-	/**
-	 * Sets the currently opened internal windows of this application so
-	 * that they can be shown in the window menu.
-	 *
-	 * @param set
-	 */
-	void setInternalWindows(Set<WindowId> set);
+	public ShowWindowAction(Application app, WindowId id) {
+		this.app = app;
+		this.id = id;
+		String name = id.getTitle();
+		putValue(NAME, name);
+		putValue(SHORT_DESCRIPTION, name);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		app.focusWindow(id);
+	}
 
 }
 

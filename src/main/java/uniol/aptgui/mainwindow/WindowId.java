@@ -26,6 +26,8 @@ public class WindowId {
 	private final int id;
 	private final WindowType type;
 
+	private String title;
+
 	public WindowId(WindowType type) {
 		this(getNextId(), type);
 	}
@@ -52,8 +54,11 @@ public class WindowId {
 		return nextId++;
 	}
 
-	public String toStringWithTitle(String name) {
-		String nameString = name.trim().isEmpty() ? "UNNAMED" : name;
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getTitle() {
 		String typeString;
 		switch (type) {
 		case PETRI_NET:
@@ -62,10 +67,14 @@ public class WindowId {
 		case TRANSITION_SYSTEM:
 			typeString = "LTS";
 			break;
+		case MODULE:
+		case MODULE_BROWSER:
+			return title;
 		default:
 			typeString = "OTHER";
 			break;
 		}
+		String nameString = title.trim().isEmpty() ? "UNNAMED" : title;
 		return String.format("%s (%s %d)", nameString, typeString, id);
 	}
 

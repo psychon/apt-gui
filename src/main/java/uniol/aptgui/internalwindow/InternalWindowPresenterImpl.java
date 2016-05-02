@@ -59,6 +59,7 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	@Override
 	public void setWindowId(WindowId id) {
 		this.id = id;
+		view.setTitle(id.getTitle());
 	}
 
 	@Override
@@ -74,11 +75,6 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	@Override
 	public void focus() {
 		view.focus();
-	}
-
-	@Override
-	public void setTitle(String title) {
-		view.setTitle(title);
 	}
 
 	@Override
