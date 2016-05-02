@@ -19,35 +19,55 @@
 
 package uniol.aptgui.mainwindow.menu;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import uniol.apt.module.Category;
 import uniol.apt.module.Module;
 import uniol.aptgui.AbstractPresenter;
+import uniol.aptgui.Application;
+import uniol.aptgui.events.ModuleExecutedEvent;
 
 public class MenuPresenterImpl extends AbstractPresenter<MenuPresenter, MenuView> implements MenuPresenter {
 
+	private static final int MAX_RECENTLY_USED = 5;
+
+	private final Application app;
 	private final Set<Category> categoriesFilter;
+	private final List<Module> recentlyUsedModules;
 
 	@Inject
-	public MenuPresenterImpl(MenuView view) {
+	public MenuPresenterImpl(Application app, EventBus eventBus, MenuView view) {
 		super(view);
+		this.app = app;
+		eventBus.register(this);
+		recentlyUsedModules = new ArrayList<>();
 		categoriesFilter = new HashSet<>();
 		categoriesFilter.add(Category.PN);
 		categoriesFilter.add(Category.LTS);
 		categoriesFilter.add(Category.GENERATOR);
 	}
 
-	@Override
-	public void setRecentlyUsedModule(Module module) {
-		for (Category cat : module.getCategories()) {
-			if (categoriesFilter.contains(cat)) {
-				view.setRecentlyUsedModule(module);
-			}
+	@Subscribe
+	public void onModuleExecutedEvent(ModuleExecutedEvent e) {
+		Module module = e.getModule();
+		if (recentlyUsedModules.contains(module)) {
+			// Remove module from the middle of the list if it already exists in the list.
+			recentlyUsedModules.remove(module);
+		} else if (recentlyUsedModules.size() >= MAX_RECENTLY_USED) {
+			// Remove last module if the list is full.
+			recentlyUsedModules.remove(recentlyUsedModules.size() - 1);
 		}
+		// Put module at the front of the list.
+		recentlyUsedModules.add(0, module);
+		// Show new module list.
+		view.setRecentlyUsedModule(app, recentlyUsedModules);
 	}
 
 }

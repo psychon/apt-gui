@@ -19,14 +19,16 @@
 
 package uniol.aptgui.mainwindow.menu;
 
+import java.util.List;
+
 import uniol.apt.module.Module;
+import uniol.aptgui.Application;
 import uniol.aptgui.View;
 
 public interface MenuView extends View<MenuPresenter> {
 
-	void setRecentlyUsedModule(Module module);
+	void setRecentlyUsedModule(Application app, List<Module> recentlyUsedModules);
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

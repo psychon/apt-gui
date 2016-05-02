@@ -19,7 +19,7 @@
 
 package uniol.aptgui.mainwindow.menu;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JMenu;
@@ -47,10 +47,6 @@ import uniol.aptgui.swing.actions.UndoAction;
 @SuppressWarnings("serial")
 public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuView {
 
-	private static final int MAX_RECENTLY_USED = 5;
-
-	private final Injector injector;
-
 	private final JMenu fileMenu;
 	private final JMenuItem newPn;
 	private final JMenuItem newTs;
@@ -68,12 +64,10 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private final JMenu moduleMenu;
 	private final JMenuItem moduleBrowser;
 	private final JMenuItem recentlyUsedHeader;
-	private final List<JMenuItem> recentlyUsedModules;
+	private final List<JMenuItem> recentlyUsedModuleMenuItems;
 
 	@Inject
 	public MenuViewImpl(Injector injector) {
-		this.injector = injector;
-
 		fileMenu = new JMenu("File");
 		newPn = new JMenuItem(injector.getInstance(NewPetriNetAction.class));
 		newTs = new JMenuItem(injector.getInstance(NewTransitionSystemAction.class));
@@ -92,7 +86,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		moduleBrowser = new JMenuItem(injector.getInstance(ModuleBrowserAction.class));
 		recentlyUsedHeader = new JMenuItem("Recently used");
 		recentlyUsedHeader.setEnabled(false);
-		recentlyUsedModules = new LinkedList<>();
+		recentlyUsedModuleMenuItems = new ArrayList<>();
 
 		setupFileMenu();
 		setupEditMenu();
@@ -122,7 +116,6 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		editMenu.add(layoutRandom);
 	}
 
-
 	private void setupModuleMenu() {
 		add(moduleMenu);
 
@@ -132,19 +125,21 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	}
 
 	@Override
-	public void setRecentlyUsedModule(Module module) {
-		if (recentlyUsedModules.size() >= MAX_RECENTLY_USED) {
-			JMenuItem removed = recentlyUsedModules.remove(0);
-			moduleMenu.remove(removed);
+	public void setRecentlyUsedModule(Application app, List<Module> recentlyUsedModules) {
+		// Remove old menu entries.
+		for (JMenuItem item : recentlyUsedModuleMenuItems) {
+			moduleMenu.remove(item);
 		}
-
-		ModuleAction action = new ModuleAction(injector.getInstance(Application.class), module);
-		JMenuItem item = new JMenuItem(action);
-		recentlyUsedModules.add(item);
-		moduleMenu.add(item);
+		recentlyUsedModuleMenuItems.clear();
+		// Set new menu entries.
+		for (Module module : recentlyUsedModules) {
+			ModuleAction action = new ModuleAction(app, module);
+			JMenuItem item = new JMenuItem(action);
+			recentlyUsedModuleMenuItems.add(item);
+			moduleMenu.add(item);
+		}
 	}
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120
