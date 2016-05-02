@@ -159,7 +159,6 @@ public class ApplicationImpl implements Application {
 		documents.put(id, document);
 		mainWindow.showWindow(id);
 		document.applyLayout(new RandomLayout());
-//		history.execute(new ApplyLayoutCommand(document, new RandomLayout()));
 		document.setVisible(true);
 		mainWindow.focus(id);
 		return id;

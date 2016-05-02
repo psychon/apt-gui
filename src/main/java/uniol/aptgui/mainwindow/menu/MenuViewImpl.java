@@ -37,6 +37,7 @@ import uniol.aptgui.swing.actions.ModuleBrowserAction;
 import uniol.aptgui.swing.actions.NewPetriNetAction;
 import uniol.aptgui.swing.actions.NewTransitionSystemAction;
 import uniol.aptgui.swing.actions.OpenAction;
+import uniol.aptgui.swing.actions.RandomLayoutAction;
 import uniol.aptgui.swing.actions.RedoAction;
 import uniol.aptgui.swing.actions.SaveAction;
 import uniol.aptgui.swing.actions.SaveAllAction;
@@ -62,6 +63,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private final JMenu editMenu;
 	private final JMenuItem undo;
 	private final JMenuItem redo;
+	private final JMenuItem layoutRandom;
 
 	private final JMenu moduleMenu;
 	private final JMenuItem moduleBrowser;
@@ -84,6 +86,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		editMenu = new JMenu("Edit");
 		undo = new JMenuItem(injector.getInstance(UndoAction.class));
 		redo = new JMenuItem(injector.getInstance(RedoAction.class));
+		layoutRandom = new JMenuItem(injector.getInstance(RandomLayoutAction.class));
 
 		moduleMenu = new JMenu("Modules");
 		moduleBrowser = new JMenuItem(injector.getInstance(ModuleBrowserAction.class));
@@ -115,6 +118,8 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 
 		editMenu.add(undo);
 		editMenu.add(redo);
+		editMenu.addSeparator();
+		editMenu.add(layoutRandom);
 	}
 
 
