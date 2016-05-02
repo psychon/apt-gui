@@ -40,7 +40,6 @@ import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.io.parser.ParseException;
 import uniol.apt.io.renderer.RenderException;
 import uniol.apt.module.Module;
-import uniol.aptgui.commands.ApplyLayoutCommand;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.PnDocument;
@@ -162,6 +161,7 @@ public class ApplicationImpl implements Application {
 		document.applyLayout(new RandomLayout());
 //		history.execute(new ApplyLayoutCommand(document, new RandomLayout()));
 		document.setVisible(true);
+		mainWindow.focus(id);
 		return id;
 	}
 
