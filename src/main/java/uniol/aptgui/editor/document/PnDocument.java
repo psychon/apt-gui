@@ -42,11 +42,13 @@ public class PnDocument extends Document<PetriNet> {
 		Map<Node, GraphicalNode> nodeMap = new HashMap<>();
 		for (Place place : pn.getPlaces()) {
 			GraphicalPlace elem = new GraphicalPlace();
+			elem.setId(place.getId());
 			nodeMap.put(place, elem);
 			add(elem, place);
 		}
 		for (Transition transition : pn.getTransitions()) {
 			GraphicalTransition elem = new GraphicalTransition();
+			elem.setId(transition.getId());
 			nodeMap.put(transition, elem);
 			add(elem, transition);
 		}

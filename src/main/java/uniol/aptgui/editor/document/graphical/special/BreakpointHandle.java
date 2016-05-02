@@ -43,12 +43,16 @@ public class BreakpointHandle extends GraphicalNode {
 	}
 
 	@Override
-	public void draw(Graphics2D graphics) {
-		if (!visible) {
-			return;
-		}
-		super.draw(graphics);
+	protected void drawShape(Graphics2D graphics) {
 		drawSquare(graphics, center, 5);
+	}
+
+	@Override
+	protected void drawId(Graphics2D graphics) {
+	}
+
+	@Override
+	protected void drawSelectionMarkers(Graphics2D graphics) {
 	}
 
 }

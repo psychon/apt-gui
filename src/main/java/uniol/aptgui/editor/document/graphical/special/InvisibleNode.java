@@ -19,6 +19,7 @@
 
 package uniol.aptgui.editor.document.graphical.special;
 
+import java.awt.Graphics2D;
 import java.awt.Point;
 
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
@@ -37,6 +38,18 @@ public class InvisibleNode extends GraphicalNode {
 	@Override
 	public boolean coversPoint(Point point) {
 		return false;
+	}
+
+	@Override
+	protected void drawShape(Graphics2D graphics) {
+	}
+
+	@Override
+	protected void drawId(Graphics2D graphics) {
+	}
+
+	@Override
+	protected void drawSelectionMarkers(Graphics2D graphics) {
 	}
 
 }

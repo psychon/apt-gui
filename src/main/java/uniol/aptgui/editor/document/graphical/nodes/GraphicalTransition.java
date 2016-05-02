@@ -19,7 +19,6 @@
 
 package uniol.aptgui.editor.document.graphical.nodes;
 
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
@@ -45,26 +44,6 @@ public class GraphicalTransition extends GraphicalNode implements HasLabel {
 	}
 
 	@Override
-	public void draw(Graphics2D graphics) {
-		if (!visible) {
-			return;
-		}
-		super.draw(graphics);
-		drawSquare(graphics, center, 20);
-		drawLabel(graphics);
-		if (selected) {
-			drawSelectionMarkers(graphics, center, RADIUS + 2);
-		}
-	}
-
-	private void drawLabel(Graphics2D graphics) {
-		FontMetrics metrics = graphics.getFontMetrics();
-		int xOffset = metrics.stringWidth(label) / 2;
-		int yOffset = metrics.getHeight() / 2;
-		graphics.drawString(label, center.x - xOffset, center.y + yOffset);
-	}
-
-	@Override
 	public boolean coversPoint(Point point) {
 		if (!super.coversPoint(point)) {
 			return false;
@@ -74,6 +53,25 @@ public class GraphicalTransition extends GraphicalNode implements HasLabel {
 		int minY = center.y - RADIUS;
 		int maxY = center.y + RADIUS;
 		return minX <= point.x && point.x <= maxX && minY <= point.y && point.y <= maxY;
+	}
+
+	@Override
+	protected void drawShape(Graphics2D graphics) {
+		drawSquare(graphics, center, 20);
+		if (label != null) {
+			drawCenteredString(graphics, center, label);
+		}
+	}
+
+	@Override
+	protected void drawId(Graphics2D graphics) {
+		Point idLabelPosition = new Point(center.x + RADIUS + 7, center.y - RADIUS - 7);
+		drawCenteredString(graphics, idLabelPosition, id);
+	}
+
+	@Override
+	protected void drawSelectionMarkers(Graphics2D graphics) {
+		drawSelectionMarkers(graphics, center, RADIUS + 2);
 	}
 
 }

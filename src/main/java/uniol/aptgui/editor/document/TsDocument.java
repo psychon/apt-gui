@@ -38,6 +38,7 @@ public class TsDocument extends Document<TransitionSystem> {
 		Map<State, GraphicalState> stateMap = new HashMap<>();
 		for (State state : ts.getNodes()) {
 			GraphicalState elem = new GraphicalState();
+			elem.setId(state.getId());
 			stateMap.put(state, elem);
 			add(elem, state);
 		}

@@ -43,21 +43,26 @@ public class GraphicalPlace extends GraphicalNode implements HasTokens {
 	}
 
 	@Override
-	public void draw(Graphics2D graphics) {
-		if (!visible) {
-			return;
-		}
-		super.draw(graphics);
-		drawCircle(graphics, center, RADIUS);
-		// TODO draw tokens
-		if (selected) {
-			drawSelectionMarkers(graphics, center, RADIUS + 2);
-		}
+	public boolean coversPoint(Point point) {
+		return super.coversPoint(point) && center.distance(point.x, point.y) < RADIUS;
 	}
 
 	@Override
-	public boolean coversPoint(Point point) {
-		return super.coversPoint(point) && center.distance(point.x, point.y) < RADIUS;
+	protected void drawShape(Graphics2D graphics) {
+		drawCircle(graphics, center, RADIUS);
+		// TODO draw tokens as points if it is a low number
+		drawCenteredString(graphics, center, String.valueOf(tokens));
+	}
+
+	@Override
+	protected void drawId(Graphics2D graphics) {
+		Point idLabelPosition = new Point(center.x + RADIUS + 7, center.y - RADIUS - 7);
+		drawCenteredString(graphics, idLabelPosition, id);
+	}
+
+	@Override
+	protected void drawSelectionMarkers(Graphics2D graphics) {
+		drawSelectionMarkers(graphics, center, RADIUS + 2);
 	}
 
 }

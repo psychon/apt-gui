@@ -32,23 +32,25 @@ public class GraphicalState extends GraphicalNode {
 	}
 
 	@Override
-	public void draw(Graphics2D graphics) {
-		if (!visible) {
-			return;
-		}
-		super.draw(graphics);
-		drawCircle(graphics, center, RADIUS);
-		if (selected) {
-			drawSelectionMarkers(graphics, center, RADIUS + 2);
-		}
-	}
-
-	@Override
 	public boolean coversPoint(Point point) {
 		return super.coversPoint(point) && center.distance(point.x, point.y) < RADIUS;
 	}
 
-}
+	@Override
+	protected void drawShape(Graphics2D graphics) {
+		drawCircle(graphics, center, RADIUS);
+	}
 
+	@Override
+	protected void drawId(Graphics2D graphics) {
+		drawCenteredString(graphics, center, id);
+	}
+
+	@Override
+	protected void drawSelectionMarkers(Graphics2D graphics) {
+		drawSelectionMarkers(graphics, center, RADIUS + 2);
+	}
+
+}
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

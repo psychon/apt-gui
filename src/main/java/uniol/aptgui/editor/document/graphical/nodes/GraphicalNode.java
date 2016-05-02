@@ -19,6 +19,7 @@
 
 package uniol.aptgui.editor.document.graphical.nodes;
 
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
@@ -56,6 +57,28 @@ public abstract class GraphicalNode extends GraphicalElement {
 	public boolean coversPoint(Point point) {
 		return center != null;
 	}
+
+	@Override
+	public void draw(Graphics2D graphics) {
+		if (!visible) {
+			return;
+		}
+		super.draw(graphics);
+
+		drawShape(graphics);
+		if (id != null) {
+			drawId(graphics);
+		}
+		if (selected) {
+			drawSelectionMarkers(graphics);
+		}
+	}
+
+	protected abstract void drawShape(Graphics2D graphics);
+
+	protected abstract void drawId(Graphics2D graphics);
+
+	protected abstract void drawSelectionMarkers(Graphics2D graphics);
 
 	/**
 	 * Returns the intersection point of this GraphicalNode's boundary with
@@ -128,6 +151,13 @@ public abstract class GraphicalNode extends GraphicalElement {
 
 		graphics.drawLine(bottomRight.x, bottomRight.y, bottomRight.x - len, bottomRight.y);
 		graphics.drawLine(bottomRight.x, bottomRight.y, bottomRight.x, bottomRight.y - len);
+	}
+
+	protected static void drawCenteredString(Graphics2D graphics, Point center, String string) {
+		FontMetrics metrics = graphics.getFontMetrics();
+		int xOffset = metrics.stringWidth(string) / 2;
+		int yOffset = metrics.getAscent() / 2;
+		graphics.drawString(string, center.x - xOffset, center.y + yOffset);
 	}
 
 }
