@@ -107,16 +107,29 @@ public abstract class GraphicalNode extends GraphicalElement {
 	}
 
 	protected static Point getSquareBoundaryIntersection(Point center, int radius, Point test) {
-		// TODO: this is the same code as for the circle intersection, replace with correct method
 		double deltaCenterTestX = (center.x - test.x);
 		double deltaCenterTestY = (center.y - test.y);
 		double alpha = atan(deltaCenterTestY / deltaCenterTestX);
-		double deltaX = cos(alpha) * radius;
-		double deltaY = sin(alpha) * radius;
+		double deltaX, deltaY, distance;
 
-		if (deltaCenterTestX > 0) {
-			deltaX = -deltaX;
-			deltaY = -deltaY;
+		if (alpha <= -Math.PI / 4 || alpha > Math.PI / 4) {
+			distance = radius / Math.sin(alpha);
+			deltaX = distance * Math.cos(alpha);
+			deltaY = radius;
+
+			if (deltaCenterTestY > 0) {
+				deltaX = -deltaX;
+				deltaY = -deltaY;
+			}
+		} else {
+			distance = radius / Math.cos(alpha);
+			deltaX = radius;
+			deltaY = distance * Math.sin(alpha);
+
+			if (deltaCenterTestX > 0) {
+				deltaX = -deltaX;
+				deltaY = -deltaY;
+			}
 		}
 
 		int x = (int) (center.x + deltaX);
