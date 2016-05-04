@@ -96,7 +96,7 @@ public abstract class GraphicalNode extends GraphicalElement {
 		double deltaX = cos(alpha) * radius;
 		double deltaY = sin(alpha) * radius;
 
-		if (deltaCenterTestX > 0) {
+		if (deltaCenterTestX >= 0) {
 			deltaX = -deltaX;
 			deltaY = -deltaY;
 		}
