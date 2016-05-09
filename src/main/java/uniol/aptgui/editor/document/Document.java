@@ -34,8 +34,32 @@ import uniol.apt.adt.extension.IExtensible;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.layout.Layout;
 
+/**
+ * <p>
+ * Document is the main model class. It is parameterized with the underlying
+ * Petri net or transition system type. A mapping of GraphicalElements to model
+ * elements and back is maintained. Furthermore administrative properties such
+ * as file location are contained.
+ * </p>
+ *
+ * <p>
+ * Listeners can be informed about changes to visual properties or even
+ * structural changes by calling the corresponding <code>fire*</code> method.
+ * </p>
+ *
+ * <p>
+ * The specific implementations for Petri nets or transition systems are
+ * {@link PnDocument} and {@link TsDocument}.
+ * </p>
+ *
+ * @param <T>
+ *                model type; should be PetriNet or TransitionSystem
+ */
 public abstract class Document<T> {
 
+	/**
+	 * List of DocumentListeners.
+	 */
 	private final List<DocumentListener> listeners;
 
 	/**
@@ -50,21 +74,61 @@ public abstract class Document<T> {
 	 */
 	private final Map<GraphicalElement, Object> elements;
 
+	/**
+	 * Selection object that saves which elements are selected by the user.
+	 */
 	private final Selection selection;
 
+	/**
+	 * Name of the document.
+	 */
 	protected String name;
+
+	/**
+	 * File location of this document. The document will be saved there.
+	 */
 	protected File file;
+
+	/**
+	 * Flag that indicates if this document has unsaved changes.
+	 */
 	protected boolean hasUnsavedChanges;
+
+	/**
+	 * Width of the document area.
+	 */
 	protected int width;
+
+	/**
+	 * Height of the document area.
+	 */
 	protected int height;
+
+	/**
+	 * Flag that indicates visibility of the document to the user.
+	 */
 	protected boolean visible;
 
+	/**
+	 * Transform object that saves translation and scaling.
+	 */
 	private final Transform2D transform;
 
+	/**
+	 * Creates a document with a default size.
+	 */
 	public Document() {
 		this(400, 300);
 	}
 
+	/**
+	 * Creates a document.
+	 *
+	 * @param width
+	 *                width of the new document
+	 * @param height
+	 *                height of the new document
+	 */
 	public Document(int width, int height) {
 		this.listeners = new ArrayList<>();
 		this.width = width;
@@ -141,16 +205,28 @@ public abstract class Document<T> {
 		this.file = file;
 	}
 
+	/**
+	 * Returns the underlying model object.
+	 *
+	 * @return the underlying model object
+	 */
 	public T getModel() {
 		return model;
 	}
 
+	/**
+	 * Sets the underlying model object.
+	 *
+	 * @param model
+	 *                new model object
+	 */
 	public void setModel(T model) {
 		this.model = model;
 	}
 
 	/**
-	 * Adds a new standalone GraphicalElement to this Document.
+	 * Adds a new standalone GraphicalElement to this Document, i.e. it has
+	 * no associated model element.
 	 *
 	 * @param graphicalElem
 	 */
@@ -174,6 +250,7 @@ public abstract class Document<T> {
 
 	/**
 	 * Removes the given GraphicalElement from this Document.
+	 *
 	 * @param graphicalElem
 	 */
 	public void remove(GraphicalElement graphicalElem) {
@@ -205,14 +282,30 @@ public abstract class Document<T> {
 		return (U) elements.get(graphicalElem);
 	}
 
+	/**
+	 * Returns this document's transform object.
+	 *
+	 * @return this document's transform object
+	 */
 	public Transform2D getTransform() {
 		return transform;
 	}
 
+	/**
+	 * Returns if this document is visible (in an editor).
+	 *
+	 * @return if this document is visible
+	 */
 	public boolean isVisible() {
 		return visible;
 	}
 
+	/**
+	 * Sets this document's visibility status.
+	 *
+	 * @param visible
+	 *                new visibility status
+	 */
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
@@ -236,10 +329,22 @@ public abstract class Document<T> {
 		this.name = name;
 	}
 
+	/**
+	 * Adds a document listener.
+	 *
+	 * @param listener
+	 *                listener to add
+	 */
 	public void addListener(DocumentListener listener) {
 		listeners.add(listener);
 	}
 
+	/**
+	 * Removes a document listener.
+	 *
+	 * @param listener
+	 *                listener to remove
+	 */
 	public void removeListener(DocumentListener listener) {
 		listeners.remove(listener);
 	}
@@ -295,20 +400,30 @@ public abstract class Document<T> {
 		}
 	}
 
+	/**
+	 * Applies the given layout to this document.
+	 *
+	 * @param layout
+	 *                layout to apply
+	 */
 	public void applyLayout(Layout layout) {
 		layout.applyTo(this);
 	}
 
+	/**
+	 * Draw this document with the given Graphics2D object. Before any
+	 * GraphicalElements are called to draw themselves the transform is
+	 * applied to the graphics object.
+	 *
+	 * @param graphics
+	 */
 	public void draw(Graphics2D graphics) {
 		if (!visible) {
 			return;
 		}
 
 		// Setup graphics object.
-		graphics.setRenderingHint(
-			RenderingHints.KEY_ANTIALIASING,
-			RenderingHints.VALUE_ANTIALIAS_ON
-		);
+		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		// Save original transform.
 		AffineTransform originalTransform = graphics.getTransform();
 		// Apply document transform.
@@ -323,23 +438,52 @@ public abstract class Document<T> {
 		graphics.setTransform(originalTransform);
 	}
 
+	/**
+	 * Returns the GraphicalElement associated with the given model element.
+	 *
+	 * @param obj
+	 *                model element
+	 * @return associated graphical element
+	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getGraphicalExtension(IExtensible obj) {
 		return (T) obj.getExtension(GraphicalElement.EXTENSION_KEY);
 	}
 
+	/**
+	 * Returns this document's width.
+	 *
+	 * @return this document's width
+	 */
 	public int getWidth() {
 		return width;
 	}
 
+	/**
+	 * Sets this document's width.
+	 *
+	 * @param width
+	 *                new width
+	 */
 	public void setWidth(int width) {
 		this.width = width;
 	}
 
+	/**
+	 * Returns this document's height.
+	 *
+	 * @return this document's height
+	 */
 	public int getHeight() {
 		return height;
 	}
 
+	/**
+	 * Sets this document's height.
+	 *
+	 * @param height
+	 *                new height
+	 */
 	public void setHeight(int height) {
 		this.height = height;
 	}
