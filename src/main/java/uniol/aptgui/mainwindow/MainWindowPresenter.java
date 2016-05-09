@@ -27,8 +27,14 @@ public interface MainWindowPresenter extends Presenter<MainWindowView> {
 
 	/// ACTIONS ///
 
+	/**
+	 * Shows the main window.
+	 */
 	void show();
 
+	/**
+	 * Closes the main window.
+	 */
 	void close();
 
 	/**
@@ -40,16 +46,54 @@ public interface MainWindowPresenter extends Presenter<MainWindowView> {
 	 */
 	WindowId createDocumentWindowId(Document<?> document);
 
+	/**
+	 * Creates a new internal window with a document editor as the content
+	 * presenter.
+	 *
+	 * @param id
+	 *                window id to use
+	 * @param document
+	 *                document to edit
+	 */
 	void createDocumentEditorWindow(WindowId id, Document<?> document);
 
+	/**
+	 * Adds the window identified by the given id to the desktop pane.
+	 *
+	 * @param id
+	 *                window id
+	 */
 	void showWindow(WindowId id);
 
+	/**
+	 * Removes the window identified by the given id from the desktop pane.
+	 *
+	 * @param id
+	 *                window id
+	 */
 	void removeWindow(WindowId id);
 
+	/**
+	 * Focuses and brings the window identified by the given id to the front
+	 * of the desktop pane.
+	 *
+	 * @param id
+	 *                window id
+	 */
 	void focus(WindowId id);
 
+	/**
+	 * Opens and brings the module browser window to front.
+	 */
 	void showModuleBrowser();
 
+	/**
+	 * Opens a window that allows to run the given module.
+	 *
+	 * @param module
+	 *                module whose settings should be displayed in the
+	 *                window
+	 */
 	void openModuleWindow(Module module);
 
 	/**
@@ -60,6 +104,15 @@ public interface MainWindowPresenter extends Presenter<MainWindowView> {
 	 * @return window title
 	 */
 	String getWindowTitle(WindowId id);
+
+	/**
+	 * Shows a dialog that asks for the name of a new document.
+	 *
+	 * @param title
+	 *                the dialog's title
+	 * @return the user input or null if the dialog was cancelled
+	 */
+	String showDocumentNameInputDialog(String title);
 
 	/// VIEW EVENTS ///
 

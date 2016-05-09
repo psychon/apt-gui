@@ -22,8 +22,6 @@ package uniol.aptgui;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +33,6 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import uniol.apt.adt.pn.PetriNet;
-import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.io.parser.ParseException;
 import uniol.apt.io.renderer.RenderException;
@@ -74,31 +71,27 @@ public class ApplicationImpl implements Application {
 	}
 
 	@Subscribe
-	public void onEvent(Object e) {
-		String timeStamp = new SimpleDateFormat("yyyyMMdd HHmmss").format(Calendar.getInstance().getTime());
-		System.out.println(timeStamp + "\t" + e);
-	}
-
-	@Subscribe
-	public void onWindowFocusEvent(WindowFocusGainedEvent e) {
+	public void onWindowFocusGainedEvent(WindowFocusGainedEvent e) {
 		activeWindow = e.getWindowId();
 	}
 
 	@Override
 	public WindowId newPetriNet() {
-		// TODO: open dialog (using MainWindow) and ask for a name
 		PetriNet pn = new PetriNet();
-		pn.createPlace("p0");
-		pn.createPlace("p1");
-		pn.createTransition("t0");
-		pn.createFlow("p0", "t0", 1);
-		pn.createFlow("t0", "p1", 5);
-
-		return openPetriNet(pn);
+		Document<?> document = new PnDocument(pn);
+		String name = mainWindow.showDocumentNameInputDialog("New Petri Net");
+		if (name != null) {
+			document.setName(name);
+			return openDocument(document);
+		}
+		return null;
 	}
 
 	@Override
 	public void closeWindow(WindowId id) {
+		if (activeWindow == id) {
+			activeWindow = null;
+		}
 		mainWindow.removeWindow(id);
 		documents.remove(id);
 		eventBus.post(new WindowClosedEvent(id));
@@ -116,15 +109,14 @@ public class ApplicationImpl implements Application {
 
 	@Override
 	public WindowId newTransitionSystem() {
-		// TODO open dialog (using MainWindow) and ask for a name
 		TransitionSystem ts = new TransitionSystem();
-		State s0 = ts.createState();
-		State s1 = ts.createState();
-		ts.setInitialState(s0);
-		ts.createArc(s0, s1, "a");
-		ts.createArc(s1, s0, "b");
-
-		return openTransitionSystem(ts);
+		Document<?> document = new TsDocument(ts);
+		String name = mainWindow.showDocumentNameInputDialog("New Transition System");
+		if (name != null) {
+			document.setName(name);
+			return openDocument(document);
+		}
+		return null;
 	}
 
 	@Override
@@ -207,18 +199,6 @@ public class ApplicationImpl implements Application {
 	@Override
 	public Set<WindowId> getDocumentWindows() {
 		return documents.keySet();
-	}
-
-	@Override
-	public WindowId openPetriNet(PetriNet pn) {
-		Document<?> pnDoc = new PnDocument(pn);
-		return openDocument(pnDoc);
-	}
-
-	@Override
-	public WindowId openTransitionSystem(TransitionSystem ts) {
-		Document<?> tsDoc = new TsDocument(ts);
-		return openDocument(tsDoc);
 	}
 
 	@Override

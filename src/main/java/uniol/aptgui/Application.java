@@ -24,8 +24,6 @@ import java.util.Set;
 
 import com.google.common.eventbus.EventBus;
 
-import uniol.apt.adt.pn.PetriNet;
-import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.module.Module;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
@@ -40,14 +38,39 @@ public interface Application {
 
 	public MainWindowPresenter getMainWindow();
 
+	/**
+	 * Shows the main window.
+	 */
 	public void show();
 
+	/**
+	 * Creates a new, empty Petri net editor window.
+	 *
+	 * @return the window id or null if the process was cancelled
+	 */
 	public WindowId newPetriNet();
 
+	/**
+	 * Creates a new, empty transition system editor window.
+	 *
+	 * @return the window id or null if the process was cancelled
+	 */
 	public WindowId newTransitionSystem();
 
+	/**
+	 * Closes the window with the given id.
+	 *
+	 * @param id
+	 *                window id
+	 */
 	public void closeWindow(WindowId id);
 
+	/**
+	 * Focuses and brings the window with the given id to the front,
+	 *
+	 * @param id
+	 *                window id
+	 */
 	public void focusWindow(WindowId id);
 
 	/**
@@ -59,6 +82,11 @@ public interface Application {
 	 */
 	public String getWindowTitle(WindowId id);
 
+	/**
+	 * Returns the window id of the window that currently has the focus.
+	 *
+	 * @return window id or null if no window is active
+	 */
 	public WindowId getActiveInternalWindow();
 
 	public Set<WindowId> getDocumentWindows();
@@ -80,10 +108,6 @@ public interface Application {
 	public void openModule(Module module);
 
 	public void openModuleBrowser();
-
-	public WindowId openPetriNet(PetriNet pn);
-
-	public WindowId openTransitionSystem(TransitionSystem ts);
 
 	public WindowId openDocument(Document<?> document);
 

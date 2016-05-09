@@ -52,17 +52,17 @@ public class RenameDocumentAction extends DocumentAction {
 	public void actionPerformed(ActionEvent e) {
 		WindowId activeWindow = app.getActiveInternalWindow();
 		Document<?> document = app.getDocument(activeWindow);
-		String result = showNameInputDialog();
+		String result = showNameInputDialog(document.getName());
 		if (result != null) {
 			Command cmd = new RenameDocumentCommand(app.getEventBus(), activeWindow, document, result);
 			app.getHistory().execute(cmd);
 		}
 	}
 
-	public String showNameInputDialog() {
+	public String showNameInputDialog(String currentName) {
 		Component parentComponent = (Component) app.getMainWindow().getView();
 		return (String) JOptionPane.showInputDialog(parentComponent, "Document Name: ", "Rename Document",
-				JOptionPane.QUESTION_MESSAGE, null, null, "");
+				JOptionPane.QUESTION_MESSAGE, null, null, currentName);
 	}
 
 }

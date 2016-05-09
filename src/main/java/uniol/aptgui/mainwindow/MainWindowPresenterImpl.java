@@ -19,8 +19,11 @@
 
 package uniol.aptgui.mainwindow;
 
+import java.awt.Component;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.JOptionPane;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -169,6 +172,12 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	@Override
 	public String getWindowTitle(WindowId id) {
 		return internalWindows.get(id).getDisplayedTitle();
+	}
+
+	@Override
+	public String showDocumentNameInputDialog(String title) {
+		return (String) JOptionPane.showInputDialog((Component) view, "Document Name: ", title,
+				JOptionPane.QUESTION_MESSAGE, null, null, "");
 	}
 
 }
