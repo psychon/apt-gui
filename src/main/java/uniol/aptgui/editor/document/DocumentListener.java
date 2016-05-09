@@ -24,9 +24,14 @@ import uniol.aptgui.editor.document.graphical.GraphicalElement;
 public interface DocumentListener {
 
 	/**
-	 * Called when the document changes and a redraw is necessary.
+	 * Called when the document changes visually.
 	 */
 	void onDocumentDirty();
+
+	/**
+	 * Called when the document changes structurally.
+	 */
+	void onDocumentChanged();
 
 	/**
 	 * Called when the selection in this Document changes.

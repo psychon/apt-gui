@@ -54,14 +54,14 @@ public class CreateFlowCommand extends Command {
 		pnFlow = pnDocument.getModel().createFlow(source, target, multiplicity);
 		pnFlow.putExtension(GraphicalElement.EXTENSION_KEY, graphialFlow);
 		pnDocument.add(graphialFlow, pnFlow);
-		pnDocument.fireDocumentDirty();
+		pnDocument.fireDocumentChanged(true);
 	}
 
 	@Override
 	public void undo() {
 		pnDocument.getModel().removeFlow(pnFlow);
 		pnDocument.remove(graphialFlow);
-		pnDocument.fireDocumentDirty();
+		pnDocument.fireDocumentChanged(true);
 	}
 
 	@Override

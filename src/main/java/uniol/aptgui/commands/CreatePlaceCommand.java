@@ -40,14 +40,14 @@ public class CreatePlaceCommand extends Command {
 		pnPlace = pnDocument.getModel().createPlace();
 		pnPlace.putExtension(GraphicalElement.EXTENSION_KEY, graphicalPlace);
 		pnDocument.add(graphicalPlace, pnPlace);
-		pnDocument.fireDocumentDirty();
+		pnDocument.fireDocumentChanged(true);
 	}
 
 	@Override
 	public void undo() {
 		pnDocument.getModel().removePlace(pnPlace);
 		pnDocument.remove(graphicalPlace);
-		pnDocument.fireDocumentDirty();
+		pnDocument.fireDocumentChanged(true);
 	}
 
 	@Override

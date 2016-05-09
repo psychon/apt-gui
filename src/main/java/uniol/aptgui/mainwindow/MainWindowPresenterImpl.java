@@ -30,11 +30,14 @@ import com.google.inject.Injector;
 
 import uniol.apt.module.Module;
 import uniol.aptgui.AbstractPresenter;
+import uniol.aptgui.Application;
 import uniol.aptgui.Presenter;
 import uniol.aptgui.editor.EditorPresenter;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.DocumentListener;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.internalwindow.InternalWindowPresenter;
 import uniol.aptgui.mainwindow.menu.MenuPresenter;
 import uniol.aptgui.mainwindow.toolbar.ToolbarPresenter;
@@ -51,6 +54,14 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	private final ToolbarPresenter toolbar;
 	private final MenuPresenter menu;
 	private final ModuleBrowserPresenter moduleBrowser;
+	private final DocumentListener titleChangeListener = new DocumentListener() {
+		@Override public void onSelectionChanged(Class<? extends GraphicalElement> commonBaseClass) {}
+		@Override public void onDocumentDirty() {}
+		@Override
+		public void onDocumentChanged() {
+			menu.setInternalWindows(internalWindows.keySet());
+		}
+	};
 
 	private WindowId moduleBrowserWindowId;
 
@@ -83,7 +94,12 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	public void removeWindow(WindowId id) {
 		InternalWindowPresenter window = internalWindows.remove(id);
 		getView().removeInternalWindow(window.getView());
-		menu.setInternalWindows(internalWindows.keySet());
+		titleChangeListener.onDocumentDirty();
+
+		Document<?> document = injector.getInstance(Application.class).getDocument(id);
+		if (document != null) {
+			document.removeListener(titleChangeListener);
+		}
 	}
 
 	@Override
@@ -95,7 +111,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	public void showWindow(WindowId id) {
 		InternalWindowPresenter window = internalWindows.get(id);
 		getView().addInternalWindow(window.getView());
-		menu.setInternalWindows(internalWindows.keySet());
+		titleChangeListener.onDocumentDirty();
 	}
 
 	@Override
@@ -111,6 +127,8 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		editor.setWindowId(id);
 
 		createInternalWindow(id, editor);
+
+		document.addListener(titleChangeListener);
 	}
 
 	@Override

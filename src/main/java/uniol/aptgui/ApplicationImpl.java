@@ -176,6 +176,7 @@ public class ApplicationImpl implements Application {
 		DocumentRenderer renderer = new AptDocumentRenderer();
 		try {
 			renderer.render(document, document.getFile());
+			document.fireDocumentChanged(false);
 		} catch (RenderException | IOException e) {
 			showException(e);
 		}

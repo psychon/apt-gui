@@ -69,7 +69,7 @@ public class SetTokensCommand extends Command {
 			marking = marking.setTokenCount(place, Token.valueOf(newTokenCount));
 		}
 		document.getModel().setInitialMarking(marking);
-		document.fireDocumentDirty();
+		document.fireDocumentChanged(true);
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class SetTokensCommand extends Command {
 			marking = marking.setTokenCount(place, Token.valueOf(oldTokenCount));
 		}
 		document.getModel().setInitialMarking(marking);
-		document.fireDocumentDirty();
+		document.fireDocumentChanged(true);
 	}
 
 }

@@ -40,14 +40,14 @@ public class CreateTransitionCommand extends Command {
 		pnTransition = pnDocument.getModel().createTransition();
 		pnTransition.putExtension(GraphicalElement.EXTENSION_KEY, graphicalTransition);
 		pnDocument.add(graphicalTransition, pnTransition);
-		pnDocument.fireDocumentDirty();
+		pnDocument.fireDocumentChanged(true);
 	}
 
 	@Override
 	public void undo() {
 		pnDocument.getModel().removeTransition(pnTransition);
 		pnDocument.remove(graphicalTransition);
-		pnDocument.fireDocumentDirty();
+		pnDocument.fireDocumentChanged(true);
 	}
 
 	@Override

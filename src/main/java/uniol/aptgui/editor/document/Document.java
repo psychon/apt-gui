@@ -70,7 +70,7 @@ public abstract class Document<T> {
 		this.width = width;
 		this.height = height;
 		this.visible = false;
-		this.hasUnsavedChanges = false;
+		this.hasUnsavedChanges = true;
 		this.transform = new Transform2D();
 		this.elements = new HashMap<>();
 		this.selection = new Selection();
@@ -236,20 +236,6 @@ public abstract class Document<T> {
 		this.name = name;
 	}
 
-	/**
-	 * Returns this document's title which is comprised of the file path and
-	 * name.
-	 *
-	 * @return this document's title.
-	 */
-	public String getTitle() {
-		if (file != null) {
-			return String.format("%s : %s", name, file.getAbsolutePath());
-		} else {
-			return name;
-		}
-	}
-
 	public void addListener(DocumentListener listener) {
 		listeners.add(listener);
 	}
@@ -258,10 +244,20 @@ public abstract class Document<T> {
 		listeners.remove(listener);
 	}
 
+	/**
+	 * Returns if this document has unsaved changes.
+	 *
+	 * @return if this document has unsaved changes
+	 */
 	public boolean hasUnsavedChanges() {
 		return hasUnsavedChanges;
 	}
 
+	/**
+	 * Sets if this document has unsaved changes.
+	 *
+	 * @param hasUnsavedChanges
+	 */
 	public void setHasUnsavedChanges(boolean hasUnsavedChanges) {
 		this.hasUnsavedChanges = hasUnsavedChanges;
 	}
@@ -272,6 +268,20 @@ public abstract class Document<T> {
 	public void fireDocumentDirty() {
 		for (DocumentListener l : listeners) {
 			l.onDocumentDirty();
+		}
+	}
+
+	/**
+	 * Sets hasUnsavedChanges to the given value and then calls
+	 * onDocumentChanged for every listener.
+	 *
+	 * @param saveNecessary
+	 *                true, if this change can be saved to a file
+	 */
+	public void fireDocumentChanged(boolean saveNecessary) {
+		setHasUnsavedChanges(saveNecessary);
+		for (DocumentListener l : listeners) {
+			l.onDocumentChanged();
 		}
 	}
 

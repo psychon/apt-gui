@@ -50,14 +50,14 @@ public class SetInitialStateCommand extends Command {
 		}
 		State newInitialState = document.getAssociatedModelElement(element);
 		ts.setInitialState(newInitialState);
-		document.fireDocumentDirty();
+		document.fireDocumentChanged(true);
 	}
 
 	@Override
 	public void undo() {
 		TransitionSystem ts = document.getModel();
 		ts.setInitialState(previousInitialState);
-		document.fireDocumentDirty();
+		document.fireDocumentChanged(true);
 	}
 
 	@Override

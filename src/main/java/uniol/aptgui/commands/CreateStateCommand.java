@@ -40,14 +40,14 @@ public class CreateStateCommand extends Command {
 		tsState = tsDocument.getModel().createState();
 		tsState.putExtension(GraphicalElement.EXTENSION_KEY, graphicalState);
 		tsDocument.add(graphicalState, tsState);
-		tsDocument.fireDocumentDirty();
+		tsDocument.fireDocumentChanged(true);
 	}
 
 	@Override
 	public void undo() {
 		tsDocument.getModel().removeState(tsState);
 		tsDocument.remove(graphicalState);
-		tsDocument.fireDocumentDirty();
+		tsDocument.fireDocumentChanged(true);
 	}
 
 	@Override

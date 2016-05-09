@@ -31,7 +31,6 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.events.DocumentTitleChangedEvent;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.mainwindow.WindowType;
 import uniol.aptgui.swing.Resource;
@@ -55,28 +54,26 @@ public class SaveAction extends DocumentAction {
 		WindowId activeWindow = app.getActiveInternalWindow();
 		Document<?> document = app.getDocument(activeWindow);
 		if (shouldShowSaveDialog(document)) {
-			File file = getSaveFile(activeWindow.getType());
+			File file = getSaveFile(document.getName(), activeWindow.getType());
 			if (file != null) {
 				document.setFile(file);
 				app.saveToFile(document);
-				// Make windows display new file name.
-				app.getEventBus().post(new DocumentTitleChangedEvent(activeWindow, document));
 			}
 		} else {
 			app.saveToFile(document);
 		}
-
 	}
 
 	protected boolean shouldShowSaveDialog(Document<?> document) {
 		return document.getFile() == null;
 	}
 
-	private File getSaveFile(WindowType type) {
+	private File getSaveFile(String defaultName, WindowType type) {
 		AptFileChooser fc = new AptFileChooser(
 				type == WindowType.PETRI_NET,
 				type == WindowType.TRANSITION_SYSTEM
 		);
+		fc.setSelectedFile(new File(defaultName));
 		int res = fc.showSaveDialog((Component) app.getMainWindow().getView());
 		if (res == JFileChooser.APPROVE_OPTION) {
 			return fc.getSelectedFileWithExtension();

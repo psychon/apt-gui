@@ -74,7 +74,7 @@ public class RemovePnElementsCommand extends Command {
 		}
 
 		document.fireSelectionChanged();
-		document.fireDocumentDirty();
+		document.fireDocumentChanged(true);
 	}
 
 	private void removeFlow(Flow flow, GraphicalFlow graphicalFlow) {
@@ -125,7 +125,7 @@ public class RemovePnElementsCommand extends Command {
 			document.add(entry.getValue(), flow);
 		}
 
-		document.fireDocumentDirty();
+		document.fireDocumentChanged(true);
 	}
 
 	@Override

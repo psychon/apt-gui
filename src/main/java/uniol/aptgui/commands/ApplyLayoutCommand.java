@@ -35,7 +35,7 @@ public class ApplyLayoutCommand extends Command {
 	@Override
 	public void execute() {
 		document.applyLayout(layout);
-		document.fireDocumentDirty();
+		document.fireDocumentChanged(true);
 	}
 
 	@Override

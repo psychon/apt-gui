@@ -157,6 +157,12 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 				GraphicalState.class.isAssignableFrom(testClass) && document.getSelection().size() == 1);
 	}
 
+	@Override
+	public void onDocumentChanged() {
+		// No other action necessary except a repaint.
+		onDocumentDirty();
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

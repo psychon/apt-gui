@@ -19,19 +19,13 @@
 
 package uniol.aptgui.commands;
 
-import com.google.common.eventbus.EventBus;
-
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.events.DocumentTitleChangedEvent;
-import uniol.aptgui.mainwindow.WindowId;
 
 /**
  * Command that renames a document.
  */
 public class RenameDocumentCommand extends Command {
 
-	private final EventBus eventBus;
-	private final WindowId windowId;
 	private final Document<?> document;
 	private final String newName;
 	private String oldName;
@@ -39,18 +33,12 @@ public class RenameDocumentCommand extends Command {
 	/**
 	 * Creates a new RenameDocumentCommand.
 	 *
-	 * @param eventBus
-	 *                event bus to notify windows of title changes
-	 * @param windowId
-	 *                window in which the document is opened
 	 * @param document
 	 *                the document to be renamed
 	 * @param newName
 	 *                the new document name
 	 */
-	public RenameDocumentCommand(EventBus eventBus, WindowId windowId, Document<?> document, String newName) {
-		this.eventBus = eventBus;
-		this.windowId = windowId;
+	public RenameDocumentCommand(Document<?> document, String newName) {
 		this.document = document;
 		this.newName = newName;
 	}
@@ -59,13 +47,13 @@ public class RenameDocumentCommand extends Command {
 	public void execute() {
 		oldName = document.getName();
 		document.setName(newName);
-		eventBus.post(new DocumentTitleChangedEvent(windowId, document));
+		document.fireDocumentChanged(true);
 	}
 
 	@Override
 	public void undo() {
 		document.setName(oldName);
-		eventBus.post(new DocumentTitleChangedEvent(windowId, document));
+		document.fireDocumentChanged(true);
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public class RenameDocumentAction extends DocumentAction {
 		Document<?> document = app.getDocument(activeWindow);
 		String result = showNameInputDialog(document.getName());
 		if (result != null) {
-			Command cmd = new RenameDocumentCommand(app.getEventBus(), activeWindow, document, result);
+			Command cmd = new RenameDocumentCommand(document, result);
 			app.getHistory().execute(cmd);
 		}
 	}

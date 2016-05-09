@@ -47,7 +47,7 @@ public class FireTransitionCommand extends Command {
 		Marking newMarking = transition.fire(oldMarking);
 		pn.setInitialMarking(newMarking);
 
-		pnDocument.fireDocumentDirty();
+		pnDocument.fireDocumentChanged(true);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class FireTransitionCommand extends Command {
 		PetriNet pn = pnDocument.getModel();
 		pn.setInitialMarking(oldMarking);
 
-		pnDocument.fireDocumentDirty();
+		pnDocument.fireDocumentChanged(true);
 	}
 
 	@Override

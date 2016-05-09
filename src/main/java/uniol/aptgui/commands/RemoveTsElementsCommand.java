@@ -72,7 +72,7 @@ public class RemoveTsElementsCommand extends Command {
 		}
 
 		document.fireSelectionChanged();
-		document.fireDocumentDirty();
+		document.fireDocumentChanged(true);
 	}
 
 	private void removeArc(Arc arc, GraphicalArc graphicalArc) {
@@ -113,7 +113,7 @@ public class RemoveTsElementsCommand extends Command {
 			document.add(entry.getValue(), arc);
 		}
 
-		document.fireDocumentDirty();
+		document.fireDocumentChanged(true);
 	}
 
 	@Override

@@ -59,7 +59,7 @@ public abstract class SetAttributeCommand<T, U> extends Command {
 		for (T e : elements) {
 			invokeAttributeSetter(e, newValue);
 		}
-		document.fireDocumentDirty();
+		document.fireDocumentChanged(true);
 	}
 
 	protected void invokeAttributeSetter(T elem, U arg) {
@@ -79,7 +79,7 @@ public abstract class SetAttributeCommand<T, U> extends Command {
 		for (int i = 0; i < elements.size(); i++) {
 			invokeAttributeSetter(elements.get(i), oldValues.get(i));
 		}
-		document.fireDocumentDirty();
+		document.fireDocumentChanged(true);
 	}
 
 }

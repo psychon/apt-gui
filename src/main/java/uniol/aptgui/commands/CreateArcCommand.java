@@ -54,14 +54,14 @@ public class CreateArcCommand extends Command {
 		tsArc = tsDocument.getModel().createArc(source, target, label);
 		tsArc.putExtension(GraphicalElement.EXTENSION_KEY, graphialArc);
 		tsDocument.add(graphialArc, tsArc);
-		tsDocument.fireDocumentDirty();
+		tsDocument.fireDocumentChanged(true);
 	}
 
 	@Override
 	public void undo() {
 		tsDocument.getModel().removeArc(tsArc);
 		tsDocument.remove(graphialArc);
-		tsDocument.fireDocumentDirty();
+		tsDocument.fireDocumentChanged(true);
 	}
 
 	@Override

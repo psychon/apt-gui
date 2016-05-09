@@ -36,10 +36,17 @@ public class AptFileChooser extends JFileChooser {
 
 	public AptFileChooser(boolean allowPn, boolean allowTs) {
 		if (allowPn) {
-			addChoosableFileFilter(new ParserFileFilter("Petri Net", new AptPNParser()));
+			FileFilter ff = new ParserFileFilter("Petri Net", new AptPNParser());
+			addChoosableFileFilter(ff);
+			setFileFilter(ff);
 		}
 		if (allowTs) {
-			addChoosableFileFilter(new ParserFileFilter("Transition system", new AptLTSParser()));
+			FileFilter ff = new ParserFileFilter("Transition system", new AptLTSParser());
+			addChoosableFileFilter(ff);
+			setFileFilter(ff);
+		}
+		if (allowPn && allowTs) {
+			setFileFilter(getAcceptAllFileFilter());
 		}
 	}
 

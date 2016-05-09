@@ -20,14 +20,14 @@
 package uniol.aptgui.internalwindow;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Application;
 import uniol.aptgui.Presenter;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.events.DocumentTitleChangedEvent;
+import uniol.aptgui.editor.document.DocumentListener;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.events.WindowFocusLostEvent;
 import uniol.aptgui.mainwindow.WindowId;
@@ -41,22 +41,22 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	private String computedTitle;
 	private WindowId id;
 
+	private DocumentListener titleChangeListener = new DocumentListener() {
+		@Override public void onSelectionChanged(Class<? extends GraphicalElement> commonBaseClass) {}
+		@Override public void onDocumentDirty() {}
+		@Override
+		public void onDocumentChanged() {
+			updateTitle();
+		}
+	};
+
 	@Inject
 	public InternalWindowPresenterImpl(InternalWindowView view, Application application, EventBus eventBus) {
 		super(view);
 		this.application = application;
 		this.eventBus = eventBus;
 		this.title = "";
-		eventBus.register(this);
 		setPadding(3);
-	}
-
-	@Subscribe
-	public void onDocumentTitleChangedEvent(DocumentTitleChangedEvent e) {
-		if (e.getWindowId() != id) {
-			return;
-		}
-		updateTitle();
 	}
 
 	@Override
@@ -72,6 +72,20 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 
 	@Override
 	public void setWindowId(WindowId id) {
+		// Remove old listener.
+		if (this.id != null) {
+			Document<?> document = application.getDocument(id);
+			if (document != null) {
+				document.removeListener(titleChangeListener);
+			}
+		}
+
+		// Add listener so that the title gets updated when the document changes.
+		Document<?> document = application.getDocument(id);
+		if (document != null) {
+			document.addListener(titleChangeListener);
+		}
+
 		this.id = id;
 		updateTitle();
 	}
@@ -105,10 +119,15 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 
 		Document<?> document = application.getDocument(id);
 		if (document != null) {
+			computedTitle = "";
+			if (document.hasUnsavedChanges()) {
+				computedTitle += "* ";
+			}
+
 			if (document.getFile() != null) {
-				computedTitle = String.format("%s (%s) (%s)", document.getName(), id.toString(), document.getFile());
+				computedTitle += String.format("%s (%s) (%s)", document.getName(), id.toString(), document.getFile());
 			} else {
-				computedTitle = String.format("%s (%s)", document.getName(), id.toString());
+				computedTitle += String.format("%s (%s)", document.getName(), id.toString());
 			}
 
 			view.setTitle(computedTitle);
