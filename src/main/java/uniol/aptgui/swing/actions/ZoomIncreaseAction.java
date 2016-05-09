@@ -21,32 +21,23 @@ package uniol.aptgui.swing.actions;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractAction;
-
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.events.WindowClosedEvent;
-import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
-public class ZoomIncreaseAction extends AbstractAction {
-
-	private final Application app;
+public class ZoomIncreaseAction extends DocumentAction {
 
 	@Inject
 	public ZoomIncreaseAction(Application app, EventBus eventBus) {
-		this.app = app;
+		super(app, eventBus);
 		String name = "Increase Zoom Level";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
 		putValue(SMALL_ICON, Resource.getIconZoomIn());
-		setEnabled(false);
-		eventBus.register(this);
 	}
 
 	@Override
@@ -55,16 +46,6 @@ public class ZoomIncreaseAction extends AbstractAction {
 		assert document != null;
 		document.getTransform().increaseScale(1);
 		document.fireDocumentDirty();
-	}
-
-	@Subscribe
-	public void onWindowFocusGainedEvent(WindowFocusGainedEvent e) {
-		setEnabled(e.getWindowId().getType().isEditorWindow());
-	}
-
-	@Subscribe
-	public void onWindowClosedEvent(WindowClosedEvent e) {
-		setEnabled(app.getActiveInternalWindow().getType().isEditorWindow());
 	}
 
 }
