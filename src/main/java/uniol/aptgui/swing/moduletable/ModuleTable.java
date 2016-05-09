@@ -28,8 +28,8 @@ public class ModuleTable extends JTable {
 
 	@Override
 	public String getToolTipText(MouseEvent event) {
-		int row = rowAtPoint(event.getPoint());
-		int col = columnAtPoint(event.getPoint());
+		int row = convertRowIndexToModel(rowAtPoint(event.getPoint()));
+		int col = convertColumnIndexToModel(columnAtPoint(event.getPoint()));
 		return getModel().getValueAt(row, col).toString();
 	}
 
