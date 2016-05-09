@@ -24,9 +24,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import uniol.apt.adt.pn.Flow;
+import uniol.apt.adt.pn.Marking;
 import uniol.apt.adt.pn.Node;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
+import uniol.apt.adt.pn.Token;
 import uniol.apt.adt.pn.Transition;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalFlow;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
@@ -62,9 +64,11 @@ public class PnDocument extends Document<PetriNet> {
 
 	@Override
 	public void draw(Graphics2D graphics) {
+		Marking marking = getModel().getInitialMarking();
 		for (Place place : getModel().getPlaces()) {
 			GraphicalPlace elem = getGraphicalExtension(place);
-			elem.setTokens(10); // TODO get correct token count
+			Token token = marking.getToken(place);
+			elem.setTokens(token.getValue());
 		}
 		for (Transition transition : getModel().getTransitions()) {
 			GraphicalTransition elem = getGraphicalExtension(transition);
