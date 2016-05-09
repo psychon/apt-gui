@@ -19,28 +19,43 @@
 
 package uniol.aptgui.swing.actions;
 
+import javax.swing.AbstractAction;
+
 import com.google.common.eventbus.EventBus;
-import com.google.inject.Inject;
+import com.google.common.eventbus.Subscribe;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.swing.Resource;
+import uniol.aptgui.events.WindowClosedEvent;
+import uniol.aptgui.events.WindowFocusGainedEvent;
+import uniol.aptgui.mainwindow.WindowType;
 
+/**
+ * Abstract base class for all actions that should only be enabled when a
+ * document editor is the active window.
+ *
+ */
 @SuppressWarnings("serial")
-public class SaveAsAction extends SaveAction {
+public abstract class DocumentAction extends AbstractAction {
 
-	@Inject
-	public SaveAsAction(Application app, EventBus eventBus) {
-		super(app, eventBus);
-		String name = "Save file as...";
-		putValue(NAME, name);
-		putValue(SMALL_ICON, Resource.getIconSaveFileAs());
-		putValue(SHORT_DESCRIPTION, name);
+	protected final Application app;
+
+	public DocumentAction(Application app, EventBus eventBus) {
+		this.app = app;
+		setEnabled(false);
+		eventBus.register(this);
 	}
 
-	@Override
-	protected boolean shouldShowSaveDialog(Document<?> document) {
-		return true;
+	@Subscribe
+	public void onWindowFocusGainedEvent(WindowFocusGainedEvent e) {
+		WindowType type = e.getWindowId().getType();
+		setEnabled(type.isEditorWindow());
+	}
+
+	@Subscribe
+	public void onWindowClosedEvent(WindowClosedEvent e) {
+		Document<?> document = app.getActiveDocument();
+		setEnabled(document != null);
 	}
 
 }

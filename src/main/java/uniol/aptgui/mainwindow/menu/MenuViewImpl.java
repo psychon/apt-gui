@@ -40,6 +40,7 @@ import uniol.aptgui.swing.actions.NewTransitionSystemAction;
 import uniol.aptgui.swing.actions.OpenAction;
 import uniol.aptgui.swing.actions.RandomLayoutAction;
 import uniol.aptgui.swing.actions.RedoAction;
+import uniol.aptgui.swing.actions.RenameDocumentAction;
 import uniol.aptgui.swing.actions.SaveAction;
 import uniol.aptgui.swing.actions.SaveAllAction;
 import uniol.aptgui.swing.actions.SaveAsAction;
@@ -61,6 +62,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private final JMenu editMenu;
 	private final JMenuItem undo;
 	private final JMenuItem redo;
+	private final JMenuItem renameDocument;
 	private final JMenuItem layoutRandom;
 
 	private final JMenu moduleMenu;
@@ -87,6 +89,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		editMenu = new JMenu("Edit");
 		undo = new JMenuItem(injector.getInstance(UndoAction.class));
 		redo = new JMenuItem(injector.getInstance(RedoAction.class));
+		renameDocument = new JMenuItem(injector.getInstance(RenameDocumentAction.class));
 		layoutRandom = new JMenuItem(injector.getInstance(RandomLayoutAction.class));
 
 		moduleMenu = new JMenu("Modules");
@@ -127,6 +130,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		editMenu.add(undo);
 		editMenu.add(redo);
 		editMenu.addSeparator();
+		editMenu.add(renameDocument);
 		editMenu.add(layoutRandom);
 	}
 

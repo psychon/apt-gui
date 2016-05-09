@@ -24,9 +24,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
-import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
@@ -38,13 +38,11 @@ import uniol.aptgui.swing.Resource;
 import uniol.aptgui.swing.filechooser.AptFileChooser;
 
 @SuppressWarnings("serial")
-public class SaveAction extends AbstractAction {
-
-	private final Application app;
+public class SaveAction extends DocumentAction {
 
 	@Inject
-	public SaveAction(Application app) {
-		this.app = app;
+	public SaveAction(Application app, EventBus eventBus) {
+		super(app, eventBus);
 		String name = "Save file...";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconSaveFile());

@@ -22,29 +22,21 @@ package uniol.aptgui.swing.actions;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import javax.swing.AbstractAction;
-
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.commands.ApplyLayoutCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.layout.RandomLayout;
-import uniol.aptgui.events.WindowClosedEvent;
-import uniol.aptgui.events.WindowFocusGainedEvent;
-import uniol.aptgui.mainwindow.WindowType;
 import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
-public class RandomLayoutAction extends AbstractAction {
-
-	private final Application app;
+public class RandomLayoutAction extends DocumentAction {
 
 	@Inject
 	public RandomLayoutAction(Application app, EventBus eventBus) {
-		this.app = app;
+		super(app, eventBus);
 		String name = "Random Layout";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
@@ -60,18 +52,6 @@ public class RandomLayoutAction extends AbstractAction {
 		if (document != null) {
 			app.getHistory().execute(new ApplyLayoutCommand(document, new RandomLayout()));
 		}
-	}
-
-	@Subscribe
-	public void onWindowFocusGainedEvent(WindowFocusGainedEvent e) {
-		WindowType type = e.getWindowId().getType();
-		setEnabled(type.isEditorWindow());
-	}
-
-	@Subscribe
-	public void onWindowClosedEvent(WindowClosedEvent e) {
-		Document<?> document = app.getActiveDocument();
-		setEnabled(document != null);
 	}
 
 }

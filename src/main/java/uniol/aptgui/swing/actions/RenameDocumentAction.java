@@ -19,28 +19,50 @@
 
 package uniol.aptgui.swing.actions;
 
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+
+import javax.swing.JOptionPane;
+
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
+import uniol.aptgui.commands.Command;
+import uniol.aptgui.commands.RenameDocumentCommand;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
-public class SaveAsAction extends SaveAction {
+public class RenameDocumentAction extends DocumentAction {
 
 	@Inject
-	public SaveAsAction(Application app, EventBus eventBus) {
+	public RenameDocumentAction(Application app, EventBus eventBus) {
 		super(app, eventBus);
-		String name = "Save file as...";
+		String name = "Rename Document...";
 		putValue(NAME, name);
-		putValue(SMALL_ICON, Resource.getIconSaveFileAs());
 		putValue(SHORT_DESCRIPTION, name);
+		putValue(SMALL_ICON, Resource.getIconLabel());
+		setEnabled(false);
+		eventBus.register(this);
 	}
 
 	@Override
-	protected boolean shouldShowSaveDialog(Document<?> document) {
-		return true;
+	public void actionPerformed(ActionEvent e) {
+		WindowId activeWindow = app.getActiveInternalWindow();
+		Document<?> document = app.getDocument(activeWindow);
+		String result = showNameInputDialog();
+		if (result != null) {
+			Command cmd = new RenameDocumentCommand(app.getEventBus(), activeWindow, document, result);
+			app.getHistory().execute(cmd);
+		}
+	}
+
+	public String showNameInputDialog() {
+		Component parentComponent = (Component) app.getMainWindow().getView();
+		return (String) JOptionPane.showInputDialog(parentComponent, "Document Name: ", "Rename Document",
+				JOptionPane.QUESTION_MESSAGE, null, null, "");
 	}
 
 }
