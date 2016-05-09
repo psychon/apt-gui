@@ -26,6 +26,9 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+/**
+ * Application entry-point.
+ */
 public class Main implements Runnable {
 
 	public static void main(String args[]) {

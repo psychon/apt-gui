@@ -30,32 +30,52 @@ import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.mainwindow.MainWindowPresenter;
 import uniol.aptgui.mainwindow.WindowId;
 
+/**
+ * Main application interface. Contains high-level functions and provides
+ * references to application-wide objects.
+ */
 public interface Application {
 
-	public EventBus getEventBus();
+	/**
+	 * Returns the application-wide event bus.
+	 *
+	 * @return the application-wide event bus
+	 */
+	EventBus getEventBus();
 
-	public History getHistory();
+	/**
+	 * Returns the application-wide command history which enables undo-redo
+	 * functionality.
+	 *
+	 * @return the application-wide command history
+	 */
+	History getHistory();
 
-	public MainWindowPresenter getMainWindow();
+	/**
+	 * Returns the main window presenter.
+	 *
+	 * @return the main window presenter
+	 */
+	MainWindowPresenter getMainWindow();
 
 	/**
 	 * Shows the main window.
 	 */
-	public void show();
+	void show();
 
 	/**
 	 * Creates a new, empty Petri net editor window.
 	 *
 	 * @return the window id or null if the process was cancelled
 	 */
-	public WindowId newPetriNet();
+	WindowId newPetriNet();
 
 	/**
 	 * Creates a new, empty transition system editor window.
 	 *
 	 * @return the window id or null if the process was cancelled
 	 */
-	public WindowId newTransitionSystem();
+	WindowId newTransitionSystem();
 
 	/**
 	 * Closes the window with the given id.
@@ -63,7 +83,7 @@ public interface Application {
 	 * @param id
 	 *                window id
 	 */
-	public void closeWindow(WindowId id);
+	void closeWindow(WindowId id);
 
 	/**
 	 * Focuses and brings the window with the given id to the front,
@@ -71,7 +91,7 @@ public interface Application {
 	 * @param id
 	 *                window id
 	 */
-	public void focusWindow(WindowId id);
+	void focusWindow(WindowId id);
 
 	/**
 	 * Returns the title of the window with the given id.
@@ -80,36 +100,81 @@ public interface Application {
 	 *                id of the window
 	 * @return title of the window
 	 */
-	public String getWindowTitle(WindowId id);
+	String getWindowTitle(WindowId id);
 
 	/**
 	 * Returns the window id of the window that currently has the focus.
 	 *
 	 * @return window id or null if no window is active
 	 */
-	public WindowId getActiveInternalWindow();
-
-	public Set<WindowId> getDocumentWindows();
-
-	public Document<?> getDocument(WindowId id);
+	WindowId getActiveInternalWindow();
 
 	/**
-	 * Returns the focused editor's document object or null if no editor is
-	 * focused.
+	 * Returns the ids of all windows that are document editors.
 	 *
-	 * @return
+	 * @return the ids of all windows that are document editors
 	 */
-	public Document<?> getActiveDocument();
+	Set<WindowId> getDocumentWindows();
 
-	public WindowId openFile(File file);
+	/**
+	 * Returns the document attached to the window with the given id.
+	 *
+	 * @param id
+	 *                window id
+	 * @return the document or null if the id is not associated with an
+	 *         editor window
+	 */
+	Document<?> getDocument(WindowId id);
 
-	public void saveToFile(Document<?> document);
+	/**
+	 * Returns the focused editor's document.
+	 *
+	 * @return the document or null if no editor is focused.
+	 */
+	Document<?> getActiveDocument();
 
-	public void openModule(Module module);
+	/**
+	 * Opens the given file and shows its contents in an editor window.
+	 *
+	 * @param file
+	 *                file to open
+	 * @return id of the opened editor window or null if the file could not
+	 *         be opened
+	 */
+	WindowId openFile(File file);
 
-	public void openModuleBrowser();
+	/**
+	 * Saves the given document to a file. The file must already be set on
+	 * the document object.
+	 *
+	 * @param document
+	 *                the document to save
+	 */
+	void saveToFile(Document<?> document);
 
-	public WindowId openDocument(Document<?> document);
+	/**
+	 * Opens a window that allows to use the given module.
+	 *
+	 * @param module
+	 *                an apt module
+	 */
+	void openModule(Module module);
+
+	/**
+	 * Opens the module browser which allows the user to search for modules
+	 * and open them.
+	 */
+	void openModuleBrowser();
+
+	/**
+	 * Opens the given document in an editor window and returns the window
+	 * id.
+	 *
+	 * @param document
+	 *                document to open
+	 * @return if of the opened editor window
+	 */
+	WindowId openDocument(Document<?> document);
 
 }
 

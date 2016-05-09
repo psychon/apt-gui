@@ -19,6 +19,15 @@
 
 package uniol.aptgui;
 
+/**
+ * Abstract base class for presenters that saves the view and registers itself
+ * on the view as the presenter.
+ *
+ * @param <P>
+ *                presenter type
+ * @param <V>
+ *                view type
+ */
 public abstract class AbstractPresenter<P extends Presenter<V>, V extends View<P>> implements Presenter<V> {
 
 	protected V view;

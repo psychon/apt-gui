@@ -19,11 +19,27 @@
 
 package uniol.aptgui;
 
+/**
+ * Interface for all view components in an MVP UI concept.
+ *
+ * @param <P>
+ *                associated presenter
+ */
 public interface View<P extends Presenter<?>> {
 
-	public P getPresenter();
+	/**
+	 * Returns the associated presenter.
+	 *
+	 * @return the associated presenter
+	 */
+	P getPresenter();
 
-	public void setPresenter(P presenter);
+	/**
+	 * Sets the associated presenter.
+	 *
+	 * @param presenter
+	 */
+	void setPresenter(P presenter);
 
 }
 
