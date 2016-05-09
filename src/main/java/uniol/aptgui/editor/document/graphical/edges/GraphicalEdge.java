@@ -207,7 +207,7 @@ public abstract class GraphicalEdge extends GraphicalElement {
 		return path;
 	}
 
-	protected void drawPathWithArrowhead(Graphics2D graphics, List<Point> path) {
+	public static void drawPathWithArrowhead(Graphics2D graphics, List<Point> path) {
 		assert path.size() >= 2;
 		drawPath(graphics, path);
 		drawArrowhead(
@@ -217,7 +217,7 @@ public abstract class GraphicalEdge extends GraphicalElement {
 		);
 	}
 
-	protected void drawPath(Graphics2D graphics, List<Point> path) {
+	public static void drawPath(Graphics2D graphics, List<Point> path) {
 		if (path.isEmpty()) {
 			return;
 		}
@@ -229,7 +229,7 @@ public abstract class GraphicalEdge extends GraphicalElement {
 		}
 	}
 
-	protected void drawArrowhead(Graphics2D graphics, Point source, Point target) {
+	public static void drawArrowhead(Graphics2D graphics, Point source, Point target) {
 		int x = target.x;
 		int y = target.y;
 		int i1 = 12;

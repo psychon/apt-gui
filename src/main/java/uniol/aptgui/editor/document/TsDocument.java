@@ -54,6 +54,7 @@ public class TsDocument extends Document<TransitionSystem> {
 	public void draw(Graphics2D graphics) {
 		for (State state : getModel().getNodes()) {
 			GraphicalState elem = getGraphicalExtension(state);
+			elem.setInitialState(state == getModel().getInitialState());
 		}
 		for (Arc arc : getModel().getEdges()) {
 			GraphicalArc elem = getGraphicalExtension(arc);

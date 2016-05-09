@@ -21,10 +21,23 @@ package uniol.aptgui.editor.document.graphical.nodes;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+
+import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 
 public class GraphicalState extends GraphicalNode {
 
 	private static final int RADIUS = 20;
+	protected boolean isInitialState;
+
+	public boolean isInitialState() {
+		return isInitialState;
+	}
+
+	public void setInitialState(boolean isInitialState) {
+		this.isInitialState = isInitialState;
+	}
 
 	@Override
 	public Point getBoundaryIntersection(Point point) {
@@ -39,6 +52,14 @@ public class GraphicalState extends GraphicalNode {
 	@Override
 	protected void drawShape(Graphics2D graphics) {
 		drawCircle(graphics, center, RADIUS);
+		if (isInitialState) {
+			Point outside = new Point(center.x - RADIUS - 30, center.y);
+			Point onBoundary = getBoundaryIntersection(outside);
+			List<Point> path = new ArrayList<>();
+			path.add(outside);
+			path.add(onBoundary);
+			GraphicalEdge.drawPathWithArrowhead(graphics, path);
+		}
 	}
 
 	@Override
