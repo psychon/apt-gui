@@ -23,7 +23,10 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import com.google.common.eventbus.Subscribe;
+
 import uniol.aptgui.Application;
+import uniol.aptgui.events.DocumentTitleChangedEvent;
 import uniol.aptgui.mainwindow.WindowId;
 
 @SuppressWarnings("serial")
@@ -35,14 +38,26 @@ public class ShowWindowAction extends AbstractAction {
 	public ShowWindowAction(Application app, WindowId id) {
 		this.app = app;
 		this.id = id;
-		String name = id.getTitle();
-		putValue(NAME, name);
-		putValue(SHORT_DESCRIPTION, name);
+		setName(app.getWindowTitle(id));
+		app.getEventBus().register(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		app.focusWindow(id);
+	}
+
+	@Subscribe
+	public void onDocumentTitleChangedEvent(DocumentTitleChangedEvent e) {
+		if (e.getWindowId() != id) {
+			return;
+		}
+		setName(app.getWindowTitle(id));
+	}
+
+	private void setName(String name) {
+		putValue(NAME, name);
+		putValue(SHORT_DESCRIPTION, name);
 	}
 
 }

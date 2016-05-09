@@ -19,12 +19,30 @@
 
 package uniol.aptgui.mainwindow;
 
+/**
+ * Enum for the different internal window types.
+ */
 public enum WindowType {
 
-	NONE, MODULE_BROWSER, MODULE, PETRI_NET, TRANSITION_SYSTEM;
+	NONE, MODULE_BROWSER, MODULE, PETRI_NET("PN"), TRANSITION_SYSTEM("TS");
+
+	private final String abbreviation;
+
+	private WindowType() {
+		this("");
+	}
+
+	private WindowType(String abbreviation) {
+		this.abbreviation = abbreviation;
+	}
 
 	public boolean isEditorWindow() {
 		return this == PETRI_NET || this == TRANSITION_SYSTEM;
+	}
+
+	@Override
+	public String toString() {
+		return abbreviation;
 	}
 
 }

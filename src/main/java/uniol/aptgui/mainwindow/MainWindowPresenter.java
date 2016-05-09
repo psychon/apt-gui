@@ -27,25 +27,43 @@ public interface MainWindowPresenter extends Presenter<MainWindowView> {
 
 	/// ACTIONS ///
 
-	public void show();
+	void show();
 
-	public void close();
+	void close();
 
-	public WindowId createWindow(Document<?> document);
+	/**
+	 * Creates a new WindowId for the given document.
+	 *
+	 * @param document
+	 *                a PnDocument or a TsDocument
+	 * @return a new WindowId
+	 */
+	WindowId createDocumentWindowId(Document<?> document);
 
-	public void showWindow(WindowId id);
+	void createDocumentEditorWindow(WindowId id, Document<?> document);
 
-	public void removeWindow(WindowId id);
+	void showWindow(WindowId id);
 
-	public void focus(WindowId id);
+	void removeWindow(WindowId id);
 
-	public void showModuleBrowser();
+	void focus(WindowId id);
 
-	public void openModuleWindow(Module module);
+	void showModuleBrowser();
+
+	void openModuleWindow(Module module);
+
+	/**
+	 * Returns the title of the window with the given id.
+	 *
+	 * @param id
+	 *                window id
+	 * @return window title
+	 */
+	String getWindowTitle(WindowId id);
 
 	/// VIEW EVENTS ///
 
-	public void onCloseButtonClicked();
+	void onCloseButtonClicked();
 
 }
 

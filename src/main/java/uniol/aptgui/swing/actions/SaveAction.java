@@ -31,6 +31,7 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.events.DocumentTitleChangedEvent;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.Resource;
 import uniol.aptgui.swing.filechooser.AptFileChooser;
@@ -61,6 +62,8 @@ public class SaveAction extends AbstractAction {
 			if (file != null) {
 				document.setFile(file);
 				app.saveToFile(document);
+				// Make windows display new file name.
+				app.getEventBus().post(new DocumentTitleChangedEvent(activeWindow, document));
 			}
 		}
 

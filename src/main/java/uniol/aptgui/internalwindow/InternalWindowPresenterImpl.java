@@ -20,11 +20,14 @@
 package uniol.aptgui.internalwindow;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Application;
 import uniol.aptgui.Presenter;
+import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.events.DocumentTitleChangedEvent;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.events.WindowFocusLostEvent;
 import uniol.aptgui.mainwindow.WindowId;
@@ -34,6 +37,8 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 
 	private final Application application;
 	private final EventBus eventBus;
+	private String title;
+	private String computedTitle;
 	private WindowId id;
 
 	@Inject
@@ -41,8 +46,17 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 		super(view);
 		this.application = application;
 		this.eventBus = eventBus;
+		this.title = "";
 		eventBus.register(this);
 		setPadding(3);
+	}
+
+	@Subscribe
+	public void onDocumentTitleChangedEvent(DocumentTitleChangedEvent e) {
+		if (e.getWindowId() != id) {
+			return;
+		}
+		updateTitle();
 	}
 
 	@Override
@@ -59,7 +73,7 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	@Override
 	public void setWindowId(WindowId id) {
 		this.id = id;
-		view.setTitle(id.getTitle());
+		updateTitle();
 	}
 
 	@Override
@@ -80,6 +94,36 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	@Override
 	public void setPadding(int padding) {
 		view.setPadding(padding);
+	}
+
+	private void updateTitle() {
+		if (!title.isEmpty()) {
+			computedTitle = title;
+			view.setTitle(computedTitle);
+			return;
+		}
+
+		Document<?> document = application.getDocument(id);
+		if (document != null) {
+			if (document.getFile() != null) {
+				computedTitle = String.format("%s (%s) (%s)", document.getName(), id.toString(), document.getFile());
+			} else {
+				computedTitle = String.format("%s (%s)", document.getName(), id.toString());
+			}
+
+			view.setTitle(computedTitle);
+			return;
+		}
+	}
+
+	@Override
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	@Override
+	public String getDisplayedTitle() {
+		return computedTitle;
 	}
 
 }

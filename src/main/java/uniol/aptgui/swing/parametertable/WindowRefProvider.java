@@ -25,15 +25,6 @@ public interface WindowRefProvider {
 
 	List<WindowRef> getWindowReferences();
 
-	/**
-	 * Returns the WindowReference instance that is used whenever no window
-	 * is available for selection, e.g. when a PN window is needed but none
-	 * is open.
-	 *
-	 * @return
-	 */
-//	WindowReference getNotAvailableInstance();
-
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

@@ -33,12 +33,10 @@ public class WindowRefProviderImpl implements WindowRefProvider {
 
 	private final Application application;
 	private final WindowType filter;
-//	private final WindowReference notAvailableInstance;
 
 	public WindowRefProviderImpl(Application application, WindowType filter) {
 		this.application = application;
 		this.filter = filter;
-//		this.notAvailableInstance = new WindowReference();
 	}
 
 	@Override
@@ -54,11 +52,6 @@ public class WindowRefProviderImpl implements WindowRefProvider {
 
 		return refs;
 	}
-
-//	@Override
-//	public WindowReference getNotAvailableInstance() {
-//		return new WindowReferencePn(null);
-//	}
 
 }
 

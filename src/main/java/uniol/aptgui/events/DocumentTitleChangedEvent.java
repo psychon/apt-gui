@@ -17,39 +17,36 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.mainwindow;
+package uniol.aptgui.events;
 
-public class WindowId {
+import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.mainwindow.WindowId;
 
-	private static int nextId = 0;
+/**
+ * Event that is published whenever a Document's title changes, either because
+ * the name or the file changes.
+ */
+public class DocumentTitleChangedEvent {
 
-	private final int id;
-	private final WindowType type;
+	private final WindowId windowId;
+	private final Document<?> document;
 
-	public WindowId(WindowType type) {
-		this(getNextId(), type);
+	public DocumentTitleChangedEvent(WindowId windowId, Document<?> document) {
+		this.windowId = windowId;
+		this.document = document;
 	}
 
-	private WindowId(int id, WindowType type) {
-		this.id = id;
-		this.type = type;
+	public WindowId getWindowId() {
+		return windowId;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public WindowType getType() {
-		return type;
+	public Document<?> getDocument() {
+		return document;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s %d", type.toString(), id);
-	}
-
-	private static synchronized int getNextId() {
-		return nextId++;
+		return "DocumentTitleChangedEvent [windowId=" + windowId + ", document=" + document + "]";
 	}
 
 }

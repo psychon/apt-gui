@@ -52,7 +52,7 @@ public abstract class Document<T> {
 
 	private final Selection selection;
 
-	protected String title;
+	protected String name;
 	protected File file;
 	protected boolean hasUnsavedChanges;
 	protected int width;
@@ -122,10 +122,21 @@ public abstract class Document<T> {
 		selection.clearSelection();
 	}
 
+	/**
+	 * Returns the file that this document was last saved to.
+	 *
+	 * @return the file that this document was last saved to
+	 */
 	public File getFile() {
 		return file;
 	}
 
+	/**
+	 * Sets the file that this document will be saved to.
+	 *
+	 * @param file
+	 *                file that this document will be saved to
+	 */
 	public void setFile(File file) {
 		this.file = file;
 	}
@@ -206,12 +217,37 @@ public abstract class Document<T> {
 		this.visible = visible;
 	}
 
-	public String getTitle() {
-		return title;
+	/**
+	 * Returns this document's name.
+	 *
+	 * @return this document's name
+	 */
+	public String getName() {
+		return name;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	/**
+	 * Sets this document's name.
+	 *
+	 * @param name
+	 *                new name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * Returns this document's title which is comprised of the file path and
+	 * name.
+	 *
+	 * @return this document's title.
+	 */
+	public String getTitle() {
+		if (file != null) {
+			return String.format("%s : %s", name, file.getAbsolutePath());
+		} else {
+			return name;
+		}
 	}
 
 	public void addListener(DocumentListener listener) {

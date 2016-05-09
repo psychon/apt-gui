@@ -43,7 +43,7 @@ public class WindowRef {
 
 	@Override
 	public String toString() {
-		return windowId.getTitle();
+		return String.format("%s (%s)", document.getName(), windowId.toString());
 	}
 
 }

@@ -21,8 +21,6 @@ package uniol.aptgui.mainwindow;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -45,7 +43,6 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 
 	private static final String TITLE = "APT";
 
-	private final Logger logger = Logger.getLogger(MainWindowPresenterImpl.class.getName());
 	private final Injector injector;
 	private final Map<WindowId, InternalWindowPresenter> internalWindows;
 	private final ToolbarPresenter toolbar;
@@ -79,14 +76,6 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		getView().close();
 	}
 
-	private InternalWindowPresenter createInternalWindow(WindowId id, Presenter<?> contentPresenter) {
-		InternalWindowPresenter window = injector.getInstance(InternalWindowPresenter.class);
-		window.setWindowId(id);
-		window.setContentPresenter(contentPresenter);
-		internalWindows.put(id, window);
-		return window;
-	}
-
 	@Override
 	public void removeWindow(WindowId id) {
 		InternalWindowPresenter window = internalWindows.remove(id);
@@ -113,32 +102,20 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	}
 
 	@Override
-	public WindowId createWindow(Document<?> document) {
-		WindowId id = null;
+	public void createDocumentEditorWindow(WindowId id, Document<?> document) {
 		EditorPresenter editor = injector.getInstance(EditorPresenter.class);
 		editor.setDocument(document);
-
-		if (document instanceof PnDocument) {
-			id = new WindowId(WindowType.PETRI_NET);
-		} else if (document instanceof TsDocument) {
-			id = new WindowId(WindowType.TRANSITION_SYSTEM);
-		} else {
-			logger.log(Level.SEVERE, "Unknown document type.");
-		}
-
-		id.setTitle(document.getTitle());
 		editor.setWindowId(id);
-		createInternalWindow(id, editor);
 
-		return id;
+		createInternalWindow(id, editor);
 	}
 
 	@Override
 	public void showModuleBrowser() {
 		if (moduleBrowserWindowId == null) {
 			moduleBrowserWindowId = new WindowId(WindowType.MODULE_BROWSER);
-			moduleBrowserWindowId.setTitle("Module Browser");
-			createInternalWindow(moduleBrowserWindowId, moduleBrowser);
+			InternalWindowPresenter iwp = createInternalWindow(moduleBrowserWindowId, moduleBrowser);
+			iwp.setTitle("Module Browser");
 			showWindow(moduleBrowserWindowId);
 		}
 
@@ -151,11 +128,47 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		modulePresenter.setModule(module);
 
 		WindowId id = new WindowId(WindowType.MODULE);
-		id.setTitle(module.getTitle());
-		createInternalWindow(id, modulePresenter);
+		InternalWindowPresenter iwp = createInternalWindow(id, modulePresenter);
+		iwp.setTitle(module.getTitle());
 
 		showWindow(id);
 		focus(id);
+	}
+
+
+	@Override
+	public WindowId createDocumentWindowId(Document<?> document) {
+		if (document instanceof PnDocument) {
+			return new WindowId(WindowType.PETRI_NET);
+		}
+		if (document instanceof TsDocument) {
+			return new WindowId(WindowType.TRANSITION_SYSTEM);
+		}
+		assert false;
+		return null;
+	}
+
+	/**
+	 * Creates a new InternalWindowPresenter with the given Presenter as its
+	 * content presenter.
+	 *
+	 * @param id
+	 *                the WindowId
+	 * @param contentPresenter
+	 *                the content/child presenter
+	 * @return a new InternalWindowPresenter
+	 */
+	private InternalWindowPresenter createInternalWindow(WindowId id, Presenter<?> contentPresenter) {
+		InternalWindowPresenter window = injector.getInstance(InternalWindowPresenter.class);
+		window.setWindowId(id);
+		window.setContentPresenter(contentPresenter);
+		internalWindows.put(id, window);
+		return window;
+	}
+
+	@Override
+	public String getWindowTitle(WindowId id) {
+		return internalWindows.get(id).getDisplayedTitle();
 	}
 
 }

@@ -44,9 +44,6 @@ public class WindowRefEditor extends DefaultCellEditor {
 		for (WindowRef ref : provider.getWindowReferences()) {
 			comboBox.addItem(ref);
 		}
-//		if (comboBox.getItemCount() == 0) {
-//			comboBox.addItem(provider.getNotAvailableInstance());
-//		}
 		return super.getTableCellEditorComponent(table, value, isSelected, row, column);
 	}
 

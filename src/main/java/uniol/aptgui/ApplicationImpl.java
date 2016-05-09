@@ -155,11 +155,19 @@ public class ApplicationImpl implements Application {
 
 	@Override
 	public WindowId openDocument(Document<?> document) {
-		WindowId id = mainWindow.createWindow(document);
+		if (document.getName().isEmpty()) {
+			document.setName("UNNAMED");
+		}
+
+		WindowId id = mainWindow.createDocumentWindowId(document);
 		documents.put(id, document);
+
+		mainWindow.createDocumentEditorWindow(id, document);
 		mainWindow.showWindow(id);
+
 		document.applyLayout(new RandomLayout());
 		document.setVisible(true);
+
 		mainWindow.focus(id);
 		return id;
 	}
@@ -221,6 +229,11 @@ public class ApplicationImpl implements Application {
 	@Override
 	public void focusWindow(WindowId id) {
 		mainWindow.focus(id);
+	}
+
+	@Override
+	public String getWindowTitle(WindowId id) {
+		return mainWindow.getWindowTitle(id);
 	}
 
 }

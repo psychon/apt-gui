@@ -37,7 +37,7 @@ public class PnDocument extends Document<PetriNet> {
 
 	public PnDocument(PetriNet pn) {
 		setModel(pn);
-		setTitle(pn.getName());
+		setName(pn.getName());
 
 		Map<Node, GraphicalNode> nodeMap = new HashMap<>();
 		for (Place place : pn.getPlaces()) {

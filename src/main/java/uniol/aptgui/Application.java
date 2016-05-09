@@ -50,6 +50,15 @@ public interface Application {
 
 	public void focusWindow(WindowId id);
 
+	/**
+	 * Returns the title of the window with the given id.
+	 *
+	 * @param id
+	 *                id of the window
+	 * @return title of the window
+	 */
+	public String getWindowTitle(WindowId id);
+
 	public WindowId getActiveInternalWindow();
 
 	public Set<WindowId> getDocumentWindows();

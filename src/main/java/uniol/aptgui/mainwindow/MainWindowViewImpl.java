@@ -24,9 +24,7 @@ import java.awt.Component;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JDesktopPane;
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.WindowConstants;
 
 import uniol.aptgui.internalwindow.InternalWindowView;

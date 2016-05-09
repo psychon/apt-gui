@@ -26,21 +26,65 @@ public interface InternalWindowPresenter extends Presenter<InternalWindowView> {
 
 	/// ACTIONS ///
 
-	public void setContentPresenter(Presenter<?> presenter);
+	/**
+	 * Sets the content presenter associated with this window. Its view will
+	 * be shown inside this window.
+	 *
+	 * @param presenter
+	 *                the new content presenter
+	 */
+	void setContentPresenter(Presenter<?> presenter);
 
-	public void setWindowId(WindowId id);
+	/**
+	 * Sets the WindowId associated with this window.
+	 *
+	 * @param id
+	 *                the new WindowId
+	 */
+	void setWindowId(WindowId id);
 
-	public WindowId getWindowId();
+	/**
+	 * Sets the window title.
+	 *
+	 * @param title
+	 *                the new title
+	 */
+	void setTitle(String title);
 
-	public void focus();
+	/**
+	 * Returns the window title that is actually visible to the user. It may
+	 * contain more information than was set using setTitle.
+	 *
+	 * @return the window title
+	 */
+	String getDisplayedTitle();
 
-	public void setPadding(int padding);
+	/**
+	 * Returns the WindowId associated with this window.
+	 *
+	 * @return the WindowId associated with this window
+	 */
+	WindowId getWindowId();
+
+	/**
+	 * Focuses this window.
+	 */
+	void focus();
+
+	/**
+	 * Sets the size in pixels of the padding area around the content
+	 * presenter view.
+	 *
+	 * @param padding
+	 *                padding size in pixels
+	 */
+	void setPadding(int padding);
 
 	/// VIEW EVENTS ///
 
-	public void onCloseButtonClicked();
+	void onCloseButtonClicked();
 
-	public void onActivated();
+	void onActivated();
 
 }
 
