@@ -19,30 +19,18 @@
 
 package uniol.aptgui.swing.actions;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.io.File;
-
-import javax.swing.AbstractAction;
-import javax.swing.JFileChooser;
-
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.events.DocumentTitleChangedEvent;
-import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.Resource;
-import uniol.aptgui.swing.filechooser.AptFileChooser;
 
 @SuppressWarnings("serial")
-public class SaveAsAction extends AbstractAction {
-
-	private final Application app;
+public class SaveAsAction extends SaveAction {
 
 	@Inject
 	public SaveAsAction(Application app) {
-		this.app = app;
+		super(app);
 		String name = "Save file as...";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconSaveFileAs());
@@ -50,25 +38,8 @@ public class SaveAsAction extends AbstractAction {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		WindowId activeWindow = app.getActiveInternalWindow();
-		Document<?> document = app.getDocument(activeWindow);
-		File file = getSaveFile();
-		if (file != null) {
-			document.setFile(file);
-			app.saveToFile(document);
-			// Make windows display new file name.
-			app.getEventBus().post(new DocumentTitleChangedEvent(activeWindow, document));
-		}
-	}
-
-	private File getSaveFile() {
-		AptFileChooser fc = new AptFileChooser();
-		int res = fc.showSaveDialog((Component) app.getMainWindow().getView());
-		if (res == JFileChooser.APPROVE_OPTION) {
-			return fc.getSelectedFileWithExtension();
-		}
-		return null;
+	protected boolean shouldShowSaveDialog(Document<?> document) {
+		return true;
 	}
 
 }

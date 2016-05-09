@@ -31,8 +31,16 @@ import uniol.apt.io.parser.impl.AptPNParser;
 public class AptFileChooser extends JFileChooser {
 
 	public AptFileChooser() {
-		addChoosableFileFilter(new ParserFileFilter("Petri Net", new AptPNParser()));
-		addChoosableFileFilter(new ParserFileFilter("Transition system", new AptLTSParser()));
+		this(true, true);
+	}
+
+	public AptFileChooser(boolean allowPn, boolean allowTs) {
+		if (allowPn) {
+			addChoosableFileFilter(new ParserFileFilter("Petri Net", new AptPNParser()));
+		}
+		if (allowTs) {
+			addChoosableFileFilter(new ParserFileFilter("Transition system", new AptLTSParser()));
+		}
 	}
 
 	/**
