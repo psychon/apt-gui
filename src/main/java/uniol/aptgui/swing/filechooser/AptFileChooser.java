@@ -19,7 +19,10 @@
 
 package uniol.aptgui.swing.filechooser;
 
+import java.io.File;
+
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 
 import uniol.apt.io.parser.impl.AptLTSParser;
 import uniol.apt.io.parser.impl.AptPNParser;
@@ -30,6 +33,27 @@ public class AptFileChooser extends JFileChooser {
 	public AptFileChooser() {
 		addChoosableFileFilter(new ParserFileFilter("Petri Net", new AptPNParser()));
 		addChoosableFileFilter(new ParserFileFilter("Transition system", new AptLTSParser()));
+	}
+
+	/**
+	 * Returns the selected file while making sure that it has the correct
+	 * extension for the selected file type. I.e. the extension is added if
+	 * it is not present.
+	 *
+	 * @return the selected file
+	 */
+	public File getSelectedFileWithExtension() {
+		File file = getSelectedFile();
+		FileFilter filter = getFileFilter();
+
+		if (filter instanceof ParserFileFilter) {
+			ParserFileFilter pFilter = (ParserFileFilter) filter;
+			if (!pFilter.accept(file)) {
+				file = new File(file.getAbsolutePath() + "." + pFilter.getDefaultExtension());
+			}
+		}
+
+		return file;
 	}
 
 }

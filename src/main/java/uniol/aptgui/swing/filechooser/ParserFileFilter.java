@@ -50,6 +50,15 @@ public class ParserFileFilter extends FileFilter {
 		this.parser = parser;
 	}
 
+	/**
+	 * Returns the default extension string of this file filter.
+	 *
+	 * @return the default extension string of this file filter
+	 */
+	public String getDefaultExtension() {
+		return parser.getFileExtensions().get(0);
+	}
+
 	@Override
 	public boolean accept(File f) {
 		if (f.isDirectory()) {

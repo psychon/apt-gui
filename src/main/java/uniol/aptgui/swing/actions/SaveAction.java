@@ -27,14 +27,13 @@ import java.io.File;
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
-import com.google.common.io.Files;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.Resource;
-import uniol.aptgui.swing.filechooser.AptFileFilter;
+import uniol.aptgui.swing.filechooser.AptFileChooser;
 
 @SuppressWarnings("serial")
 public class SaveAction extends AbstractAction {
@@ -68,18 +67,11 @@ public class SaveAction extends AbstractAction {
 	}
 
 	private File getSaveFile() {
-		JFileChooser fc = new JFileChooser();
-		fc.setFileFilter(new AptFileFilter());
+		AptFileChooser fc = new AptFileChooser();
 		int res = fc.showSaveDialog((Component) app.getMainWindow().getView());
 		if (res == JFileChooser.APPROVE_OPTION) {
-			File f = fc.getSelectedFile();
-			String ext = Files.getFileExtension(f.getAbsolutePath());
-			if (!ext.equalsIgnoreCase("apt")) {
-				f = new File(f.getAbsolutePath() + ".apt");
-			}
-			return f;
+			return fc.getSelectedFileWithExtension();
 		}
-
 		return null;
 	}
 
