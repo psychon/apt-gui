@@ -17,43 +17,19 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.swing.actions;
+package uniol.aptgui.swing.filechooser;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
-import com.google.inject.Inject;
-
-import uniol.aptgui.Application;
-import uniol.aptgui.swing.Resource;
-import uniol.aptgui.swing.filechooser.AptFileChooser;
+import uniol.apt.io.parser.impl.AptLTSParser;
+import uniol.apt.io.parser.impl.AptPNParser;
 
 @SuppressWarnings("serial")
-public class OpenAction extends AbstractAction {
+public class AptFileChooser extends JFileChooser {
 
-	private final Application app;
-
-	@Inject
-	public OpenAction(Application app) {
-		this.app = app;
-		String name = "Open file...";
-		putValue(NAME, name);
-		putValue(SMALL_ICON, Resource.getIconOpenFile());
-		putValue(SHORT_DESCRIPTION, name);
-		putValue(MNEMONIC_KEY, KeyEvent.VK_O);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		AptFileChooser fc = new AptFileChooser();
-		int res = fc.showOpenDialog((Component) app.getMainWindow().getView());
-		if (res == JFileChooser.APPROVE_OPTION) {
-			app.openFile(fc.getSelectedFile());
-		}
+	public AptFileChooser() {
+		addChoosableFileFilter(new ParserFileFilter("Petri Net", new AptPNParser()));
+		addChoosableFileFilter(new ParserFileFilter("Transition system", new AptLTSParser()));
 	}
 
 }
