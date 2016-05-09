@@ -98,12 +98,6 @@ public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalE
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON3) {
-			Point modelPosition = transform.applyInverse(e.getPoint());
-			GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
-			System.out.println(elem);
-			return;
-		}
 		if (e.getButton() != MouseEvent.BUTTON1) {
 			return;
 		}
@@ -119,9 +113,7 @@ public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalE
 			graphicalTarget.setCenter(modelPosition);
 			graphicalEdge = createGraphicalEdge(graphicalSource, graphicalTarget);
 			document.add(graphicalEdge);
-		}
-
-		if (creating) {
+		} else if (creating) {
 			// Clicked second node. If possible, stop creation.
 			if (elem != null && isValidTarget(elem)) {
 				creating = false;

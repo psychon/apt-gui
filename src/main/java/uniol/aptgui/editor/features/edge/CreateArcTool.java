@@ -62,8 +62,7 @@ public class CreateArcTool extends CreateEdgeTool<TsDocument, GraphicalArc> {
 
 	@Override
 	protected boolean isValidTarget(GraphicalElement target) {
-		boolean typesCorrect = graphicalSource instanceof GraphicalState && target instanceof GraphicalState;
-		return graphicalSource != target && typesCorrect;
+		return graphicalSource instanceof GraphicalState && target instanceof GraphicalState;
 	}
 
 }
