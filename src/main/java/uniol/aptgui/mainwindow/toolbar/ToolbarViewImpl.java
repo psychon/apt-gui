@@ -35,6 +35,7 @@ import uniol.aptgui.swing.actions.OpenAction;
 import uniol.aptgui.swing.actions.PnCreateFlowToolAction;
 import uniol.aptgui.swing.actions.PnCreatePlaceToolAction;
 import uniol.aptgui.swing.actions.PnCreateTransitionToolAction;
+import uniol.aptgui.swing.actions.PnFireTransitionToolAction;
 import uniol.aptgui.swing.actions.PnSelectionToolAction;
 import uniol.aptgui.swing.actions.RedoAction;
 import uniol.aptgui.swing.actions.SaveAction;
@@ -69,6 +70,7 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 	private final JToggleButton pnCreatePlaceTool;
 	private final JToggleButton pnCreateTransitionTool;
 	private final JToggleButton pnCreateFlowTool;
+	private final JToggleButton pnFireTransitionTool;
 
 	// TS BUTTONS
 	private final JToggleButton tsSelectionTool;
@@ -125,10 +127,12 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 		pnCreatePlaceTool = new JToggleButton(injector.getInstance(PnCreatePlaceToolAction.class));
 		pnCreateTransitionTool = new JToggleButton(injector.getInstance(PnCreateTransitionToolAction.class));
 		pnCreateFlowTool = new JToggleButton(injector.getInstance(PnCreateFlowToolAction.class));
+		pnFireTransitionTool = new JToggleButton(injector.getInstance(PnFireTransitionToolAction.class));
 		setToolButton(pnSelectionTool, pnToolGroup);
 		setToolButton(pnCreatePlaceTool, pnToolGroup);
 		setToolButton(pnCreateTransitionTool, pnToolGroup);
 		setToolButton(pnCreateFlowTool, pnToolGroup);
+		setToolButton(pnFireTransitionTool, pnToolGroup);
 
 		// TS BUTTONS
 		tsSelectionTool = new JToggleButton(injector.getInstance(TsSelectionToolAction.class));
@@ -151,6 +155,7 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 		pnCreatePlaceTool.setVisible(visible);
 		pnCreateTransitionTool.setVisible(visible);
 		pnCreateFlowTool.setVisible(visible);
+		pnFireTransitionTool.setVisible(visible);
 	}
 
 	@Override
@@ -174,6 +179,9 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 			break;
 		case PN_SELECTION:
 			pnSelectionTool.doClick();
+			break;
+		case PN_FIRE_TRANSITION:
+			pnFireTransitionTool.doClick();
 			break;
 		case TS_SELECTION:
 			tsSelectionTool.doClick();

@@ -21,17 +21,20 @@ package uniol.aptgui.editor.features.base;
 
 public enum FeatureId {
 
-	// FEATURES
+	// Features
 	VIEWPORT, HOVER, CONTEXT_MENU,
 
-	// TOOLS
-	PN_SELECTION, PN_CREATE_PLACE, PN_CREATE_TRANSITION, PN_CREATE_FLOW,
+	// PN tools
+	PN_SELECTION, PN_CREATE_PLACE, PN_CREATE_TRANSITION, PN_CREATE_FLOW, PN_FIRE_TRANSITION,
+
+	// TS tools
 	TS_SELECTION, TS_CREATE_STATE, TS_CREATE_ARC;
 
 	public boolean isPetriNetTool() {
 		return this == PN_SELECTION
 		    || this == PN_CREATE_PLACE
 		    || this == PN_CREATE_TRANSITION
+		    || this == PN_FIRE_TRANSITION
 		    || this == PN_CREATE_FLOW;
 	}
 

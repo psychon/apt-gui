@@ -19,34 +19,45 @@
 
 package uniol.aptgui.swing.actions;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
+import java.util.List;
 
 import com.google.inject.Inject;
 
+import uniol.apt.adt.pn.Marking;
+import uniol.apt.adt.pn.Place;
 import uniol.aptgui.Application;
+import uniol.aptgui.commands.Command;
+import uniol.aptgui.commands.SetTokensCommand;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.PnDocument;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalPlace;
 
 @SuppressWarnings("serial")
-public class SetTokensAction extends AbstractAction {
-
-	private final Application app;
+public class SetTokensAction extends SetSimpleAttributeAction<GraphicalPlace, Long> {
 
 	@Inject
 	public SetTokensAction(Application app) {
-		this.app = app;
-		String name = "Set tokens";
-		putValue(NAME, name);
-		putValue(SHORT_DESCRIPTION, name);
+		super("Set Tokens", "New token count:", app);
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		Document<?> document = app.getActiveDocument();
-		// TODO implement
+	protected Command createCommand(Document<?> document, List<GraphicalPlace> selection, String userInput) {
+		try {
+			Long value = Long.valueOf(userInput);
+			return new SetTokensCommand((PnDocument) document, selection, value);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+
 	}
 
+	@Override
+	protected Long getAttribute(GraphicalPlace element) {
+		PnDocument pnDoc = (PnDocument) document;
+		Marking marking = pnDoc.getModel().getInitialMarking();
+		Place place = pnDoc.getAssociatedModelElement(element);
+		return marking.getToken(place).getValue();
+	}
 
 }
 

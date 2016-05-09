@@ -17,32 +17,36 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.mainwindow;
+package uniol.aptgui.swing.actions;
 
-/**
- * Enum for the different internal window types.
- */
-public enum WindowType {
+import java.awt.event.ActionEvent;
 
-	MODULE_BROWSER("Module Browser"), MODULE("Module"), PETRI_NET("PN"), TRANSITION_SYSTEM("TS");
+import javax.swing.AbstractAction;
 
-	private final String abbreviation;
+import com.google.common.eventbus.EventBus;
+import com.google.inject.Inject;
 
-	private WindowType() {
-		this("");
-	}
+import uniol.aptgui.editor.features.base.FeatureId;
+import uniol.aptgui.events.ToolSelectedEvent;
+import uniol.aptgui.swing.Resource;
 
-	private WindowType(String abbreviation) {
-		this.abbreviation = abbreviation;
-	}
+@SuppressWarnings("serial")
+public class PnFireTransitionToolAction extends AbstractAction {
 
-	public boolean isEditorWindow() {
-		return this == PETRI_NET || this == TRANSITION_SYSTEM;
+	private final EventBus eventBus;
+
+	@Inject
+	public PnFireTransitionToolAction(EventBus eventBus) {
+		this.eventBus = eventBus;
+		String name = "Fire Transition";
+		putValue(NAME, name);
+		putValue(SMALL_ICON, Resource.getIconFireTransition());
+		putValue(SHORT_DESCRIPTION, name);
 	}
 
 	@Override
-	public String toString() {
-		return abbreviation;
+	public void actionPerformed(ActionEvent e) {
+		eventBus.post(new ToolSelectedEvent(FeatureId.PN_FIRE_TRANSITION));
 	}
 
 }

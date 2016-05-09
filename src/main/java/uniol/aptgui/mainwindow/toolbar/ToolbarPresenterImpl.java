@@ -56,8 +56,6 @@ public class ToolbarPresenterImpl extends AbstractPresenter<ToolbarPresenter, To
 	@Subscribe
 	public void onWindowFocusGainedEvent(WindowFocusGainedEvent e) {
 		switch (e.getWindowId().getType()) {
-		case MODULE:
-			break;
 		case PETRI_NET:
 			view.setTransitionSystemToolsVisible(false);
 			view.setPetriNetToolsVisible(true);
@@ -67,6 +65,8 @@ public class ToolbarPresenterImpl extends AbstractPresenter<ToolbarPresenter, To
 			view.setPetriNetToolsVisible(false);
 			view.setTransitionSystemToolsVisible(true);
 			view.setActiveTool(activeTsTool);
+			break;
+		default:
 			break;
 		}
 	}

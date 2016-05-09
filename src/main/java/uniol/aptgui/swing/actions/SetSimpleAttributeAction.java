@@ -48,6 +48,7 @@ public abstract class SetSimpleAttributeAction<T, U> extends AbstractAction {
 	private final String inputMessage;
 
 	protected final Application app;
+	protected Document<?> document;
 
 	public SetSimpleAttributeAction(String name, String inputMessage, Application app) {
 		this.name = name;
@@ -60,7 +61,7 @@ public abstract class SetSimpleAttributeAction<T, U> extends AbstractAction {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Document<?> document = app.getActiveDocument();
+		document = app.getActiveDocument();
 
 		// Action should only be enabled when this action is applicable
 		// for the document's selection. Therefore there is no further

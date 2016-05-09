@@ -36,6 +36,7 @@ import uniol.aptgui.editor.document.graphical.traits.HasLabel;
 import uniol.aptgui.editor.document.graphical.traits.HasMultiplicity;
 import uniol.aptgui.editor.document.graphical.traits.HasTokens;
 import uniol.aptgui.editor.features.ContextMenuFeature;
+import uniol.aptgui.editor.features.FireTransitionTool;
 import uniol.aptgui.editor.features.HoverFeature;
 import uniol.aptgui.editor.features.SelectionTool;
 import uniol.aptgui.editor.features.ViewportFeature;
@@ -102,6 +103,7 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 			tools.put(FeatureId.PN_CREATE_TRANSITION,
 					new CreateTransitionTool(pnDocument, application.getHistory()));
 			tools.put(FeatureId.PN_CREATE_FLOW, new CreateFlowTool(pnDocument, application.getHistory()));
+			tools.put(FeatureId.PN_FIRE_TRANSITION, new FireTransitionTool(pnDocument, application.getHistory()));
 		} else if (document instanceof TsDocument) {
 			TsDocument tsDocument = (TsDocument) document;
 			tools.put(FeatureId.TS_SELECTION, new SelectionTool(document));
