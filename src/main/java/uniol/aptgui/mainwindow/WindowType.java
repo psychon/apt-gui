@@ -24,7 +24,7 @@ package uniol.aptgui.mainwindow;
  */
 public enum WindowType {
 
-	NONE, MODULE_BROWSER, MODULE, PETRI_NET("PN"), TRANSITION_SYSTEM("TS");
+	NONE, MODULE_BROWSER("Module Browser"), MODULE("Module"), PETRI_NET("PN"), TRANSITION_SYSTEM("TS");
 
 	private final String abbreviation;
 

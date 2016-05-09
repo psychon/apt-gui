@@ -119,6 +119,7 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	@Override
 	public void setTitle(String title) {
 		this.title = title;
+		updateTitle();
 	}
 
 	@Override
