@@ -26,15 +26,29 @@ import java.util.List;
 
 import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 
+/**
+ * Graphical representation class of LTS states.
+ */
 public class GraphicalState extends GraphicalNode {
 
 	private static final int RADIUS = 20;
 	protected boolean isInitialState;
 
+	/**
+	 * Returns if this state is an initial state of the LTS.
+	 *
+	 * @return if this state is an initial state of the LTS
+	 */
 	public boolean isInitialState() {
 		return isInitialState;
 	}
 
+	/**
+	 * Sets if this state is an initial state of the LTS.
+	 *
+	 * @param isInitialState
+	 *                true, if this state should be an initial state
+	 */
 	public void setInitialState(boolean isInitialState) {
 		this.isInitialState = isInitialState;
 	}

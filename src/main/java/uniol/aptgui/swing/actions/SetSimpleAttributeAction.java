@@ -64,8 +64,8 @@ public abstract class SetSimpleAttributeAction<T, U> extends AbstractAction {
 
 		// Action should only be enabled when this action is applicable
 		// for the document's selection. Therefore there is no further
-		// check if the selected elements really are instances of
-		// HasLabel.
+		// check if the selected elements really are instances of the
+		// trait interface.
 		List<T> selection = new ArrayList<>();
 		selection.addAll((Collection<? extends T>) document.getSelection());
 

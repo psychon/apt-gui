@@ -27,7 +27,7 @@ import uniol.aptgui.View;
 public interface EditorView extends View<EditorPresenter> {
 
 	public static enum MenuAction {
-		SET_LABEL, SET_TOKENS, SET_MULTIPLICITY, DELETE
+		SET_LABEL, SET_TOKENS, SET_MULTIPLICITY, DELETE, SET_INITIAL_STATE
 	}
 
 	public int getCanvasWidth();

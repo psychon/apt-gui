@@ -31,6 +31,7 @@ import uniol.aptgui.editor.document.DocumentListener;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
 import uniol.aptgui.editor.document.graphical.traits.HasLabel;
 import uniol.aptgui.editor.document.graphical.traits.HasMultiplicity;
 import uniol.aptgui.editor.document.graphical.traits.HasTokens;
@@ -150,6 +151,8 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 		view.setMenuActionActive(EditorView.MenuAction.SET_LABEL, HasLabel.class.isAssignableFrom(testClass));
 		view.setMenuActionActive(EditorView.MenuAction.SET_TOKENS, HasTokens.class.isAssignableFrom(testClass));
 		view.setMenuActionActive(EditorView.MenuAction.SET_MULTIPLICITY, HasMultiplicity.class.isAssignableFrom(testClass));
+		view.setMenuActionActive(EditorView.MenuAction.SET_INITIAL_STATE,
+				GraphicalState.class.isAssignableFrom(testClass) && document.getSelection().size() == 1);
 	}
 
 }

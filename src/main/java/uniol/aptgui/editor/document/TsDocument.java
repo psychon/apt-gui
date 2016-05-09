@@ -23,6 +23,7 @@ import java.awt.Graphics2D;
 import java.util.HashMap;
 import java.util.Map;
 
+import uniol.apt.adt.exception.StructureException;
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
@@ -52,9 +53,15 @@ public class TsDocument extends Document<TransitionSystem> {
 
 	@Override
 	public void draw(Graphics2D graphics) {
+		State initial = null;
+		try {
+			initial = getModel().getInitialState();
+		} catch (StructureException e) {
+		}
+
 		for (State state : getModel().getNodes()) {
 			GraphicalState elem = getGraphicalExtension(state);
-			elem.setInitialState(state == getModel().getInitialState());
+			elem.setInitialState(state == initial);
 		}
 		for (Arc arc : getModel().getEdges()) {
 			GraphicalArc elem = getGraphicalExtension(arc);

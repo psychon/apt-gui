@@ -33,6 +33,7 @@ import com.google.inject.Injector;
 
 import uniol.aptgui.swing.JPanelView;
 import uniol.aptgui.swing.actions.DeleteElementsAction;
+import uniol.aptgui.swing.actions.SetInitialStateAction;
 import uniol.aptgui.swing.actions.SetLabelAction;
 import uniol.aptgui.swing.actions.SetMultiplicityAction;
 import uniol.aptgui.swing.actions.SetTokensAction;
@@ -46,6 +47,7 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 	private JMenuItem setLabel;
 	private JMenuItem setTokens;
 	private JMenuItem setMultiplicity;
+	private JMenuItem setInitialState;
 	private JMenuItem delete;
 
 	@Inject
@@ -61,11 +63,13 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 		setLabel = new JMenuItem(injector.getInstance(SetLabelAction.class));
 		setTokens = new JMenuItem(injector.getInstance(SetTokensAction.class));
 		setMultiplicity = new JMenuItem(injector.getInstance(SetMultiplicityAction.class));
+		setInitialState = new JMenuItem(injector.getInstance(SetInitialStateAction.class));
 		delete = new JMenuItem(injector.getInstance(DeleteElementsAction.class));
 
 		popupMenu.add(setLabel);
 		popupMenu.add(setTokens);
 		popupMenu.add(setMultiplicity);
+		popupMenu.add(setInitialState);
 		popupMenu.add(delete);
 	}
 
@@ -111,6 +115,9 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 			break;
 		case DELETE:
 			delete.setEnabled(active);
+			break;
+		case SET_INITIAL_STATE:
+			setInitialState.setEnabled(active);
 			break;
 		default:
 			break;
