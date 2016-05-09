@@ -47,6 +47,7 @@ public class ModuleBrowserPresenterImpl extends AbstractPresenter<ModuleBrowserP
 		this.moduleTableModel = createTableModel(moduleRegistry.getModules());
 
 		view.setModuleTableModel(moduleTableModel);
+		view.setCategoryFilters(getCategoryStrings(moduleRegistry.getModules()));
 	}
 
 	private ModuleTableModel createTableModel(Collection<Module> moduleCollection) {
@@ -58,6 +59,18 @@ public class ModuleBrowserPresenterImpl extends AbstractPresenter<ModuleBrowserP
 			}
 		});
 		return new ModuleTableModel(moduleList);
+	}
+
+	private List<String> getCategoryStrings(Collection<Module> moduleCollection) {
+		List<String> categories = new ArrayList<>();
+		categories.add(ANY_CATEGORY_STRING);
+		for (Module mod : moduleCollection) {
+			String cat = mod.getCategories()[0].getName();
+			if (!categories.contains(cat)) {
+				categories.add(cat);
+			}
+		}
+		return categories;
 	}
 
 	@Override

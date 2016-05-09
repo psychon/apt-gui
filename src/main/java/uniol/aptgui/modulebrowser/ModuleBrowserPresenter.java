@@ -23,6 +23,8 @@ import uniol.aptgui.Presenter;
 
 public interface ModuleBrowserPresenter extends Presenter<ModuleBrowserView> {
 
+	public static String ANY_CATEGORY_STRING = "Any category";
+
 	// VIEW EVENTS
 
 	public void onModuleRequestOpen(int tableRow);

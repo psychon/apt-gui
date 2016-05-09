@@ -19,45 +19,51 @@
 
 package uniol.aptgui.modulebrowser;
 
-import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
 
 import uniol.aptgui.swing.JPanelView;
+import uniol.aptgui.swing.moduletable.ModuleRowFilter;
 import uniol.aptgui.swing.moduletable.ModuleTable;
 import uniol.aptgui.swing.moduletable.ModuleTableModel;
 
 @SuppressWarnings("serial")
 public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> implements ModuleBrowserView {
 
-	private final JLabel header;
+	private final JComboBox<String> categoryFilter;
 	private final JTextField searchBox;
+	private final JLabel explanatoryText;
+	private final ModuleTable moduleTable;
 
-	private ModuleTable moduleTable;
+	private final ModuleRowFilter moduleRowFilter;
 	private TableRowSorter<ModuleTableModel> rowSorter;
 
 	public ModuleBrowserViewImpl() {
-		setLayout(new BorderLayout());
+		moduleRowFilter = new ModuleRowFilter();
+
+		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setPreferredSize(new Dimension(300, 400));
 
-		header = new JLabel("Double-click a module to open it...");
-
-		moduleTable = new ModuleTable();
-		moduleTable.addMouseListener(new MouseAdapter() {
+		categoryFilter = new JComboBox<>();
+		categoryFilter.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) {
-					onListDoubleClick();
-				}
+			public void actionPerformed(ActionEvent e) {
+				filter();
 			}
 		});
 
@@ -79,9 +85,32 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 			}
 		});
 
-		add(header, BorderLayout.PAGE_START);
-		add(new JScrollPane(moduleTable), BorderLayout.CENTER);
-		add(searchBox, BorderLayout.PAGE_END);
+		explanatoryText = new JLabel("Double-click a module to open it...");
+
+		moduleTable = new ModuleTable();
+		moduleTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					onListDoubleClick();
+				}
+			}
+		});
+
+		JScrollPane scrollPane = new JScrollPane(moduleTable);
+
+		categoryFilter.setAlignmentX(Component.LEFT_ALIGNMENT);
+		searchBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+		explanatoryText.setAlignmentX(Component.LEFT_ALIGNMENT);
+		scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+		add(categoryFilter);
+		add(Box.createVerticalStrut(3));
+		add(searchBox);
+		add(Box.createVerticalStrut(3));
+		add(explanatoryText);
+		add(Box.createVerticalStrut(3));
+		add(scrollPane);
 	}
 
 	private void onListDoubleClick() {
@@ -94,14 +123,10 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 	 * Called when the textfield content changes to filter the module table.
 	 */
 	private void filter() {
-		RowFilter<ModuleTableModel, Object> rf = null;
-		// If current expression doesn't parse, don't update.
-		try {
-			rf = RowFilter.regexFilter(searchBox.getText(), 0);
-		} catch (java.util.regex.PatternSyntaxException e) {
-			return;
-		}
-		rowSorter.setRowFilter(rf);
+		String selection = (String) categoryFilter.getSelectedItem();
+		moduleRowFilter.setCategoryFilter(selection);
+		moduleRowFilter.setNameFilter(searchBox.getText());
+		rowSorter.setRowFilter(moduleRowFilter);
 	}
 
 	@Override
@@ -112,6 +137,14 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 		moduleTable.getColumnModel().getColumn(0).setPreferredWidth(100);
 		moduleTable.getColumnModel().getColumn(1).setPreferredWidth(30);
 		moduleTable.getColumnModel().getColumn(2).setPreferredWidth(200);
+	}
+
+	@Override
+	public void setCategoryFilters(List<String> categoryStrings) {
+		categoryFilter.removeAllItems();
+		for (String cat : categoryStrings) {
+			categoryFilter.addItem(cat);
+		}
 	}
 
 }

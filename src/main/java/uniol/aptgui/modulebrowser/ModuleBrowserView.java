@@ -19,14 +19,29 @@
 
 package uniol.aptgui.modulebrowser;
 
+import java.util.List;
+
 import uniol.aptgui.View;
 import uniol.aptgui.swing.moduletable.ModuleTableModel;
 
 public interface ModuleBrowserView extends View<ModuleBrowserPresenter> {
 
+	/**
+	 * Sets the module table model which contains all data that can be
+	 * displayed in the module browser table.
+	 *
+	 * @param tableModel
+	 */
 	void setModuleTableModel(ModuleTableModel tableModel);
 
-}
+	/**
+	 * Sets category filter options.
+	 *
+	 * @param categoryStrings
+	 *                list of strings matching category names
+	 */
+	void setCategoryFilters(List<String> categoryStrings);
 
+}
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120
