@@ -26,7 +26,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
@@ -34,6 +33,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
 
 import uniol.aptgui.swing.JPanelView;
+import uniol.aptgui.swing.moduletable.ModuleTable;
 import uniol.aptgui.swing.moduletable.ModuleTableModel;
 
 @SuppressWarnings("serial")
@@ -42,7 +42,7 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 	private final JLabel header;
 	private final JTextField searchBox;
 
-	private JTable moduleTable;
+	private ModuleTable moduleTable;
 	private TableRowSorter<ModuleTableModel> rowSorter;
 
 	public ModuleBrowserViewImpl() {
@@ -51,7 +51,7 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 
 		header = new JLabel("Double-click a module to open it...");
 
-		moduleTable = new JTable();
+		moduleTable = new ModuleTable();
 		moduleTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -109,6 +109,9 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 		rowSorter = new TableRowSorter<>(tableModel);
 		moduleTable.setModel(tableModel);
 		moduleTable.setRowSorter(rowSorter);
+		moduleTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+		moduleTable.getColumnModel().getColumn(1).setPreferredWidth(30);
+		moduleTable.getColumnModel().getColumn(2).setPreferredWidth(200);
 	}
 
 }

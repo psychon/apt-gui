@@ -33,7 +33,7 @@ import uniol.apt.module.Module;
 @SuppressWarnings("serial")
 public class ModuleTableModel extends AbstractTableModel {
 
-	private String[] columnNames = { "Module", "Category" };
+	private String[] columnNames = { "Module", "Category", "Description" };
 	private List<Module> modules;
 
 	public ModuleTableModel(List<Module> modules) {
@@ -47,7 +47,7 @@ public class ModuleTableModel extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {
-		return 2;
+		return columnNames.length;
 	}
 
 	@Override
@@ -62,6 +62,9 @@ public class ModuleTableModel extends AbstractTableModel {
 		}
 		if (columnIndex == 1) {
 			return modules.get(rowIndex).getCategories()[0];
+		}
+		if (columnIndex == 2) {
+			return modules.get(rowIndex).getShortDescription();
 		}
 		return null;
 	}
