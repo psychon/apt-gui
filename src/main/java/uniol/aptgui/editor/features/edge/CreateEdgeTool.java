@@ -28,9 +28,9 @@ import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 import uniol.aptgui.editor.document.graphical.special.InvisibleNode;
-import uniol.aptgui.editor.features.base.Feature;
+import uniol.aptgui.editor.features.base.HoverEffectFeature;
 
-public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalEdge> extends Feature {
+public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalEdge> extends HoverEffectFeature {
 
 	/**
 	 * Document this tool operates on.
@@ -42,15 +42,25 @@ public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalE
 	 */
 	protected final Transform2D transform;
 
+	/**
+	 * True, while the creation is in progress, i.e. the user did not finish the creation process.
+	 */
 	protected boolean creating;
-	protected GraphicalNode graphicalSource;
-	protected GraphicalNode graphicalTarget;
-	protected U graphicalEdge;
 
 	/**
-	 * Saves element under cursor to apply hover effects.
+	 * Edge source element.
 	 */
-	protected GraphicalElement hoverElement;
+	protected GraphicalNode graphicalSource;
+
+	/**
+	 * Edge target element.
+	 */
+	protected GraphicalNode graphicalTarget;
+
+	/**
+	 * Edge element to be inserted.
+	 */
+	protected U graphicalEdge;
 
 	public CreateEdgeTool(T document) {
 		this.document = document;
@@ -121,7 +131,7 @@ public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalE
 				graphicalEdge.setTarget(graphicalTarget);
 				commitEdgeCreation(graphicalEdge);
 				graphicalEdge = null;
-				resetHoverEffects();
+				removeHoverEffects();
 			}
 			// Clicked anywhere else, therefore add breakpoint.
 			if (elem == null) {
@@ -145,30 +155,18 @@ public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalE
 		}
 	}
 
-	private void resetHoverEffects() {
-		if (hoverElement != null) {
-			hoverElement.setHighlightedSuccess(false);
-			hoverElement.setHighlightedError(false);
-		}
+	@Override
+	protected void removeHoverEffects(GraphicalElement hoverElement) {
+		hoverElement.setHighlightedSuccess(false);
+		hoverElement.setHighlightedError(false);
 	}
 
-	private void setHoverEffects(GraphicalElement currentHoverElem) {
-		// Do nothing if the element didn't change.
-		if (hoverElement == currentHoverElem) {
-			return;
-		}
-		// Reset old hover effects.
-		resetHoverEffects();
-		// Update element.
-		hoverElement = currentHoverElem;
-		// Apply new hover effects.
-		if (hoverElement != null) {
-			if (isValidTarget(hoverElement)) {
-				hoverElement.setHighlightedSuccess(true);
-			} else {
-				hoverElement.setHighlightedError(true);
-			}
-
+	@Override
+	protected void applyHoverEffects(GraphicalElement hoverElement) {
+		if (isValidTarget(hoverElement)) {
+			hoverElement.setHighlightedSuccess(true);
+		} else {
+			hoverElement.setHighlightedError(true);
 		}
 	}
 

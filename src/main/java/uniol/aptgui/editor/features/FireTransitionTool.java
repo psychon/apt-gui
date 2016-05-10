@@ -72,8 +72,8 @@ public class FireTransitionTool extends HoverEffectFeature {
 			history.execute(cmd);
 			// Force update of hover effects because the state can
 			// change without the user having to move the mouse.
-			hoverElement = null;
-			setHoverEffects(element);
+			updateHoverEffects();
+			document.fireDocumentDirty();
 		}
 	}
 
@@ -82,6 +82,7 @@ public class FireTransitionTool extends HoverEffectFeature {
 		Point modelPoint = transform.applyInverse(e.getPoint());
 		GraphicalElement element = document.getGraphicalElementAt(modelPoint);
 		setHoverEffects(element);
+		document.fireDocumentDirty();
 	}
 
 	@Override

@@ -29,8 +29,8 @@ public abstract class HoverEffectFeature extends Feature {
 	protected GraphicalElement hoverElement;
 
 	/**
-	 * Correctly updates hover effects. Must be called by subclasses when
-	 * the mouse moves.
+	 * Correctly and efficiently updates hover effects. Must be called by
+	 * subclasses when the mouse moves.
 	 *
 	 * @param currentHoverElem
 	 *                the element that is currently at the cursor position
@@ -41,12 +41,36 @@ public abstract class HoverEffectFeature extends Feature {
 			return;
 		}
 		// Reset old hover effects.
-		if (hoverElement != null) {
-			removeHoverEffects(hoverElement);
-		}
+		removeHoverEffects();
 		// Update element.
 		hoverElement = currentHoverElem;
 		// Apply new hover effects.
+		applyHoverEffects();
+	}
+
+	/**
+	 * Updates hover effect on the currently highlighted element.
+	 */
+	protected void updateHoverEffects() {
+		if (hoverElement != null) {
+			removeHoverEffects(hoverElement);
+			applyHoverEffects(hoverElement);
+		}
+	}
+
+	/**
+	 * Removes hover effects from currently highlighted element.
+	 */
+	protected void removeHoverEffects() {
+		if (hoverElement != null) {
+			removeHoverEffects(hoverElement);
+		}
+	}
+
+	/**
+	 * Applies hover effects to the currently highlighted element.
+	 */
+	protected void applyHoverEffects() {
 		if (hoverElement != null) {
 			applyHoverEffects(hoverElement);
 		}

@@ -27,9 +27,9 @@ import uniol.aptgui.editor.document.Transform2D;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 import uniol.aptgui.editor.document.graphical.special.BreakpointHandle;
-import uniol.aptgui.editor.features.base.Feature;
+import uniol.aptgui.editor.features.base.HoverEffectFeature;
 
-public class HoverFeature extends Feature {
+public class HoverFeature extends HoverEffectFeature {
 
 	/**
 	 * Document reference the HoverFeature operates on.
@@ -46,16 +46,10 @@ public class HoverFeature extends Feature {
 	 */
 	private final BreakpointHandle breakpointHandle;
 
-	/**
-	 * Currently highlighted element.
-	 */
-	private GraphicalElement hoverElem;
-
 	public HoverFeature(Document<?> document) {
 		this.document = document;
 		this.transform = document.getTransform();
 		this.breakpointHandle = new BreakpointHandle();
-		this.hoverElem = null;
 	}
 
 	@Override
@@ -70,17 +64,7 @@ public class HoverFeature extends Feature {
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		setHoverEffects(e.getPoint());
-	}
-
-	/**
-	 * Sets highlights and displays handles for breakpoints.
-	 *
-	 * @param cursor
-	 *                current mouse position
-	 */
-	private void setHoverEffects(Point cursor) {
-		Point modelPosition = transform.applyInverse(cursor);
+		Point modelPosition = transform.applyInverse(e.getPoint());
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
 
 		// Display breakpoint handle if necessary.
@@ -95,20 +79,18 @@ public class HoverFeature extends Feature {
 			breakpointHandle.setVisible(false);
 		}
 
-		// Reset previous highlight.
-		if (hoverElem != null) {
-			hoverElem.setHighlighted(false);
-		}
-
-		// Update highlighted element.
-		hoverElem = elem;
-
-		// Set new highlight.
-		if (hoverElem != null) {
-			hoverElem.setHighlighted(true);
-		}
-
+		setHoverEffects(elem);
 		document.fireDocumentDirty();
+	}
+
+	@Override
+	protected void applyHoverEffects(GraphicalElement hoverElement) {
+		hoverElement.setHighlighted(true);
+	}
+
+	@Override
+	protected void removeHoverEffects(GraphicalElement hoverElement) {
+		hoverElement.setHighlighted(false);
 	}
 
 }
