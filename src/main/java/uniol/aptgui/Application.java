@@ -110,7 +110,8 @@ public interface Application {
 	WindowId getActiveInternalWindow();
 
 	/**
-	 * Returns the ids of all windows that are document editors.
+	 * Returns the ids of all windows that are document editors as an
+	 * unmodifiable set.
 	 *
 	 * @return the ids of all windows that are document editors
 	 */

@@ -31,8 +31,9 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.PnDocument;
+import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.mainwindow.WindowId;
-import uniol.aptgui.mainwindow.WindowType;
 import uniol.aptgui.swing.Resource;
 import uniol.aptgui.swing.filechooser.AptFileChooser;
 
@@ -54,7 +55,7 @@ public class SaveAction extends DocumentAction {
 		WindowId activeWindow = app.getActiveInternalWindow();
 		Document<?> document = app.getDocument(activeWindow);
 		if (shouldShowSaveDialog(document)) {
-			File file = getSaveFile(document.getName(), activeWindow.getType());
+			File file = getSaveFileLocation(document);
 			if (file != null) {
 				document.setFile(file);
 				app.saveToFile(document);
@@ -64,21 +65,50 @@ public class SaveAction extends DocumentAction {
 		}
 	}
 
+	/**
+	 * Returns true if a save dialog should be shown to the user.
+	 *
+	 * @param document
+	 *                the document to save
+	 * @return true if a save dialog should be shown to the user
+	 */
 	protected boolean shouldShowSaveDialog(Document<?> document) {
 		return document.getFile() == null;
 	}
 
-	private File getSaveFile(String defaultName, WindowType type) {
+	/**
+	 * Shows a file chooser to save the given document.
+	 *
+	 * @param document
+	 *                the document to save
+	 * @return the file that the user selected as the save location or null
+	 *         if the process was cancelled
+	 */
+	private File getSaveFileLocation(Document<?> document) {
 		AptFileChooser fc = new AptFileChooser(
-				type == WindowType.PETRI_NET,
-				type == WindowType.TRANSITION_SYSTEM
+				document instanceof PnDocument,
+				document instanceof TsDocument
 		);
-		fc.setSelectedFile(new File(defaultName));
+		fc.setSelectedFile(new File(toValidFileName(document.getName())));
+		fc.setDialogTitle("Save " + document.getName());
 		int res = fc.showSaveDialog((Component) app.getMainWindow().getView());
 		if (res == JFileChooser.APPROVE_OPTION) {
 			return fc.getSelectedFileWithExtension();
 		}
 		return null;
+	}
+
+	/**
+	 * Turns the given string into a string that is allowed as a file name,
+	 * i.e. special characters are removed or replaced.
+	 *
+	 * @param str
+	 *                input string that may contain chars that are not
+	 *                allowed in file names
+	 * @return output string that can be used as a file name
+	 */
+	private String toValidFileName(String str) {
+		return str.replaceAll("[^a-zA-Z0-9.-]", "_");
 	}
 
 }

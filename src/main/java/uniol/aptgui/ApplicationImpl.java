@@ -22,6 +22,7 @@ package uniol.aptgui;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -182,11 +183,6 @@ public class ApplicationImpl implements Application {
 		}
 	}
 
-	private void showException(Exception e) {
-		JOptionPane.showMessageDialog((Component) mainWindow.getView(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-		e.printStackTrace();
-	}
-
 	@Override
 	public void openModule(Module module) {
 		mainWindow.openModuleWindow(module);
@@ -199,7 +195,7 @@ public class ApplicationImpl implements Application {
 
 	@Override
 	public Set<WindowId> getDocumentWindows() {
-		return documents.keySet();
+		return Collections.unmodifiableSet(documents.keySet());
 	}
 
 	@Override
@@ -215,6 +211,19 @@ public class ApplicationImpl implements Application {
 	@Override
 	public String getWindowTitle(WindowId id) {
 		return mainWindow.getWindowTitle(id);
+	}
+
+	/**
+	 * Shows an exception's message in a dialog box and prints the trace to
+	 * stderr.
+	 *
+	 * @param e
+	 *                exception
+	 */
+	private void showException(Exception e) {
+		JOptionPane.showMessageDialog((Component) mainWindow.getView(), e.getMessage(), "Error",
+				JOptionPane.ERROR_MESSAGE);
+		e.printStackTrace();
 	}
 
 }

@@ -20,22 +20,28 @@
 package uniol.aptgui.swing.actions;
 
 import java.awt.event.ActionEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
+import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
 public class SaveAllAction extends AbstractAction {
 
 	private final Application app;
+	private final SaveAction saveAction;
 
 	@Inject
-	public SaveAllAction(Application app) {
+	public SaveAllAction(Application app, SaveAction saveAction) {
 		this.app = app;
+		this.saveAction = saveAction;
 		String name = "Save all...";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconSaveFile());
@@ -44,7 +50,18 @@ public class SaveAllAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		app.newTransitionSystem();
+		Set<WindowId> windowIds = new HashSet<>(app.getDocumentWindows());
+		for (WindowId id : windowIds) {
+			Document<?> document = app.getDocument(id);
+			if (document.hasUnsavedChanges()) {
+				saveDocument(id, document);
+			}
+		}
+	}
+
+	private void saveDocument(WindowId id, Document<?> document) {
+		app.focusWindow(id);
+		saveAction.actionPerformed(null);
 	}
 
 }
