@@ -25,6 +25,8 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
@@ -38,6 +40,8 @@ import uniol.aptgui.editor.document.DocumentListener;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.events.WindowClosedEvent;
+import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.internalwindow.InternalWindowListener;
 import uniol.aptgui.internalwindow.InternalWindowPresenter;
 import uniol.aptgui.mainwindow.menu.MenuPresenter;
@@ -48,7 +52,9 @@ import uniol.aptgui.modulebrowser.ModuleBrowserPresenter;
 public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresenter, MainWindowView>
 		implements MainWindowPresenter {
 
-	// TODO dynamically change title
+	/**
+	 * Main application title.
+	 */
 	private static final String TITLE = "APT";
 
 	/**
@@ -113,6 +119,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	public MainWindowPresenterImpl(
 		MainWindowView view,
 		Application application,
+		EventBus eventBus,
 		Injector injector,
 		ToolbarPresenter toolbar,
 		MenuPresenter menu
@@ -127,6 +134,20 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		view.setToolbar(toolbar.getView());
 		view.setMenu(menu.getView());
 		view.setTitle(TITLE);
+
+		eventBus.register(this);
+	}
+
+	@Subscribe
+	public void onWindowFocusGainedEvent(WindowFocusGainedEvent e) {
+		view.setTitle(getWindowTitle(e.getWindowId()) + " - " + TITLE);
+	}
+
+	@Subscribe
+	public void onWindowClosedEvent(WindowClosedEvent e) {
+		if (internalWindows.isEmpty()) {
+			view.setTitle(TITLE);
+		}
 	}
 
 	@Override
