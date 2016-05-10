@@ -19,6 +19,9 @@
 
 package uniol.aptgui.internalwindow;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
@@ -35,12 +38,41 @@ import uniol.aptgui.mainwindow.WindowId;
 public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindowPresenter, InternalWindowView>
 		implements InternalWindowPresenter {
 
+	/**
+	 * List of listeners.
+	 */
+	private final List<InternalWindowListener> listeners;
+
+	/**
+	 * Main application reference.
+	 */
 	private final Application application;
+
+	/**
+	 * EventBus reference.
+	 */
 	private final EventBus eventBus;
+
+	/**
+	 * Title of this window as set programmatically.
+	 */
 	private String title;
+
+	/**
+	 * Title of this window as seen by the user.
+	 */
 	private String computedTitle;
+
+	/**
+	 * This window's id.
+	 */
 	private WindowId id;
 
+	/**
+	 * Document listener that get's used when this window contains a
+	 * document editor to track document title changes and update the window
+	 * title.
+	 */
 	private DocumentListener titleChangeListener = new DocumentListener() {
 		@Override public void onSelectionChanged(Class<? extends GraphicalElement> commonBaseClass) {}
 		@Override public void onDocumentDirty() {}
@@ -53,6 +85,7 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	@Inject
 	public InternalWindowPresenterImpl(InternalWindowView view, Application application, EventBus eventBus) {
 		super(view);
+		this.listeners = new ArrayList<>();
 		this.application = application;
 		this.eventBus = eventBus;
 		this.title = "";
@@ -144,6 +177,23 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	@Override
 	public String getDisplayedTitle() {
 		return computedTitle;
+	}
+
+	@Override
+	public void addWindowListener(InternalWindowListener listener) {
+		listeners.add(listener);
+	}
+
+	@Override
+	public void removeWindowListener(InternalWindowListener listener) {
+		listeners.remove(listener);
+	}
+
+	@Override
+	public void onWindowResized(int width, int height) {
+		for (InternalWindowListener listener : listeners) {
+			listener.windowResized(id, width, height);
+		}
 	}
 
 }

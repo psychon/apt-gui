@@ -38,6 +38,7 @@ import uniol.aptgui.editor.document.DocumentListener;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.internalwindow.InternalWindowListener;
 import uniol.aptgui.internalwindow.InternalWindowPresenter;
 import uniol.aptgui.mainwindow.menu.MenuPresenter;
 import uniol.aptgui.mainwindow.toolbar.ToolbarPresenter;
@@ -47,33 +48,81 @@ import uniol.aptgui.modulebrowser.ModuleBrowserPresenter;
 public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresenter, MainWindowView>
 		implements MainWindowPresenter {
 
+	// TODO dynamically change title
 	private static final String TITLE = "APT";
 
+	/**
+	 * Reference to the global application instance.
+	 */
+	private final Application application;
+
+	/**
+	 * Reference to the injector to create new InternalWindowPresenters.
+	 */
 	private final Injector injector;
+
+	/**
+	 * Map that contains all windows by id.
+	 */
 	private final Map<WindowId, InternalWindowPresenter> internalWindows;
+
+	/**
+	 * Toolbar presenter.
+	 */
+	@SuppressWarnings("unused")
 	private final ToolbarPresenter toolbar;
+
+	/**
+	 * Main menu presenter.
+	 */
 	private final MenuPresenter menu;
-	private final ModuleBrowserPresenter moduleBrowser;
+
+	/**
+	 * Module browser window id.
+	 */
+	private WindowId moduleBrowserWindowId;
+
+	/**
+	 * Listener for Document title changes that updates the menu so that an
+	 * up-to-date window list can be shown.
+	 */
 	private final DocumentListener titleChangeListener = new DocumentListener() {
 		@Override public void onSelectionChanged(Class<? extends GraphicalElement> commonBaseClass) {}
 		@Override public void onDocumentDirty() {}
 		@Override
 		public void onDocumentChanged() {
-			menu.setInternalWindows(internalWindows.keySet());
+			updateWindowMenu();
 		}
 	};
 
-	private WindowId moduleBrowserWindowId;
+	/**
+	 * Listener for window events that updates the document size when the
+	 * window size changes.
+	 */
+	private final InternalWindowListener windowListener = new InternalWindowListener() {
+		@Override
+		public void windowResized(WindowId id, int width, int height) {
+			Document<?> document = application.getDocument(id);
+			assert document != null;
+			document.setWidth(width);
+			document.setHeight(height);
+		}
+	};
 
 	@Inject
-	public MainWindowPresenterImpl(MainWindowView view, Injector injector, ToolbarPresenter toolbar,
-			MenuPresenter menu, ModuleBrowserPresenter moduleBrowser) {
+	public MainWindowPresenterImpl(
+		MainWindowView view,
+		Application application,
+		Injector injector,
+		ToolbarPresenter toolbar,
+		MenuPresenter menu
+	) {
 		super(view);
+		this.application = application;
 		this.injector = injector;
 		this.internalWindows = new HashMap<>();
 		this.toolbar = toolbar;
 		this.menu = menu;
-		this.moduleBrowser = moduleBrowser;
 
 		view.setToolbar(toolbar.getView());
 		view.setMenu(menu.getView());
@@ -93,12 +142,13 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	@Override
 	public void removeWindow(WindowId id) {
 		InternalWindowPresenter window = internalWindows.remove(id);
-		getView().removeInternalWindow(window.getView());
-		titleChangeListener.onDocumentDirty();
+		view.removeInternalWindow(window.getView());
+		updateWindowMenu();
 
-		Document<?> document = injector.getInstance(Application.class).getDocument(id);
+		Document<?> document = application.getDocument(id);
 		if (document != null) {
 			document.removeListener(titleChangeListener);
+			window.removeWindowListener(windowListener);
 		}
 	}
 
@@ -110,8 +160,8 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	@Override
 	public void showWindow(WindowId id) {
 		InternalWindowPresenter window = internalWindows.get(id);
-		getView().addInternalWindow(window.getView());
-		titleChangeListener.onDocumentDirty();
+		view.addInternalWindow(window.getView());
+		updateWindowMenu();
 	}
 
 	@Override
@@ -126,7 +176,8 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		editor.setDocument(document);
 		editor.setWindowId(id);
 
-		createInternalWindow(id, editor);
+		InternalWindowPresenter iwp = createInternalWindow(id, editor);
+		iwp.addWindowListener(windowListener);
 
 		document.addListener(titleChangeListener);
 	}
@@ -135,6 +186,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	public void showModuleBrowser() {
 		if (moduleBrowserWindowId == null) {
 			moduleBrowserWindowId = new WindowId(WindowType.MODULE_BROWSER);
+			ModuleBrowserPresenter moduleBrowser = injector.getInstance(ModuleBrowserPresenter.class);
 			InternalWindowPresenter iwp = createInternalWindow(moduleBrowserWindowId, moduleBrowser);
 			iwp.setTitle("Module Browser");
 			showWindow(moduleBrowserWindowId);
@@ -156,7 +208,6 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		focus(id);
 	}
 
-
 	@Override
 	public WindowId createDocumentWindowId(Document<?> document) {
 		if (document instanceof PnDocument) {
@@ -167,6 +218,17 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		}
 		assert false;
 		return null;
+	}
+
+	@Override
+	public String getWindowTitle(WindowId id) {
+		return internalWindows.get(id).getDisplayedTitle();
+	}
+
+	@Override
+	public String showDocumentNameInputDialog(String title) {
+		return (String) JOptionPane.showInputDialog((Component) view, "Document Name: ", title,
+				JOptionPane.QUESTION_MESSAGE, null, null, "");
 	}
 
 	/**
@@ -187,15 +249,11 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		return window;
 	}
 
-	@Override
-	public String getWindowTitle(WindowId id) {
-		return internalWindows.get(id).getDisplayedTitle();
-	}
-
-	@Override
-	public String showDocumentNameInputDialog(String title) {
-		return (String) JOptionPane.showInputDialog((Component) view, "Document Name: ", title,
-				JOptionPane.QUESTION_MESSAGE, null, null, "");
+	/**
+	 * Updates the Menu presenter with the current set of windows.
+	 */
+	private void updateWindowMenu() {
+		menu.setInternalWindows(internalWindows.keySet());
 	}
 
 }

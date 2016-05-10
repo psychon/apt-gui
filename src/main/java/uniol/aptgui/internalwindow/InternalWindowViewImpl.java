@@ -21,6 +21,8 @@ package uniol.aptgui.internalwindow;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.beans.PropertyVetoException;
 
 import javax.swing.BorderFactory;
@@ -54,6 +56,12 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 			@Override
 			public void internalFrameActivated(InternalFrameEvent e) {
 				getPresenter().onActivated();
+			}
+		});
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				getPresenter().onWindowResized(contentPanel.getWidth(), contentPanel.getHeight());
 			}
 		});
 	}

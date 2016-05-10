@@ -80,11 +80,43 @@ public interface InternalWindowPresenter extends Presenter<InternalWindowView> {
 	 */
 	void setPadding(int padding);
 
+	/**
+	 * Adds a listener that gets notified about window events.
+	 *
+	 * @param listener
+	 *                the listener
+	 */
+	void addWindowListener(InternalWindowListener listener);
+
+	/**
+	 * Removes a listener.
+	 *
+	 * @param listener
+	 *                the listener
+	 */
+	void removeWindowListener(InternalWindowListener listener);
+
 	/// VIEW EVENTS ///
 
+	/**
+	 * Called by the view when the close button of the window was clicked.
+	 */
 	void onCloseButtonClicked();
 
+	/**
+	 * Called by the view when the window receives focus.
+	 */
 	void onActivated();
+
+	/**
+	 * Called by the view when the window has been resized.
+	 *
+	 * @param width
+	 *                width of the content pane
+	 * @param height
+	 *                height of the content pane
+	 */
+	void onWindowResized(int width, int height);
 
 }
 

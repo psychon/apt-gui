@@ -19,39 +19,21 @@
 
 package uniol.aptgui.internalwindow;
 
-import uniol.aptgui.View;
+import uniol.aptgui.mainwindow.WindowId;
 
-public interface InternalWindowView extends View<InternalWindowPresenter> {
+public interface InternalWindowListener {
 
 	/**
-	 * Sets the content view that will be shown inside this window.
+	 * Called when a window is resized.
 	 *
-	 * @param view
-	 *                content/child view
+	 * @param id
+	 *                the id of the window that was resized
+	 * @param width
+	 *                new width
+	 * @param height
+	 *                new height
 	 */
-	void setContent(View<?> view);
-
-	/**
-	 * Sets the window title.
-	 *
-	 * @param title
-	 *                new window title
-	 */
-	void setTitle(String title);
-
-	/**
-	 * Focuses and brings the window to the front of the containing desktop
-	 * pane.
-	 */
-	void focus();
-
-	/**
-	 * Sets the amount of space around the content view.
-	 *
-	 * @param padding
-	 *                padding in pixels
-	 */
-	void setPadding(int padding);
+	void windowResized(WindowId id, int width, int height);
 
 }
 
