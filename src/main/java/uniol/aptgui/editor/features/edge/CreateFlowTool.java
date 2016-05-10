@@ -32,6 +32,9 @@ import uniol.aptgui.editor.document.graphical.nodes.GraphicalPlace;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalTransition;
 import uniol.aptgui.swing.Resource;
 
+/**
+ * Tool that allows the user to create a new flow between nodes in a Petri net.
+ */
 public class CreateFlowTool extends CreateEdgeTool<PnDocument, GraphicalFlow> {
 
 	private final Cursor cursor = Resource.getCursorCreateEdge();

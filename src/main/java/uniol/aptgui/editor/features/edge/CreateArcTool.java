@@ -24,6 +24,7 @@ import java.awt.Cursor;
 import uniol.apt.adt.ts.State;
 import uniol.aptgui.commands.CreateArcCommand;
 import uniol.aptgui.commands.History;
+import uniol.aptgui.editor.EditorView;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalArc;
@@ -31,14 +32,20 @@ import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
 import uniol.aptgui.swing.Resource;
 
+/**
+ * Tool that allows the user to create a new arc between states in a transition
+ * system.
+ */
 public class CreateArcTool extends CreateEdgeTool<TsDocument, GraphicalArc> {
 
 	private final Cursor cursor = Resource.getCursorCreateEdge();
 	private final History history;
+	private final EditorView view;
 
-	public CreateArcTool(TsDocument document, History history) {
+	public CreateArcTool(TsDocument document, History history, EditorView view) {
 		super(document);
 		this.history = history;
+		this.view = view;
 	}
 
 	@Override
@@ -54,10 +61,14 @@ public class CreateArcTool extends CreateEdgeTool<TsDocument, GraphicalArc> {
 
 	@Override
 	protected void commitEdgeCreation(GraphicalArc edge) {
-		State source = document.getAssociatedModelElement(edge.getSource());
-		State target = document.getAssociatedModelElement(edge.getTarget());
-		CreateArcCommand cmd = new CreateArcCommand(document, source, target, "a", edge);
-		history.execute(cmd);
+		String label = view.showArcLabelInputDialog();
+
+		if (label != null) {
+			State source = document.getAssociatedModelElement(edge.getSource());
+			State target = document.getAssociatedModelElement(edge.getTarget());
+			CreateArcCommand cmd = new CreateArcCommand(document, source, target, label, edge);
+			history.execute(cmd);
+		}
 	}
 
 	@Override

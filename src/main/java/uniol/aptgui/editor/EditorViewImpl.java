@@ -26,6 +26,7 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import com.google.inject.Inject;
@@ -123,6 +124,12 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 			break;
 
 		}
+	}
+
+	@Override
+	public String showArcLabelInputDialog() {
+		return (String) JOptionPane.showInputDialog(this, "Arc label:", "New Arc",
+				JOptionPane.QUESTION_MESSAGE, null, null, "a");
 	}
 
 }

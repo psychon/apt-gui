@@ -30,6 +30,20 @@ import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 import uniol.aptgui.editor.document.graphical.special.InvisibleNode;
 import uniol.aptgui.editor.features.base.HoverEffectFeature;
 
+/**
+ * <p>
+ * Base class for tools that allow the creation of edges.
+ * </p>
+ * <p>
+ * The edge creation process goes as follows: The user first clicks a node. This
+ * starts the creation process. Subsequent clicks on the canvas create break
+ * points in the edge. If the user clicks another valid node, the creation
+ * process is finalized.
+ * </p>
+ *
+ * @param <T> document type
+ * @param <U> edge type that gets created
+ */
 public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalEdge> extends HoverEffectFeature {
 
 	/**
@@ -43,7 +57,8 @@ public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalE
 	protected final Transform2D transform;
 
 	/**
-	 * True, while the creation is in progress, i.e. the user did not finish the creation process.
+	 * True, while the creation is in progress, i.e. the user did not finish
+	 * the creation process.
 	 */
 	protected boolean creating;
 
@@ -71,8 +86,10 @@ public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalE
 	/**
 	 * Creates a new instance of this tool's graphical edge type.
 	 *
-	 * @param source source node
-	 * @param target target node
+	 * @param source
+	 *                source node
+	 * @param target
+	 *                target node
 	 * @return
 	 */
 	protected abstract U createGraphicalEdge(GraphicalNode source, GraphicalNode target);
@@ -90,7 +107,8 @@ public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalE
 	/**
 	 * Commits the creation of the given edge to the history.
 	 *
-	 * @param edge the edge to create
+	 * @param edge
+	 *                the edge to create
 	 */
 	protected abstract void commitEdgeCreation(U edge);
 

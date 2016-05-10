@@ -44,6 +44,14 @@ public interface EditorView extends View<EditorPresenter> {
 
 	public void setMenuActionActive(MenuAction action, boolean active);
 
+	/**
+	 * Shows a dialog box that prompts the user to input a label for a new
+	 * arc.
+	 *
+	 * @return the label or null if the process was cancelled
+	 */
+	public String showArcLabelInputDialog();
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120
