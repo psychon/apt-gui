@@ -24,6 +24,8 @@ import java.util.Set;
 
 import javax.swing.AbstractAction;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
@@ -34,6 +36,7 @@ import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.events.DocumentSelectionChangedEvent;
 import uniol.aptgui.swing.Resource;
 
 /**
@@ -46,12 +49,14 @@ public class DeleteElementsAction extends AbstractAction {
 	private final Application app;
 
 	@Inject
-	public DeleteElementsAction(Application app) {
+	public DeleteElementsAction(Application app, EventBus eventBus) {
 		this.app = app;
 		String name = "Delete";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconDelete());
 		putValue(SHORT_DESCRIPTION, name);
+		setEnabled(false);
+		eventBus.register(this);
 	}
 
 	@Override
@@ -67,6 +72,12 @@ public class DeleteElementsAction extends AbstractAction {
 			}
 			app.getHistory().execute(cmd);
 		}
+	}
+
+	@Subscribe
+	public void onDocumentSelectionChangedEvent(DocumentSelectionChangedEvent e) {
+		Set<GraphicalElement> selection = e.getDocument().getSelection();
+		setEnabled(!selection.isEmpty());
 	}
 
 }

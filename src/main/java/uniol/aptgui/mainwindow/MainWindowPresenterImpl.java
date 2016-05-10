@@ -39,7 +39,7 @@ import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.DocumentListener;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.events.DocumentSelectionChangedEvent;
 import uniol.aptgui.events.WindowClosedEvent;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.internalwindow.InternalWindowListener;
@@ -61,6 +61,11 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	 * Reference to the global application instance.
 	 */
 	private final Application application;
+
+	/**
+	 * Reference to the global event bus instance.
+	 */
+	private final EventBus eventBus;
 
 	/**
 	 * Reference to the injector to create new InternalWindowPresenters.
@@ -89,11 +94,14 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	private WindowId moduleBrowserWindowId;
 
 	/**
-	 * Listener for Document title changes that updates the menu so that an
-	 * up-to-date window list can be shown.
+	 * Listener for Document events. It updates the menu so that an
+	 * up-to-date window list can be shown and also broadcasts selection
+	 * change events so that actions can be enabled or disabled correctly.
 	 */
-	private final DocumentListener titleChangeListener = new DocumentListener() {
-		@Override public void onSelectionChanged(Class<? extends GraphicalElement> commonBaseClass) {}
+	private final DocumentListener documentListener = new DocumentListener() {
+		@Override public void onSelectionChanged(Document<?> source) {
+			eventBus.post(new DocumentSelectionChangedEvent(source));
+		}
 		@Override public void onDocumentDirty() {}
 		@Override
 		public void onDocumentChanged() {
@@ -126,6 +134,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	) {
 		super(view);
 		this.application = application;
+		this.eventBus = eventBus;
 		this.injector = injector;
 		this.internalWindows = new HashMap<>();
 		this.toolbar = toolbar;
@@ -168,7 +177,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 
 		Document<?> document = application.getDocument(id);
 		if (document != null) {
-			document.removeListener(titleChangeListener);
+			document.removeListener(documentListener);
 			window.removeWindowListener(windowListener);
 		}
 	}
@@ -200,7 +209,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		InternalWindowPresenter iwp = createInternalWindow(id, editor);
 		iwp.addWindowListener(windowListener);
 
-		document.addListener(titleChangeListener);
+		document.addListener(documentListener);
 	}
 
 	@Override

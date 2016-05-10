@@ -31,11 +31,6 @@ import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.DocumentListener;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
-import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
-import uniol.aptgui.editor.document.graphical.traits.HasLabel;
-import uniol.aptgui.editor.document.graphical.traits.HasMultiplicity;
-import uniol.aptgui.editor.document.graphical.traits.HasTokens;
 import uniol.aptgui.editor.features.ContextMenuFeature;
 import uniol.aptgui.editor.features.FireTransitionTool;
 import uniol.aptgui.editor.features.HoverFeature;
@@ -164,17 +159,8 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 	}
 
 	@Override
-	public void onSelectionChanged(Class<? extends GraphicalElement> commonBase) {
-		// Compare traits with Object if commonBase is null, since it
-		// will not throw an exception but return false for the
-		// isAssignableFrom calls as expected.
-		Class<?> testClass = (commonBase == null) ? Object.class : commonBase;
-
-		view.setMenuActionActive(EditorView.MenuAction.SET_LABEL, HasLabel.class.isAssignableFrom(testClass));
-		view.setMenuActionActive(EditorView.MenuAction.SET_TOKENS, HasTokens.class.isAssignableFrom(testClass));
-		view.setMenuActionActive(EditorView.MenuAction.SET_MULTIPLICITY, HasMultiplicity.class.isAssignableFrom(testClass));
-		view.setMenuActionActive(EditorView.MenuAction.SET_INITIAL_STATE,
-				GraphicalState.class.isAssignableFrom(testClass) && document.getSelection().size() == 1);
+	public void onSelectionChanged(Document<?> source) {
+		// Do nothing.
 	}
 
 	@Override

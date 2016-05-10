@@ -32,20 +32,20 @@ import uniol.aptgui.swing.JToolBarView;
 import uniol.aptgui.swing.actions.NewPetriNetAction;
 import uniol.aptgui.swing.actions.NewTransitionSystemAction;
 import uniol.aptgui.swing.actions.OpenAction;
-import uniol.aptgui.swing.actions.PnCreateFlowToolAction;
-import uniol.aptgui.swing.actions.PnCreatePlaceToolAction;
-import uniol.aptgui.swing.actions.PnCreateTransitionToolAction;
-import uniol.aptgui.swing.actions.PnFireTransitionToolAction;
-import uniol.aptgui.swing.actions.PnSelectionToolAction;
 import uniol.aptgui.swing.actions.RedoAction;
 import uniol.aptgui.swing.actions.SaveAction;
 import uniol.aptgui.swing.actions.SaveAllAction;
-import uniol.aptgui.swing.actions.TsCreateArcToolAction;
-import uniol.aptgui.swing.actions.TsCreateStateToolAction;
-import uniol.aptgui.swing.actions.TsSelectionToolAction;
 import uniol.aptgui.swing.actions.UndoAction;
 import uniol.aptgui.swing.actions.ZoomDecreaseAction;
 import uniol.aptgui.swing.actions.ZoomIncreaseAction;
+import uniol.aptgui.swing.actions.tools.PnCreateFlowToolAction;
+import uniol.aptgui.swing.actions.tools.PnCreatePlaceToolAction;
+import uniol.aptgui.swing.actions.tools.PnCreateTransitionToolAction;
+import uniol.aptgui.swing.actions.tools.PnFireTransitionToolAction;
+import uniol.aptgui.swing.actions.tools.PnSelectionToolAction;
+import uniol.aptgui.swing.actions.tools.TsCreateArcToolAction;
+import uniol.aptgui.swing.actions.tools.TsCreateStateToolAction;
+import uniol.aptgui.swing.actions.tools.TsSelectionToolAction;
 
 @SuppressWarnings("serial")
 public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements ToolbarView {

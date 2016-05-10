@@ -33,6 +33,7 @@ import uniol.aptgui.commands.RenameDocumentCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.Resource;
+import uniol.aptgui.swing.actions.base.DocumentAction;
 
 @SuppressWarnings("serial")
 public class RenameDocumentAction extends DocumentAction {

@@ -17,27 +17,24 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.document;
+package uniol.aptgui.events;
 
-public interface DocumentListener {
+import uniol.aptgui.editor.document.Document;
 
-	/**
-	 * Called when the document changes visually.
-	 */
-	void onDocumentDirty();
+/**
+ * Event that gets published when the selection in a document changes.
+ */
+public class DocumentSelectionChangedEvent {
 
-	/**
-	 * Called when the document changes structurally.
-	 */
-	void onDocumentChanged();
+	private final Document<?> document;
 
-	/**
-	 * Called when the selection in this Document changes.
-	 *
-	 * @param source
-	 *                the document that this call originates from
-	 */
-	void onSelectionChanged(Document<?> source);
+	public DocumentSelectionChangedEvent(Document<?> document) {
+		this.document = document;
+	}
+
+	public Document<?> getDocument() {
+		return document;
+	}
 
 }
 

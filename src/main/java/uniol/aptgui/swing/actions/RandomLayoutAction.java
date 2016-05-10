@@ -30,6 +30,7 @@ import uniol.aptgui.commands.ApplyLayoutCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.layout.RandomLayout;
 import uniol.aptgui.swing.Resource;
+import uniol.aptgui.swing.actions.base.DocumentAction;
 
 @SuppressWarnings("serial")
 public class RandomLayoutAction extends DocumentAction {

@@ -17,7 +17,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.swing.actions;
+package uniol.aptgui.swing.actions.base;
+
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 
@@ -25,38 +27,38 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import uniol.aptgui.Application;
-import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.events.WindowClosedEvent;
-import uniol.aptgui.events.WindowFocusGainedEvent;
-import uniol.aptgui.mainwindow.WindowType;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.events.DocumentSelectionChangedEvent;
 
-/**
- * Abstract base class for all actions that should only be enabled when a
- * document editor is the active window.
- *
- */
 @SuppressWarnings("serial")
-public abstract class DocumentAction extends AbstractAction {
+public abstract class SelectionAction extends AbstractAction {
 
 	protected final Application app;
 
-	public DocumentAction(Application app, EventBus eventBus) {
+	public SelectionAction(Application app, EventBus eventBus) {
 		this.app = app;
 		setEnabled(false);
 		eventBus.register(this);
 	}
 
 	@Subscribe
-	public void onWindowFocusGainedEvent(WindowFocusGainedEvent e) {
-		WindowType type = e.getWindowId().getType();
-		setEnabled(type.isEditorWindow());
+	public void onDocumentSelectionChangedEvent(DocumentSelectionChangedEvent e) {
+		Class<? extends GraphicalElement> commonBase = e.getDocument().getSelectionCommonBaseClass();
+		// Compare traits with Object if commonBase is null, since it
+		// will not throw an exception but return false for the
+		// isAssignableFrom calls as expected.
+		Class<?> testClass = (commonBase == null) ? Object.class : commonBase;
+
+		setEnabled(checkEnabled(e.getDocument().getSelection(), testClass));
 	}
 
-	@Subscribe
-	public void onWindowClosedEvent(WindowClosedEvent e) {
-		Document<?> document = app.getActiveDocument();
-		setEnabled(document != null);
-	}
+	/**
+	 * Called by the superclass when the document selection changes. This
+	 * method must return true, if the action should still be enabled.
+	 *
+	 * @return true, if the action is applicable for the given selection
+	 */
+	protected abstract boolean checkEnabled(Set<GraphicalElement> selection, Class<?> commonBaseTestClass);
 
 }
 

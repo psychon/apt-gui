@@ -20,7 +20,9 @@
 package uniol.aptgui.swing.actions;
 
 import java.util.List;
+import java.util.Set;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import uniol.apt.adt.pn.Marking;
@@ -30,14 +32,17 @@ import uniol.aptgui.commands.Command;
 import uniol.aptgui.commands.SetTokensCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.PnDocument;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalPlace;
+import uniol.aptgui.editor.document.graphical.traits.HasTokens;
+import uniol.aptgui.swing.actions.base.SetSimpleAttributeAction;
 
 @SuppressWarnings("serial")
 public class SetTokensAction extends SetSimpleAttributeAction<GraphicalPlace, Long> {
 
 	@Inject
-	public SetTokensAction(Application app) {
-		super("Set Tokens", "New token count:", app);
+	public SetTokensAction(Application app, EventBus eventBus) {
+		super("Set Tokens", "New token count:", app, eventBus);
 	}
 
 	@Override
@@ -57,6 +62,11 @@ public class SetTokensAction extends SetSimpleAttributeAction<GraphicalPlace, Lo
 		Marking marking = pnDoc.getModel().getInitialMarking();
 		Place place = pnDoc.getAssociatedModelElement(element);
 		return marking.getToken(place).getValue();
+	}
+
+	@Override
+	protected boolean checkEnabled(Set<GraphicalElement> selection, Class<?> commonBaseTestClass) {
+		return HasTokens.class.isAssignableFrom(commonBaseTestClass);
 	}
 
 }

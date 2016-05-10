@@ -20,21 +20,25 @@
 package uniol.aptgui.swing.actions;
 
 import java.util.List;
+import java.util.Set;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.commands.Command;
 import uniol.aptgui.commands.SetMultiplicityCommand;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.traits.HasMultiplicity;
+import uniol.aptgui.swing.actions.base.SetSimpleAttributeAction;
 
 @SuppressWarnings("serial")
 public class SetMultiplicityAction extends SetSimpleAttributeAction<HasMultiplicity, Integer> {
 
 	@Inject
-	public SetMultiplicityAction(Application app) {
-		super("Set Multiplicity", "New multiplicity:", app);
+	public SetMultiplicityAction(Application app, EventBus eventBus) {
+		super("Set Multiplicity", "New multiplicity:", app, eventBus);
 	}
 
 	@Override
@@ -50,6 +54,11 @@ public class SetMultiplicityAction extends SetSimpleAttributeAction<HasMultiplic
 	@Override
 	protected Integer getAttribute(HasMultiplicity element) {
 		return element.getMultiplicity();
+	}
+
+	@Override
+	protected boolean checkEnabled(Set<GraphicalElement> selection, Class<?> commonBaseTestClass) {
+		return HasMultiplicity.class.isAssignableFrom(commonBaseTestClass);
 	}
 
 }

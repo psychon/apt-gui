@@ -35,6 +35,7 @@ import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.Resource;
+import uniol.aptgui.swing.actions.base.DocumentAction;
 import uniol.aptgui.swing.filechooser.AptFileChooser;
 
 @SuppressWarnings("serial")

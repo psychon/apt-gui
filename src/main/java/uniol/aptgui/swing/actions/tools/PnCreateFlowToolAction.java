@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.swing.actions;
+package uniol.aptgui.swing.actions.tools;
 
 import java.awt.event.ActionEvent;
 
@@ -31,22 +31,22 @@ import uniol.aptgui.events.ToolSelectedEvent;
 import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
-public class TsSelectionToolAction extends AbstractAction {
+public class PnCreateFlowToolAction extends AbstractAction {
 
 	private final EventBus eventBus;
 
 	@Inject
-	public TsSelectionToolAction(EventBus eventBus) {
+	public PnCreateFlowToolAction(EventBus eventBus) {
 		this.eventBus = eventBus;
-		String name = "Select";
+		String name = "Create flow";
 		putValue(NAME, name);
-		putValue(SMALL_ICON, Resource.getIconSelect());
+		putValue(SMALL_ICON, Resource.getIconArc());
 		putValue(SHORT_DESCRIPTION, name);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		eventBus.post(new ToolSelectedEvent(FeatureId.TS_SELECTION));
+		eventBus.post(new ToolSelectedEvent(FeatureId.PN_CREATE_FLOW));
 	}
 
 }

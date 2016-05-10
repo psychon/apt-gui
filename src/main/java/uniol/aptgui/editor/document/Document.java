@@ -150,6 +150,16 @@ public abstract class Document<T> {
 	}
 
 	/**
+	 * Returns the most specific base class that all selected elements are
+	 * assignable to.
+	 *
+	 * @return common base class of all selected elements
+	 */
+	public Class<? extends GraphicalElement> getSelectionCommonBaseClass() {
+		return selection.getCommonBaseClass();
+	}
+
+	/**
 	 * Toggles selection status on the element. If it was previously
 	 * unselected, it will be selected afterwards and the other way around.
 	 *
@@ -394,9 +404,8 @@ public abstract class Document<T> {
 	 * Calls onSelectionChanged for every listener.
 	 */
 	public void fireSelectionChanged() {
-		Class<? extends GraphicalElement> commonBase = selection.getCommonBaseClass();
 		for (DocumentListener l : listeners) {
-			l.onSelectionChanged(commonBase);
+			l.onSelectionChanged(this);
 		}
 	}
 

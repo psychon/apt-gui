@@ -26,10 +26,6 @@ import uniol.aptgui.View;
 
 public interface EditorView extends View<EditorPresenter> {
 
-	public static enum MenuAction {
-		SET_LABEL, SET_TOKENS, SET_MULTIPLICITY, DELETE, SET_INITIAL_STATE
-	}
-
 	public int getCanvasWidth();
 
 	public int getCanvasHeight();
@@ -41,8 +37,6 @@ public interface EditorView extends View<EditorPresenter> {
 	public void repaint();
 
 	public void showPopupMenu(int x, int y);
-
-	public void setMenuActionActive(MenuAction action, boolean active);
 
 	/**
 	 * Shows a dialog box that prompts the user to input a label for a new

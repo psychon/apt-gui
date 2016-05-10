@@ -20,9 +20,9 @@
 package uniol.aptgui.swing.actions;
 
 import java.awt.event.ActionEvent;
+import java.util.Set;
 
-import javax.swing.AbstractAction;
-
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
@@ -30,16 +30,16 @@ import uniol.aptgui.commands.Command;
 import uniol.aptgui.commands.SetInitialStateCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.TsDocument;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
+import uniol.aptgui.swing.actions.base.SelectionAction;
 
 @SuppressWarnings("serial")
-public class SetInitialStateAction extends AbstractAction {
-
-	private final Application app;
+public class SetInitialStateAction extends SelectionAction {
 
 	@Inject
-	public SetInitialStateAction(Application app) {
-		this.app = app;
+	public SetInitialStateAction(Application app, EventBus eventBus) {
+		super(app, eventBus);
 		String name = "Set Initial State";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
@@ -54,6 +54,11 @@ public class SetInitialStateAction extends AbstractAction {
 		GraphicalState element = (GraphicalState) tsDocument.getSelection().iterator().next();
 		Command cmd = new SetInitialStateCommand(tsDocument, element);
 		app.getHistory().execute(cmd);
+	}
+
+	@Override
+	protected boolean checkEnabled(Set<GraphicalElement> selection, Class<?> commonBaseTestClass) {
+		return GraphicalState.class.isAssignableFrom(commonBaseTestClass) && selection.size() == 1;
 	}
 
 }

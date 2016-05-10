@@ -30,7 +30,6 @@ import uniol.aptgui.Application;
 import uniol.aptgui.Presenter;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.DocumentListener;
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.events.WindowFocusLostEvent;
 import uniol.aptgui.mainwindow.WindowId;
@@ -74,7 +73,7 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	 * title.
 	 */
 	private DocumentListener titleChangeListener = new DocumentListener() {
-		@Override public void onSelectionChanged(Class<? extends GraphicalElement> commonBaseClass) {}
+		@Override public void onSelectionChanged(Document<?> source) {}
 		@Override public void onDocumentDirty() {}
 		@Override
 		public void onDocumentChanged() {

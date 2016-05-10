@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.swing.actions;
+package uniol.aptgui.swing.actions.base;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -25,8 +25,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
+
+import com.google.common.eventbus.EventBus;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.commands.Command;
@@ -42,20 +43,20 @@ import uniol.aptgui.editor.document.Document;
  *                attribute type
  */
 @SuppressWarnings("serial")
-public abstract class SetSimpleAttributeAction<T, U> extends AbstractAction {
+public abstract class SetSimpleAttributeAction<T, U> extends SelectionAction {
 
 	private final String name;
 	private final String inputMessage;
-
-	protected final Application app;
 	protected Document<?> document;
 
-	public SetSimpleAttributeAction(String name, String inputMessage, Application app) {
+	public SetSimpleAttributeAction(String name, String inputMessage, Application app, EventBus eventBus) {
+		super(app, eventBus);
 		this.name = name;
 		this.inputMessage = inputMessage;
-		this.app = app;
+		eventBus.register(this);
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
+		setEnabled(false);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -20,22 +20,26 @@
 package uniol.aptgui.swing.actions;
 
 import java.util.List;
+import java.util.Set;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.commands.Command;
 import uniol.aptgui.commands.SetLabelCommand;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.traits.HasLabel;
 import uniol.aptgui.swing.Resource;
+import uniol.aptgui.swing.actions.base.SetSimpleAttributeAction;
 
 @SuppressWarnings("serial")
 public class SetLabelAction extends SetSimpleAttributeAction<HasLabel, String> {
 
 	@Inject
-	public SetLabelAction(Application app) {
-		super("Set label", "New label:", app);
+	public SetLabelAction(Application app, EventBus eventBus) {
+		super("Set Label", "New label:", app, eventBus);
 		putValue(SMALL_ICON, Resource.getIconLabel());
 	}
 
@@ -48,6 +52,11 @@ public class SetLabelAction extends SetSimpleAttributeAction<HasLabel, String> {
 	protected Command createCommand(Document<?> document, List<HasLabel> selection, String userInput) {
 		// TODO validation
 		return new SetLabelCommand(document, selection, userInput);
+	}
+
+	@Override
+	protected boolean checkEnabled(Set<GraphicalElement> selection, Class<?> commonBaseTestClass) {
+		return HasLabel.class.isAssignableFrom(commonBaseTestClass);
 	}
 
 }

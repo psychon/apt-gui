@@ -103,30 +103,6 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 	}
 
 	@Override
-	public void setMenuActionActive(MenuAction action, boolean active) {
-		switch (action) {
-		case SET_LABEL:
-			setLabel.setEnabled(active);
-			break;
-		case SET_TOKENS:
-			setTokens.setEnabled(active);
-			break;
-		case SET_MULTIPLICITY:
-			setMultiplicity.setEnabled(active);
-			break;
-		case DELETE:
-			delete.setEnabled(active);
-			break;
-		case SET_INITIAL_STATE:
-			setInitialState.setEnabled(active);
-			break;
-		default:
-			break;
-
-		}
-	}
-
-	@Override
 	public String showArcLabelInputDialog() {
 		return (String) JOptionPane.showInputDialog(this, "Arc label:", "New Arc",
 				JOptionPane.QUESTION_MESSAGE, null, null, "a");
