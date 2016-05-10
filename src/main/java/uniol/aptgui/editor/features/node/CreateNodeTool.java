@@ -106,6 +106,18 @@ public abstract class CreateNodeTool<T extends Document<?>, U extends GraphicalN
 		initPlace();
 	}
 
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		node.setVisible(true);
+		document.fireDocumentDirty();
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		node.setVisible(false);
+		document.fireDocumentDirty();
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120
