@@ -109,6 +109,11 @@ public interface InternalWindowPresenter extends Presenter<InternalWindowView> {
 	void onActivated();
 
 	/**
+	 * Called by the view when the window loses focus.
+	 */
+	void onDeactivated();
+
+	/**
 	 * Called by the view when the window has been resized.
 	 *
 	 * @param width

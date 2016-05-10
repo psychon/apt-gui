@@ -100,7 +100,6 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	@Override
 	public void onCloseButtonClicked() {
 		application.closeWindow(id);
-		eventBus.post(new WindowFocusLostEvent(id));
 	}
 
 	@Override
@@ -194,6 +193,11 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 		for (InternalWindowListener listener : listeners) {
 			listener.windowResized(id, width, height);
 		}
+	}
+
+	@Override
+	public void onDeactivated() {
+		eventBus.post(new WindowFocusLostEvent(id));
 	}
 
 }

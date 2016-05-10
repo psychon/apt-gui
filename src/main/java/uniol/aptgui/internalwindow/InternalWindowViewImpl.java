@@ -28,10 +28,10 @@ import java.beans.PropertyVetoException;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
+import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
 import uniol.aptgui.View;
-import uniol.aptgui.swing.CustomInternalFrameListener;
 import uniol.aptgui.swing.JInternalFrameView;
 
 @SuppressWarnings("serial")
@@ -47,7 +47,7 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 
 	private void initWindowListener() {
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		addInternalFrameListener(new CustomInternalFrameListener() {
+		addInternalFrameListener(new InternalFrameAdapter() {
 			@Override
 			public void internalFrameClosing(InternalFrameEvent e) {
 				getPresenter().onCloseButtonClicked();
@@ -56,6 +56,11 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 			@Override
 			public void internalFrameActivated(InternalFrameEvent e) {
 				getPresenter().onActivated();
+			}
+
+			@Override
+			public void internalFrameDeactivated(InternalFrameEvent e) {
+				getPresenter().onDeactivated();
 			}
 		});
 		addComponentListener(new ComponentAdapter() {

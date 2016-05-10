@@ -50,6 +50,8 @@ import uniol.aptgui.editor.features.node.CreatePlaceTool;
 import uniol.aptgui.editor.features.node.CreateStateTool;
 import uniol.aptgui.editor.features.node.CreateTransitionTool;
 import uniol.aptgui.events.ToolSelectedEvent;
+import uniol.aptgui.events.WindowFocusGainedEvent;
+import uniol.aptgui.events.WindowFocusLostEvent;
 import uniol.aptgui.mainwindow.WindowId;
 
 public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, EditorView>
@@ -75,6 +77,39 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 		application.getEventBus().register(this);
 	}
 
+	@Subscribe
+	public void onToolSelectedEvent(ToolSelectedEvent e) {
+		if (application.getActiveInternalWindow() != windowId) {
+			return;
+		}
+
+		features.setListening(false);
+		tools.setListening(false);
+		tools.setActive(e.getSelectionId());
+		tools.setListening(true);
+		features.setListening(true);
+		Feature tool = tools.getActiveFeature();
+		view.setCursor(tool.getCursor());
+		view.repaint();
+	}
+
+	@Subscribe
+	public void onWindowFocusGainedEvent(WindowFocusGainedEvent e) {
+		if (e.getWindowId() != windowId) {
+			return;
+		}
+		tools.onActivated();
+	}
+
+	@Subscribe
+	public void onWindowFocusLostEvent(WindowFocusLostEvent e) {
+		if (e.getWindowId() != windowId) {
+			return;
+		}
+		tools.onDeactivated();
+	}
+
+	@Override
 	public void setWindowId(WindowId windowId) {
 		this.windowId = windowId;
 	}
@@ -111,22 +146,6 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 			tools.put(FeatureId.TS_CREATE_ARC, new CreateArcTool(tsDocument, application.getHistory()));
 		}
 		tools.setListening(true);
-	}
-
-	@Subscribe
-	public void onToolSelected(ToolSelectedEvent e) {
-		if (!application.getActiveInternalWindow().equals(windowId)) {
-			return;
-		}
-
-		features.setListening(false);
-		tools.setListening(false);
-		tools.setActive(e.getSelectionId());
-		tools.setListening(true);
-		features.setListening(true);
-		Feature tool = tools.getActiveFeature();
-		view.setCursor(tool.getCursor());
-		view.repaint();
 	}
 
 	@Override
