@@ -42,6 +42,7 @@ public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implemen
 		initWindowListener();
 		setLayout(new BorderLayout());
 		setSize(1280, 720);
+		setLocationByPlatform(true);
 
 		jDesktopPane = createDesktopPane();
 		add(jDesktopPane, BorderLayout.CENTER);
