@@ -26,6 +26,10 @@ import java.awt.event.MouseWheelEvent;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.features.base.Feature;
 
+/**
+ * The viewport feature gives the user the ability to translate and scale the
+ * view.
+ */
 public class ViewportFeature extends Feature {
 
 	/**

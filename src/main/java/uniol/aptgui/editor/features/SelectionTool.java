@@ -30,9 +30,8 @@ import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 import uniol.aptgui.editor.features.base.Feature;
 
 /**
- * Selection tool. Gives the user the ability to translate and scale the view,
- * highlight elements by hovering over them, select elements, move them and
- * modify edge paths.
+ * The selection tool gives the user the ability to select elements, move them
+ * and modify edge paths.
  */
 public class SelectionTool extends Feature {
 
@@ -86,16 +85,14 @@ public class SelectionTool extends Feature {
 		// User clicked LMB: Select element under cursor.
 		Point modelPosition = transform.applyInverse(e.getPoint());
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
-		if (elem instanceof GraphicalNode) {
-			GraphicalNode node = (GraphicalNode) elem;
+		if (elem != null) {
 			if (e.isControlDown()) {
-				// If CTRL was pressed, add to/remove from
-				// selection.
-				document.toggleSelection(node);
+				// If CTRL was pressed, add to/remove from selection.
+				document.toggleSelection(elem);
 			} else {
 				// Otherwise replace selection.
 				document.clearSelection();
-				document.addToSelection(node);
+				document.addToSelection(elem);
 			}
 			document.fireSelectionChanged();
 			document.fireDocumentDirty();

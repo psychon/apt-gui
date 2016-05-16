@@ -85,32 +85,14 @@ public abstract class GraphicalEdge extends GraphicalElement {
 			return;
 		}
 		super.draw(graphics);
+
 		List<Point> path = getPath();
 		drawPathWithArrowhead(graphics, path);
-		drawLabel(graphics, path);
-	}
+		drawLabel(graphics, path, label);
 
-	private void drawLabel(Graphics2D graphics, List<Point> path) {
-		Point labelPoint = getLabelPoint(path.get(path.size() - 2), path.get(path.size() - 1));
-		graphics.drawString(label, labelPoint.x, labelPoint.y);
-	}
-
-	/**
-	 * Returns the position where the label should be drawn.
-	 *
-	 * @param segmentSource
-	 *                source point of the segment that the label should be
-	 *                drawn next to
-	 * @param segmentDestination
-	 *                destination point of the segment that the label should
-	 *                be drawn next to
-	 * @return label position
-	 */
-	protected Point getLabelPoint(Point segmentSource, Point segmentDestination) {
-		final Point labelPoint = new Point();
-		labelPoint.x = segmentSource.x + (segmentDestination.x - segmentSource.x) * 2 / 3;
-		labelPoint.y = segmentSource.y + (segmentDestination.y - segmentSource.y) * 2 / 3 - 3;
-		return labelPoint;
+		if (selected) {
+			drawSelectionMarkers(graphics, path);
+		}
 	}
 
 	@Override
@@ -185,6 +167,12 @@ public abstract class GraphicalEdge extends GraphicalElement {
 		return -1;
 	}
 
+	/**
+	 * Returns a list of points that describe this edge's path when
+	 * interpolating linearly between them.
+	 *
+	 * @return list of points that describe this edge's path
+	 */
 	protected List<Point> getPath() {
 		List<Point> path = new ArrayList<>();
 
@@ -207,6 +195,59 @@ public abstract class GraphicalEdge extends GraphicalElement {
 		return path;
 	}
 
+	/**
+	 * Draws a label at a suitable position along the given path.
+	 *
+	 * @param graphics
+	 *                graphics object to paint with
+	 * @param path
+	 *                edge path
+	 * @param label
+	 *                the label string to draw
+	 */
+	private static void drawLabel(Graphics2D graphics, List<Point> path, String label) {
+		Point labelPoint = getLabelPoint(path.get(path.size() - 2), path.get(path.size() - 1));
+		graphics.drawString(label, labelPoint.x, labelPoint.y);
+	}
+
+	/**
+	 * Returns the position where the label should be drawn.
+	 *
+	 * @param segmentSource
+	 *                source point of the segment that the label should be
+	 *                drawn next to
+	 * @param segmentDestination
+	 *                destination point of the segment that the label should
+	 *                be drawn next to
+	 * @return label position
+	 */
+	private static Point getLabelPoint(Point segmentSource, Point segmentDestination) {
+		final Point labelPoint = new Point();
+		labelPoint.x = segmentSource.x + (segmentDestination.x - segmentSource.x) * 2 / 3;
+		labelPoint.y = segmentSource.y + (segmentDestination.y - segmentSource.y) * 2 / 3 - 3;
+		return labelPoint;
+	}
+
+	/**
+	 * Draws selection markers that indicate the selection state to the
+	 * user.
+	 *
+	 * @param graphics
+	 *                graphics object to paint with
+	 */
+	private static void drawSelectionMarkers(Graphics2D graphics, List<Point> path) {
+		for (Point p : path) {
+			drawSelectionMarkers(graphics, p, 5);
+		}
+	}
+
+	/**
+	 * Draws a linear path between the given points that ends with an
+	 * arrowhead.
+	 *
+	 * @param graphics
+	 * @param path
+	 */
 	public static void drawPathWithArrowhead(Graphics2D graphics, List<Point> path) {
 		assert path.size() >= 2;
 		drawPath(graphics, path);
@@ -217,6 +258,12 @@ public abstract class GraphicalEdge extends GraphicalElement {
 		);
 	}
 
+	/**
+	 * Draws a linear path between the given points.
+	 *
+	 * @param graphics
+	 * @param path
+	 */
 	public static void drawPath(Graphics2D graphics, List<Point> path) {
 		if (path.isEmpty()) {
 			return;
@@ -229,6 +276,15 @@ public abstract class GraphicalEdge extends GraphicalElement {
 		}
 	}
 
+	/**
+	 * Draws an arrowhead that ends in the given target point. It's size is
+	 * not affected by the distance between source and target. Therefore the
+	 * source is only useful to specify the arrowhead's orientation.
+	 *
+	 * @param graphics
+	 * @param source
+	 * @param target
+	 */
 	public static void drawArrowhead(Graphics2D graphics, Point source, Point target) {
 		int x = target.x;
 		int y = target.y;

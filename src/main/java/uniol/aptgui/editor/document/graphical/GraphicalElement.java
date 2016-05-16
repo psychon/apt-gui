@@ -23,6 +23,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
+/**
+ * Base class for graphical elements of a document. It contains basic properties
+ * such as colors or highlight states.
+ */
 public abstract class GraphicalElement {
 
 	private static final Color HIGHLIGHT_COLOR = Color.BLUE;
@@ -90,6 +94,12 @@ public abstract class GraphicalElement {
 		this.color = color;
 	}
 
+	/**
+	 * Draws this element using the given graphics object.
+	 *
+	 * @param graphics
+	 *                graphics object
+	 */
 	public void draw(Graphics2D graphics) {
 		if (!visible) {
 			return;
@@ -107,6 +117,35 @@ public abstract class GraphicalElement {
 	}
 
 	public abstract boolean coversPoint(Point point);
+
+	/**
+	 * Draws selection markers around the given center point with radius
+	 * distance.
+	 *
+	 * @param graphics
+	 * @param center
+	 * @param radius
+	 */
+	protected static void drawSelectionMarkers(Graphics2D graphics, Point center, int radius) {
+		int len = 5;
+
+		Point topLeft = new Point(center.x - radius, center.y - radius);
+		Point topRight = new Point(center.x + radius, center.y - radius);
+		Point bottomLeft = new Point(center.x - radius, center.y + radius);
+		Point bottomRight = new Point(center.x + radius, center.y + radius);
+
+		graphics.drawLine(topLeft.x, topLeft.y, topLeft.x + len, topLeft.y);
+		graphics.drawLine(topLeft.x, topLeft.y, topLeft.x, topLeft.y + len);
+
+		graphics.drawLine(topRight.x, topRight.y, topRight.x - len, topRight.y);
+		graphics.drawLine(topRight.x, topRight.y, topRight.x, topRight.y + len);
+
+		graphics.drawLine(bottomLeft.x, bottomLeft.y, bottomLeft.x + len, bottomLeft.y);
+		graphics.drawLine(bottomLeft.x, bottomLeft.y, bottomLeft.x, bottomLeft.y - len);
+
+		graphics.drawLine(bottomRight.x, bottomRight.y, bottomRight.x - len, bottomRight.y);
+		graphics.drawLine(bottomRight.x, bottomRight.y, bottomRight.x, bottomRight.y - len);
+	}
 
 }
 
