@@ -33,7 +33,6 @@ import uniol.aptgui.mainwindow.WindowType;
 /**
  * Abstract base class for all actions that should only be enabled when a
  * document editor is the active window.
- *
  */
 @SuppressWarnings("serial")
 public abstract class DocumentAction extends AbstractAction {

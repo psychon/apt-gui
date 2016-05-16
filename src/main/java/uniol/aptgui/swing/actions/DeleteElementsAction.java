@@ -22,10 +22,7 @@ package uniol.aptgui.swing.actions;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
-import javax.swing.AbstractAction;
-
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
@@ -36,27 +33,23 @@ import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
-import uniol.aptgui.events.DocumentSelectionChangedEvent;
 import uniol.aptgui.swing.Resource;
+import uniol.aptgui.swing.actions.base.SelectionAction;
 
 /**
  * Action that deletes all currently selected elements in the currently active
  * document.
  */
 @SuppressWarnings("serial")
-public class DeleteElementsAction extends AbstractAction {
-
-	private final Application app;
+public class DeleteElementsAction extends SelectionAction {
 
 	@Inject
 	public DeleteElementsAction(Application app, EventBus eventBus) {
-		this.app = app;
+		super(app, eventBus);
 		String name = "Delete";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconDelete());
 		putValue(SHORT_DESCRIPTION, name);
-		setEnabled(false);
-		eventBus.register(this);
 	}
 
 	@Override
@@ -74,10 +67,9 @@ public class DeleteElementsAction extends AbstractAction {
 		}
 	}
 
-	@Subscribe
-	public void onDocumentSelectionChangedEvent(DocumentSelectionChangedEvent e) {
-		Set<GraphicalElement> selection = e.getDocument().getSelection();
-		setEnabled(!selection.isEmpty());
+	@Override
+	protected boolean checkEnabled(Set<GraphicalElement> selection, Class<?> commonBaseTestClass) {
+		return !selection.isEmpty();
 	}
 
 }

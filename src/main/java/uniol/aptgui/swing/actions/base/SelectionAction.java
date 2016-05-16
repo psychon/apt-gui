@@ -27,9 +27,16 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import uniol.aptgui.Application;
+import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.events.DocumentSelectionChangedEvent;
+import uniol.aptgui.events.WindowClosedEvent;
+import uniol.aptgui.events.WindowFocusGainedEvent;
 
+/**
+ * Action super-class for all actions that should only be enabled during certain
+ * document selection state of the active document editor window.
+ */
 @SuppressWarnings("serial")
 public abstract class SelectionAction extends AbstractAction {
 
@@ -43,13 +50,44 @@ public abstract class SelectionAction extends AbstractAction {
 
 	@Subscribe
 	public void onDocumentSelectionChangedEvent(DocumentSelectionChangedEvent e) {
-		Class<? extends GraphicalElement> commonBase = e.getDocument().getSelectionCommonBaseClass();
+		setEnabled(checkEnabled(e.getDocument()));
+	}
+
+	@Subscribe
+	public void onWindowClosedEvent(WindowClosedEvent e) {
+		// Disable action, if the last document editor was closed.
+		if (app.getDocumentWindows().isEmpty()) {
+			setEnabled(false);
+		}
+	}
+
+	@Subscribe
+	public void onWindowFocusGainedEvent(WindowFocusGainedEvent e) {
+		Document<?> document = app.getDocument(e.getWindowId());
+		if (document != null) {
+			setEnabled(checkEnabled(document));
+		} else {
+			setEnabled(false);
+		}
+	}
+
+	/**
+	 * Returns if this action should be enabled given the document's
+	 * selection state.
+	 *
+	 * @param document
+	 *                document whose selection will be examined to decide if
+	 *                this action should be enabled
+	 * @return true, if this action should be enabled for the given document
+	 */
+	private boolean checkEnabled(Document<?> document) {
+		Class<? extends GraphicalElement> commonBase = document.getSelectionCommonBaseClass();
 		// Compare traits with Object if commonBase is null, since it
 		// will not throw an exception but return false for the
 		// isAssignableFrom calls as expected.
 		Class<?> testClass = (commonBase == null) ? Object.class : commonBase;
 
-		setEnabled(checkEnabled(e.getDocument().getSelection(), testClass));
+		return checkEnabled(document.getSelection(), testClass);
 	}
 
 	/**
