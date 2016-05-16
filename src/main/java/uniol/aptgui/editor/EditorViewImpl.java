@@ -33,7 +33,9 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 import uniol.aptgui.swing.JPanelView;
+import uniol.aptgui.swing.actions.AddBreakpointAction;
 import uniol.aptgui.swing.actions.DeleteElementsAction;
+import uniol.aptgui.swing.actions.RemoveBreakpointAction;
 import uniol.aptgui.swing.actions.SetInitialStateAction;
 import uniol.aptgui.swing.actions.SetLabelAction;
 import uniol.aptgui.swing.actions.SetMultiplicityAction;
@@ -49,6 +51,8 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 	private JMenuItem setTokens;
 	private JMenuItem setMultiplicity;
 	private JMenuItem setInitialState;
+	private JMenuItem addBreakpoint;
+	private JMenuItem removeBreakpoint;
 	private JMenuItem delete;
 
 	@Inject
@@ -65,12 +69,16 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 		setTokens = new JMenuItem(injector.getInstance(SetTokensAction.class));
 		setMultiplicity = new JMenuItem(injector.getInstance(SetMultiplicityAction.class));
 		setInitialState = new JMenuItem(injector.getInstance(SetInitialStateAction.class));
+		addBreakpoint = new JMenuItem(injector.getInstance(AddBreakpointAction.class));
+		removeBreakpoint = new JMenuItem(injector.getInstance(RemoveBreakpointAction.class));
 		delete = new JMenuItem(injector.getInstance(DeleteElementsAction.class));
 
 		popupMenu.add(setLabel);
 		popupMenu.add(setTokens);
 		popupMenu.add(setMultiplicity);
 		popupMenu.add(setInitialState);
+		popupMenu.add(addBreakpoint);
+		popupMenu.add(removeBreakpoint);
 		popupMenu.add(delete);
 	}
 

@@ -19,8 +19,6 @@
 
 package uniol.aptgui.swing.actions.base;
 
-import java.util.Set;
-
 import javax.swing.AbstractAction;
 
 import com.google.common.eventbus.EventBus;
@@ -87,16 +85,20 @@ public abstract class SelectionAction extends AbstractAction {
 		// isAssignableFrom calls as expected.
 		Class<?> testClass = (commonBase == null) ? Object.class : commonBase;
 
-		return checkEnabled(document.getSelection(), testClass);
+		return checkEnabled(document, testClass);
 	}
 
 	/**
 	 * Called by the superclass when the document selection changes. This
 	 * method must return true, if the action should still be enabled.
 	 *
+	 * @param document
+	 *                the document which contains the selection
+	 * @param commonBaseTestClass
+	 *                base class of selection with null replaced by Object
 	 * @return true, if the action is applicable for the given selection
 	 */
-	protected abstract boolean checkEnabled(Set<GraphicalElement> selection, Class<?> commonBaseTestClass);
+	protected abstract boolean checkEnabled(Document<?> document, Class<?> commonBaseTestClass);
 
 }
 

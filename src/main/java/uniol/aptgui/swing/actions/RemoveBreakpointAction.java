@@ -19,6 +19,7 @@
 
 package uniol.aptgui.swing.actions;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 
 import com.google.common.eventbus.EventBus;
@@ -26,22 +27,21 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.commands.Command;
-import uniol.aptgui.commands.SetInitialStateCommand;
+import uniol.aptgui.commands.RemoveBreakpointCommand;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.TsDocument;
-import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
+import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 import uniol.aptgui.swing.actions.base.SelectionAction;
 
 /**
- * Action that sets a state to be the initial state of a LTS.
+ * Action that removes a breakpoint from an edge.
  */
 @SuppressWarnings("serial")
-public class SetInitialStateAction extends SelectionAction {
+public class RemoveBreakpointAction extends SelectionAction {
 
 	@Inject
-	public SetInitialStateAction(Application app, EventBus eventBus) {
+	public RemoveBreakpointAction(Application app, EventBus eventBus) {
 		super(app, eventBus);
-		String name = "Set Initial State";
+		String name = "Remove Breakpoint";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
 	}
@@ -49,18 +49,27 @@ public class SetInitialStateAction extends SelectionAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Document<?> document = app.getActiveDocument();
-		assert document instanceof TsDocument;
-		TsDocument tsDocument = (TsDocument) document;
-		assert tsDocument.getSelection().size() == 1;
-		GraphicalState element = (GraphicalState) tsDocument.getSelection().iterator().next();
-		Command cmd = new SetInitialStateCommand(tsDocument, element);
-		app.getHistory().execute(cmd);
+		if (document != null) {
+			GraphicalEdge edge = getEdge();
+			Point selPos = document.getLastSelectionPosition();
+			int bpIndex = edge.getClosestBreakpointIndex(selPos);
+			assert bpIndex != -1;
+			Command cmd = new RemoveBreakpointCommand(document, edge, bpIndex);
+			app.getHistory().execute(cmd);
+		}
 	}
 
 	@Override
 	protected boolean checkEnabled(Document<?> document, Class<?> commonBaseTestClass) {
-		return GraphicalState.class.isAssignableFrom(commonBaseTestClass)
-				&& document.getSelection().size() == 1;
+		return document.getSelection().size() == 1
+		    && GraphicalEdge.class.isAssignableFrom(commonBaseTestClass)
+		    // Make sure that there is a breakpoint next to the cursor position.
+		    && getEdge().getClosestBreakpointIndex(document.getLastSelectionPosition()) != -1;
+	}
+
+	private GraphicalEdge getEdge() {
+		Document<?> document = app.getActiveDocument();
+		return (GraphicalEdge) document.getSelection().iterator().next();
 	}
 
 }

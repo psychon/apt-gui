@@ -20,9 +20,8 @@
 package uniol.aptgui.editor.document.graphical.edges;
 
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
-import uniol.aptgui.editor.document.graphical.traits.HasMultiplicity;
 
-public class GraphicalFlow extends GraphicalEdge implements HasMultiplicity {
+public class GraphicalFlow extends GraphicalEdge {
 
 	protected Integer multiplicity;
 

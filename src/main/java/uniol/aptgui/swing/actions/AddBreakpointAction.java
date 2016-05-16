@@ -19,45 +19,55 @@
 
 package uniol.aptgui.swing.actions;
 
-import java.util.List;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.util.Set;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
+import uniol.aptgui.commands.AddBreakpointCommand;
 import uniol.aptgui.commands.Command;
-import uniol.aptgui.commands.SetLabelCommand;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.graphical.traits.HasLabel;
-import uniol.aptgui.swing.Resource;
-import uniol.aptgui.swing.actions.base.SetSimpleAttributeAction;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
+import uniol.aptgui.swing.actions.base.SelectionAction;
 
 /**
- * Action that sets labels of transitions or arcs.
+ * Action that adds a new breakpoint to an edge.
  */
 @SuppressWarnings("serial")
-public class SetLabelAction extends SetSimpleAttributeAction<HasLabel, String> {
+public class AddBreakpointAction extends SelectionAction {
 
 	@Inject
-	public SetLabelAction(Application app, EventBus eventBus) {
-		super("Set Label", "New label:", app, eventBus);
-		putValue(SMALL_ICON, Resource.getIconLabel());
+	public AddBreakpointAction(Application app, EventBus eventBus) {
+		super(app, eventBus);
+		String name = "Add Breakpoint";
+		putValue(NAME, name);
+		putValue(SHORT_DESCRIPTION, name);
 	}
 
 	@Override
-	protected String getAttribute(HasLabel element) {
-		return element.getLabel();
-	}
+	public void actionPerformed(ActionEvent e) {
+		Document<?> document = app.getActiveDocument();
+		if (document != null) {
+			Set<GraphicalElement> selection = document.getSelection();
 
-	@Override
-	protected Command createCommand(Document<?> document, List<HasLabel> selection, String userInput) {
-		// TODO validation
-		return new SetLabelCommand(document, selection, userInput);
+			// This action is only enabled if the following is
+			// possible.
+			GraphicalEdge edge = (GraphicalEdge) selection.iterator().next();
+
+			Point selectionPos = document.getLastSelectionPosition();
+
+			Command cmd = new AddBreakpointCommand(document, edge, selectionPos);
+			app.getHistory().execute(cmd);
+		}
 	}
 
 	@Override
 	protected boolean checkEnabled(Document<?> document, Class<?> commonBaseTestClass) {
-		return HasLabel.class.isAssignableFrom(commonBaseTestClass);
+		return document.getSelection().size() == 1 && GraphicalEdge.class.isAssignableFrom(commonBaseTestClass);
 	}
 
 }

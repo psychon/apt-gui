@@ -115,6 +115,13 @@ public abstract class Document<T> {
 	private final Transform2D transform;
 
 	/**
+	 * The position in this document that was last selected by the user
+	 * while clicking to create a selection or opening a context menu (which
+	 * will also select the element under the cursor).
+	 */
+	private Point lastSelectionPosition;
+
+	/**
 	 * Creates a document with a default size.
 	 */
 	public Document() {
@@ -138,6 +145,27 @@ public abstract class Document<T> {
 		this.transform = new Transform2D();
 		this.elements = new HashMap<>();
 		this.selection = new Selection();
+	}
+
+	/**
+	 * Returns the position in this document that was last selected by the user
+	 * while clicking to create a selection or opening a context menu (which
+	 * will also select the element under the cursor).
+	 *
+	 * The point is in model coordinates.
+	 */
+	public Point getLastSelectionPosition() {
+		return lastSelectionPosition;
+	}
+
+	/**
+	 * Sets the last selection position.
+	 *
+	 * @param lastSelectionPosition
+	 *                position where the user last made a selection
+	 */
+	public void setLastSelectionPosition(Point lastSelectionPosition) {
+		this.lastSelectionPosition = lastSelectionPosition;
 	}
 
 	/**

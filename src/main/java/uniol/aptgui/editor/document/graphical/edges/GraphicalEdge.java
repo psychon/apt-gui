@@ -63,35 +63,12 @@ public abstract class GraphicalEdge extends GraphicalElement {
 		this.target = target;
 	}
 
-	public List<Point> getBreakpoints() {
-		return breakpoints;
-	}
-
-	public void setBreakpoints(List<Point> breakpoints) {
-		this.breakpoints = breakpoints;
-	}
-
 	public String getLabel() {
 		return label;
 	}
 
 	public void setLabel(String label) {
 		this.label = label;
-	}
-
-	/**
-	 * Translates the position of all breakpoints by the given x and y
-	 * difference.
-	 *
-	 * @param dx
-	 *                movement in x-direction
-	 * @param dy
-	 *                movement in y-direction
-	 */
-	public void translateBreakpoints(int dx, int dy) {
-		for (Point p : breakpoints) {
-			p.translate(dx, dy);
-		}
 	}
 
 	@Override
@@ -116,22 +93,35 @@ public abstract class GraphicalEdge extends GraphicalElement {
 	}
 
 	/**
-	 * Returns the closest breakpoint to the given point that is within the
-	 * selection distance. Attention: A reference is returned, so any
-	 * modifications will be mirrored by the GraphicalEdge.
+	 * Returns the breakpoint with the given index. Attention: A reference
+	 * is returned, so any modifications will be mirrored by the
+	 * GraphicalEdge.
+	 *
+	 * @param index
+	 *                breakpoint index
+	 * @return the breakpoint at the index
+	 */
+	public Point getBreakpoint(int index) {
+		return breakpoints.get(index);
+	}
+
+	/**
+	 * Returns the closest breakpoint index to the given point that is
+	 * within the selection distance.
 	 *
 	 * @param point
 	 *                test position
-	 * @return the closest breakpoint or null if no breakpoint is close
+	 * @return the closest breakpoint index or -1 if no breakpoint is close
 	 *         enough
 	 */
-	public Point getClosestBreakpoint(Point point) {
-		for (Point p : breakpoints) {
+	public int getClosestBreakpointIndex(Point point) {
+		for (int i = 0; i < breakpoints.size(); i++) {
+			Point p = breakpoints.get(i);
 			if (p.distance(point.x, point.y) < SELECTION_DISTANCE) {
-				return p;
+				return i;
 			}
 		}
-		return null;
+		return -1;
 	}
 
 	/**
@@ -139,9 +129,23 @@ public abstract class GraphicalEdge extends GraphicalElement {
 	 *
 	 * @param breakpoint
 	 *                the new breakpoint in model coordinates
+	 * @return the index of the new breakpoint
 	 */
-	public void addBreakpoint(Point breakpoint) {
+	public int addBreakpoint(Point breakpoint) {
 		breakpoints.add(breakpoint);
+		return breakpoints.size() - 1;
+	}
+
+	/**
+	 * Adds the given breakpoint at the given index position.
+	 *
+	 * @param index
+	 *                index of the new breakpoint
+	 * @param breakpoint
+	 *                breakpoint to add
+	 */
+	public void addBreakpoint(int index, Point breakpoint) {
+		breakpoints.add(index, breakpoint);
 	}
 
 	/**
@@ -150,14 +154,42 @@ public abstract class GraphicalEdge extends GraphicalElement {
 	 *
 	 * @param breakpoint
 	 *                the new breakpoint
+	 * @return the index of the new breakpoint or -1 if it was not inserted
 	 */
-	public void addBreakpointToClosestSegment(Point breakpoint) {
+	public int addBreakpointToClosestSegment(Point breakpoint) {
 		int pathIndex = getSegmentIndexAt(breakpoint);
 		if (pathIndex != -1) {
 			// SourceNode position is also part of the path, so
 			// subtract 1.
 			int insertionIndex = pathIndex - 1;
 			breakpoints.add(insertionIndex, breakpoint);
+			return insertionIndex;
+		}
+		return -1;
+	}
+
+	/**
+	 * Removes the breakpoint at the given index.
+	 *
+	 * @param breakpoint
+	 *                index of the breakpoint to remove
+	 */
+	public void removeBreakpoint(int index) {
+		breakpoints.remove(index);
+	}
+
+	/**
+	 * Translates the position of all breakpoints by the given x and y
+	 * difference.
+	 *
+	 * @param dx
+	 *                movement in x-direction
+	 * @param dy
+	 *                movement in y-direction
+	 */
+	public void translateBreakpoints(int dx, int dy) {
+		for (Point p : breakpoints) {
+			p.translate(dx, dy);
 		}
 	}
 

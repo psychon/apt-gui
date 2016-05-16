@@ -70,9 +70,9 @@ public class HoverFeature extends HoverEffectFeature {
 		// Display breakpoint handle if necessary.
 		if (elem instanceof GraphicalEdge) {
 			GraphicalEdge edge = (GraphicalEdge) elem;
-			Point breakpoint = edge.getClosestBreakpoint(modelPosition);
-			if (breakpoint != null) {
-				breakpointHandle.setCenter(breakpoint);
+			int bpIndex = edge.getClosestBreakpointIndex(modelPosition);
+			if (bpIndex != -1) {
+				breakpointHandle.setCenter(edge.getBreakpoint(bpIndex));
 				breakpointHandle.setVisible(true);
 			}
 		} else {

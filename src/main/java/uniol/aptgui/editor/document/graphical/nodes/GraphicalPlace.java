@@ -22,9 +22,7 @@ package uniol.aptgui.editor.document.graphical.nodes;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-import uniol.aptgui.editor.document.graphical.traits.HasTokens;
-
-public class GraphicalPlace extends GraphicalNode implements HasTokens {
+public class GraphicalPlace extends GraphicalNode{
 
 	private static final int RADIUS = 20;
 	protected long tokens;

@@ -20,7 +20,6 @@
 package uniol.aptgui.swing.actions;
 
 import java.util.List;
-import java.util.Set;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -29,12 +28,14 @@ import uniol.aptgui.Application;
 import uniol.aptgui.commands.Command;
 import uniol.aptgui.commands.SetMultiplicityCommand;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
-import uniol.aptgui.editor.document.graphical.traits.HasMultiplicity;
+import uniol.aptgui.editor.document.graphical.edges.GraphicalFlow;
 import uniol.aptgui.swing.actions.base.SetSimpleAttributeAction;
 
+/**
+ * Action that sets the multiplicity of a flow.
+ */
 @SuppressWarnings("serial")
-public class SetMultiplicityAction extends SetSimpleAttributeAction<HasMultiplicity, Integer> {
+public class SetMultiplicityAction extends SetSimpleAttributeAction<GraphicalFlow, Integer> {
 
 	@Inject
 	public SetMultiplicityAction(Application app, EventBus eventBus) {
@@ -42,7 +43,7 @@ public class SetMultiplicityAction extends SetSimpleAttributeAction<HasMultiplic
 	}
 
 	@Override
-	protected Command createCommand(Document<?> document, List<HasMultiplicity> selection, String userInput) {
+	protected Command createCommand(Document<?> document, List<GraphicalFlow> selection, String userInput) {
 		try {
 			Integer value = Integer.valueOf(userInput);
 			return new SetMultiplicityCommand(document, selection, value);
@@ -52,13 +53,13 @@ public class SetMultiplicityAction extends SetSimpleAttributeAction<HasMultiplic
 	}
 
 	@Override
-	protected Integer getAttribute(HasMultiplicity element) {
+	protected Integer getAttribute(GraphicalFlow element) {
 		return element.getMultiplicity();
 	}
 
 	@Override
-	protected boolean checkEnabled(Set<GraphicalElement> selection, Class<?> commonBaseTestClass) {
-		return HasMultiplicity.class.isAssignableFrom(commonBaseTestClass);
+	protected boolean checkEnabled(Document<?> document, Class<?> commonBaseTestClass) {
+		return GraphicalFlow.class.isAssignableFrom(commonBaseTestClass);
 	}
 
 }

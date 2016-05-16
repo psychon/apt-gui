@@ -19,40 +19,39 @@
 
 package uniol.aptgui.commands;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.Point;
 
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.graphical.edges.GraphicalFlow;
+import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 
-public class SetMultiplicityCommand extends SetAttributeCommand<GraphicalFlow, Integer> {
+public class AddBreakpointCommand extends Command {
 
-	public SetMultiplicityCommand(Document<?> document, List<GraphicalFlow> elements, Integer newValue) {
-		super(document, elements, newValue);
+	private final Document<?> document;
+	private final GraphicalEdge edge;
+	private final Point newBreakpointPosition;
+	private int newBreakpointIndex;
+
+	public AddBreakpointCommand(Document<?> document, GraphicalEdge edge, Point newBreakpointPosition) {
+		this.document = document;
+		this.edge = edge;
+		this.newBreakpointPosition = newBreakpointPosition;
 	}
 
 	@Override
 	public String getName() {
-		return "Set Label";
+		return "Add Breakpoint";
 	}
 
 	@Override
-	protected List<Integer> getAttributeValues(List<GraphicalFlow> elements) {
-		List<Integer> oldValues = new ArrayList<>();
-		for (GraphicalFlow e : elements) {
-			oldValues.add(e.getMultiplicity());
-		}
-		return oldValues;
+	public void execute() {
+		newBreakpointIndex = edge.addBreakpointToClosestSegment(newBreakpointPosition);
+		document.fireDocumentChanged(true);
 	}
 
 	@Override
-	protected Class<?> getModelAttributeClass() {
-		return int.class;
-	}
-
-	@Override
-	protected String getModelAttributeSetterName() {
-		return "setWeight";
+	public void undo() {
+		edge.removeBreakpoint(newBreakpointIndex);
+		document.fireDocumentChanged(true);
 	}
 
 }

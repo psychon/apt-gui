@@ -68,8 +68,8 @@ public class DeleteElementsAction extends SelectionAction {
 	}
 
 	@Override
-	protected boolean checkEnabled(Set<GraphicalElement> selection, Class<?> commonBaseTestClass) {
-		return !selection.isEmpty();
+	protected boolean checkEnabled(Document<?> document, Class<?> commonBaseTestClass) {
+		return !document.getSelection().isEmpty();
 	}
 
 }

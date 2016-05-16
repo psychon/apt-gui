@@ -21,6 +21,7 @@ package uniol.aptgui.editor.document;
 
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
 public class Transform2D {
@@ -109,7 +110,7 @@ public class Transform2D {
 			AffineTransform tx = getAffineTransform();
 			Point2D res = tx.inverseTransform(point, null);
 			return new Point((int) res.getX(), (int) res.getY());
-		} catch (Exception e) {
+		} catch (NoninvertibleTransformException e) {
 			throw new AssertionError();
 		}
 	}

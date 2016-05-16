@@ -23,6 +23,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import uniol.aptgui.commands.History;
+import uniol.aptgui.commands.TranslateBreakpointCommand;
 import uniol.aptgui.commands.TranslateElementsCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.Transform2D;
@@ -61,20 +62,21 @@ public class SelectionTool extends Feature {
 	private DragType dragType;
 
 	/**
-	 * The element that is dragged around.
-	 */
-	private Object draggedElement;
-
-	/**
 	 * Cursor position when a drag started.
 	 */
 	private Point dragSource;
 
 	/**
-	 * Command object that will be submitted to the history when the
-	 * translation process finishes.
+	 * Command object that will be submitted to the history when an element
+	 * translation finishes.
 	 */
-	private TranslateElementsCommand translateCommand;
+	private TranslateElementsCommand translateElementsCommand;
+
+	/**
+	 * Command object that will be submitted to the history when a
+	 * breakpoint translation finishes.
+	 */
+	private TranslateBreakpointCommand translateBreakpointCommand;
 
 	/**
 	 * Creates a new SelectionTool that operates on the given document.
@@ -104,11 +106,11 @@ public class SelectionTool extends Feature {
 		if (elem != null) {
 			if (elem instanceof GraphicalEdge) {
 				GraphicalEdge edge = (GraphicalEdge) elem;
-				Point bp = edge.getClosestBreakpoint(modelPosition);
+				int breakpointIndex = edge.getClosestBreakpointIndex(modelPosition);
 				// If the click hit a breakpoint, drag it.
-				if (bp != null) {
-					draggedElement = bp;
+				if (breakpointIndex != -1) {
 					dragType = DragType.BREAKPOINT;
+					translateBreakpointCommand = new TranslateBreakpointCommand(document, edge, breakpointIndex);
 					return;
 				}
 			}
@@ -124,12 +126,13 @@ public class SelectionTool extends Feature {
 				document.addToSelection(elem);
 			}
 
+			document.setLastSelectionPosition(modelPosition);
 			document.fireSelectionChanged();
 			document.fireDocumentDirty();
 
 			// Set drag type to selection.
 			dragType = DragType.SELECTION;
-			translateCommand = new TranslateElementsCommand(document, document.getSelection());
+			translateElementsCommand = new TranslateElementsCommand(document, document.getSelection());
 		} else {
 			dragType = DragType.NONE;
 			document.clearSelection();
@@ -140,41 +143,43 @@ public class SelectionTool extends Feature {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (dragType == DragType.SELECTION && !translateCommand.isIdentity()) {
-			translateCommand.unapplyTranslation();
-			history.execute(translateCommand);
+		if (dragType == DragType.BREAKPOINT && !translateBreakpointCommand.isIdentity()) {
+			translateBreakpointCommand.unapplyTranslation();
+			history.execute(translateBreakpointCommand);
 		}
+		if (dragType == DragType.SELECTION && !translateElementsCommand.isIdentity()) {
+			translateElementsCommand.unapplyTranslation();
+			history.execute(translateElementsCommand);
+		}
+
 		dragType = DragType.NONE;
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		Point dragTarget = e.getPoint();
+		int dx = (int) ((dragTarget.x - dragSource.x) / transform.getScale());
+		int dy = (int) ((dragTarget.y - dragSource.y) / transform.getScale());
 
 		switch (dragType) {
 		case BREAKPOINT:
-			translateBreakpoint(dragTarget);
+			translateBreakpointCommand.unapplyTranslation();
+			translateBreakpointCommand.translate(dx, dy);
+			translateBreakpointCommand.applyTranslation();
 			break;
 		case SELECTION:
-			int dx = (int) ((dragTarget.x - dragSource.x) / transform.getScale());
-			int dy = (int) ((dragTarget.y - dragSource.y) / transform.getScale());
-			translateCommand.unapplyTranslation();
-			translateCommand.translate(dx, dy);
-			translateCommand.applyTranslation();
+			if (!GraphicalEdge.class.isAssignableFrom(document.getSelectionCommonBaseClass())) {
+				// Only translate elements if the selection is not only edges.
+				translateElementsCommand.unapplyTranslation();
+				translateElementsCommand.translate(dx, dy);
+				translateElementsCommand.applyTranslation();
+			}
 			break;
-		case NONE:
+		default:
 			break;
 		}
 
 		dragSource = dragTarget;
-	}
-
-	private void translateBreakpoint(Point dragTarget) {
-		// TODO encapsulate in history command
-		Point breakpoint = (Point) draggedElement;
-		Point modelPoint = transform.applyInverse(dragTarget);
-		breakpoint.setLocation(modelPoint);
-		document.fireDocumentDirty();
 	}
 
 }

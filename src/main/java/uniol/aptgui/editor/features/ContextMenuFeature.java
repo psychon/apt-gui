@@ -68,9 +68,10 @@ public class ContextMenuFeature extends Feature {
 			if (!document.getSelection().contains(elem)) {
 				document.clearSelection();
 				document.addToSelection(elem);
-				document.fireSelectionChanged();
-				document.fireDocumentDirty();
 			}
+			document.setLastSelectionPosition(modelPosition);
+			document.fireSelectionChanged();
+			document.fireDocumentDirty();
 			view.showPopupMenu(e.getX(), e.getY());
 		}
 	}

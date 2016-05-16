@@ -17,16 +17,43 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.document.graphical.traits;
+package uniol.aptgui.commands;
 
-/**
- * Interface for all GraphicalElements that have tokens.
- */
-public interface HasTokens {
+import java.awt.Point;
 
-	long getTokens();
+import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 
-	void setTokens(long tokens);
+public class RemoveBreakpointCommand extends Command {
+
+	private final Document<?> document;
+	private final GraphicalEdge edge;
+	private final int bpIndex;
+	private Point oldBreakpoint;
+
+	public RemoveBreakpointCommand(Document<?> document, GraphicalEdge edge, int bpIndex) {
+		this.document = document;
+		this.edge = edge;
+		this.bpIndex = bpIndex;
+	}
+
+	@Override
+	public String getName() {
+		return "Remove Breakpoint";
+	}
+
+	@Override
+	public void execute() {
+		oldBreakpoint = edge.getBreakpoint(bpIndex);
+		edge.removeBreakpoint(bpIndex);
+		document.fireDocumentChanged(true);
+	}
+
+	@Override
+	public void undo() {
+		edge.addBreakpoint(bpIndex, oldBreakpoint);
+		document.fireDocumentChanged(true);
+	}
 
 }
 

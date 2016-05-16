@@ -20,7 +20,6 @@
 package uniol.aptgui.swing.actions;
 
 import java.util.List;
-import java.util.Set;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -32,11 +31,12 @@ import uniol.aptgui.commands.Command;
 import uniol.aptgui.commands.SetTokensCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.PnDocument;
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalPlace;
-import uniol.aptgui.editor.document.graphical.traits.HasTokens;
 import uniol.aptgui.swing.actions.base.SetSimpleAttributeAction;
 
+/**
+ * Action that sets the amount of tokens on a place.
+ */
 @SuppressWarnings("serial")
 public class SetTokensAction extends SetSimpleAttributeAction<GraphicalPlace, Long> {
 
@@ -65,8 +65,8 @@ public class SetTokensAction extends SetSimpleAttributeAction<GraphicalPlace, Lo
 	}
 
 	@Override
-	protected boolean checkEnabled(Set<GraphicalElement> selection, Class<?> commonBaseTestClass) {
-		return HasTokens.class.isAssignableFrom(commonBaseTestClass);
+	protected boolean checkEnabled(Document<?> document, Class<?> commonBaseTestClass) {
+		return GraphicalPlace.class.isAssignableFrom(commonBaseTestClass);
 	}
 
 }
