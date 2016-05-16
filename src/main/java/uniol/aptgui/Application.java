@@ -64,6 +64,11 @@ public interface Application {
 	void show();
 
 	/**
+	 * Closes the application and all its windows.
+	 */
+	void close();
+
+	/**
 	 * Creates a new, empty Petri net editor window.
 	 *
 	 * @return the window id or null if the process was cancelled
@@ -78,12 +83,15 @@ public interface Application {
 	WindowId newTransitionSystem();
 
 	/**
-	 * Closes the window with the given id.
+	 * Tries to close the window with the given id. The user may abort this
+	 * process (e.g. when choosing cancel after being asked if he wants to
+	 * save his document before closing).
 	 *
 	 * @param id
 	 *                window id
+	 * @return true, if the window was closed
 	 */
-	void closeWindow(WindowId id);
+	boolean closeWindow(WindowId id);
 
 	/**
 	 * Focuses and brings the window with the given id to the front,

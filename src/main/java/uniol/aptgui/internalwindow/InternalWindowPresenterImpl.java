@@ -152,7 +152,7 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 		if (document != null) {
 			computedTitle = "";
 			if (document.hasUnsavedChanges()) {
-				computedTitle += "* ";
+				computedTitle += "*";
 			}
 
 			if (document.getFile() != null) {

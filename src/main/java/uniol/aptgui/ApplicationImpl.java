@@ -50,6 +50,7 @@ import uniol.aptgui.io.AptParser;
 import uniol.aptgui.io.DocumentRenderer;
 import uniol.aptgui.mainwindow.MainWindowPresenter;
 import uniol.aptgui.mainwindow.WindowId;
+import uniol.aptgui.swing.actions.SaveAction;
 
 public class ApplicationImpl implements Application {
 
@@ -89,13 +90,21 @@ public class ApplicationImpl implements Application {
 	}
 
 	@Override
-	public void closeWindow(WindowId id) {
+	public boolean closeWindow(WindowId id) {
+		if (id.getType().isEditorWindow()) {
+			Document<?> doc = getDocument(id);
+			if (doc.hasUnsavedChanges() && askSaveDocument(id, getDocument(id))) {
+				return false;
+			}
+		}
+
 		if (activeWindow == id) {
 			activeWindow = null;
 		}
 		mainWindow.removeWindow(id);
 		documents.remove(id);
 		eventBus.post(new WindowClosedEvent(id));
+		return true;
 	}
 
 	@Override
@@ -224,6 +233,37 @@ public class ApplicationImpl implements Application {
 		JOptionPane.showMessageDialog((Component) mainWindow.getView(), e.getMessage(), "Error",
 				JOptionPane.ERROR_MESSAGE);
 		e.printStackTrace();
+	}
+
+	/**
+	 * Asks the user if he wants to save the given document and opens the
+	 * save dialog if he does. Returns if the cancel button was clicked.
+	 *
+	 * @param id
+	 *                window id of the document
+	 * @param document
+	 *                document in question
+	 * @return true, if the user choose cancel
+	 */
+	private boolean askSaveDocument(WindowId id, Document<?> document) {
+		Component parentComponent = (Component) getMainWindow().getView();
+		int res = JOptionPane.showOptionDialog(parentComponent,
+				"Do you want to save your changes to '" + getWindowTitle(id) + "'?",
+				"Save changes?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+				null, null);
+		if (res == JOptionPane.CANCEL_OPTION) {
+			return true;
+		}
+		if (res == JOptionPane.YES_OPTION) {
+			focusWindow(id);
+			new SaveAction(this, eventBus).actionPerformed(null);
+		}
+		return false;
+	}
+
+	@Override
+	public void close() {
+		mainWindow.close();
 	}
 
 }
