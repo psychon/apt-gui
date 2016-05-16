@@ -79,6 +79,21 @@ public abstract class GraphicalEdge extends GraphicalElement {
 		this.label = label;
 	}
 
+	/**
+	 * Translates the position of all breakpoints by the given x and y
+	 * difference.
+	 *
+	 * @param dx
+	 *                movement in x-direction
+	 * @param dy
+	 *                movement in y-direction
+	 */
+	public void translateBreakpoints(int dx, int dy) {
+		for (Point p : breakpoints) {
+			p.translate(dx, dy);
+		}
+	}
+
 	@Override
 	public void draw(Graphics2D graphics) {
 		if (!visible) {

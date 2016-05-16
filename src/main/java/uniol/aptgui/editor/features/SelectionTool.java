@@ -22,11 +22,12 @@ package uniol.aptgui.editor.features;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
+import uniol.aptgui.commands.History;
+import uniol.aptgui.commands.TranslateElementsCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.Transform2D;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
-import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 import uniol.aptgui.editor.features.base.Feature;
 
 /**
@@ -36,8 +37,13 @@ import uniol.aptgui.editor.features.base.Feature;
 public class SelectionTool extends Feature {
 
 	private static enum DragType {
-		NONE, NODE, EDGE, SELECTION
+		NONE, SELECTION, BREAKPOINT
 	}
+
+	/**
+	 * History reference.
+	 */
+	private final History history;
 
 	/**
 	 * Document this tool operates on.
@@ -65,76 +71,80 @@ public class SelectionTool extends Feature {
 	private Point dragSource;
 
 	/**
+	 * Command object that will be submitted to the history when the
+	 * translation process finishes.
+	 */
+	private TranslateElementsCommand translateCommand;
+
+	/**
 	 * Creates a new SelectionTool that operates on the given document.
 	 *
 	 * @param document
 	 */
-	public SelectionTool(Document<?> document) {
+	public SelectionTool(Document<?> document, History history) {
 		this.document = document;
 		this.transform = document.getTransform();
+		this.history = history;
 		this.dragType = DragType.NONE;
 		this.dragSource = null;
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mousePressed(MouseEvent e) {
+		// Only listen for LMB clicks.
 		if (e.getButton() != MouseEvent.BUTTON1) {
 			return;
 		}
 
-		// User clicked LMB: Select element under cursor.
+		dragSource = e.getPoint();
+
 		Point modelPosition = transform.applyInverse(e.getPoint());
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
+
 		if (elem != null) {
+			if (elem instanceof GraphicalEdge) {
+				GraphicalEdge edge = (GraphicalEdge) elem;
+				Point bp = edge.getClosestBreakpoint(modelPosition);
+				// If the click hit a breakpoint, drag it.
+				if (bp != null) {
+					draggedElement = bp;
+					dragType = DragType.BREAKPOINT;
+					return;
+				}
+			}
+
 			if (e.isControlDown()) {
-				// If CTRL was pressed, add to/remove from selection.
+				// If CTRL was pressed, add to/remove from
+				// selection.
 				document.toggleSelection(elem);
-			} else {
-				// Otherwise replace selection.
+			} else if (!document.getSelection().contains(elem)) {
+				// If the clicked element did not belong to the
+				// selection, replace the selection.
 				document.clearSelection();
 				document.addToSelection(elem);
 			}
+
+			document.fireSelectionChanged();
+			document.fireDocumentDirty();
+
+			// Set drag type to selection.
+			dragType = DragType.SELECTION;
+			translateCommand = new TranslateElementsCommand(document, document.getSelection());
+		} else {
+			dragType = DragType.NONE;
+			document.clearSelection();
 			document.fireSelectionChanged();
 			document.fireDocumentDirty();
 		}
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-		if (e.getButton() != MouseEvent.BUTTON1) {
-			return;
+	public void mouseReleased(MouseEvent e) {
+		if (dragType == DragType.SELECTION && !translateCommand.isIdentity()) {
+			translateCommand.unapplyTranslation();
+			history.execute(translateCommand);
 		}
-
-		// User pressed LMB: Either move view or element under cursor.
-		Point modelPosition = transform.applyInverse(e.getPoint());
-		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
-		if (elem instanceof GraphicalNode) {
-			if (document.getSelection().isEmpty()) {
-				dragType = DragType.NODE;
-				draggedElement = elem;
-			} else if (document.getSelection().contains(elem)) {
-				dragType = DragType.SELECTION;
-			} else {
-				dragType = DragType.NONE;
-				draggedElement = null;
-			}
-		} else if (elem instanceof GraphicalEdge) {
-			dragType = DragType.EDGE;
-			draggedElement = getOrCreateBreakpoint(e.getPoint(), (GraphicalEdge) elem);
-			document.clearSelection();
-			document.fireSelectionChanged();
-		} else {
-			clearSelection();
-		}
-
-		dragSource = e.getPoint();
-	}
-
-	private void clearSelection() {
 		dragType = DragType.NONE;
-		draggedElement = null;
-		document.clearSelection();
-		document.fireSelectionChanged();
 	}
 
 	@Override
@@ -142,16 +152,15 @@ public class SelectionTool extends Feature {
 		Point dragTarget = e.getPoint();
 
 		switch (dragType) {
-		case EDGE:
+		case BREAKPOINT:
 			translateBreakpoint(dragTarget);
-			break;
-		case NODE:
-			translateNode(dragTarget);
 			break;
 		case SELECTION:
 			int dx = (int) ((dragTarget.x - dragSource.x) / transform.getScale());
 			int dy = (int) ((dragTarget.y - dragSource.y) / transform.getScale());
-			translateSelection(dx, dy);
+			translateCommand.unapplyTranslation();
+			translateCommand.translate(dx, dy);
+			translateCommand.applyTranslation();
 			break;
 		case NONE:
 			break;
@@ -160,53 +169,11 @@ public class SelectionTool extends Feature {
 		dragSource = dragTarget;
 	}
 
-	private void translateSelection(int dx, int dy) {
-		// TODO encapsulate in history command
-		for (GraphicalElement elem : document.getSelection()) {
-			if (elem instanceof GraphicalNode) {
-				GraphicalNode node = (GraphicalNode) elem;
-				node.translate(dx, dy);
-			}
-		}
-		document.fireDocumentDirty();
-	}
-
-	/**
-	 * Checks if a breakpoint exists near the given cursor position on the
-	 * given edge. If it exists, it is returned. Otherwise a new breakpoint
-	 * is added at the cursor position and returned.
-	 *
-	 * @param cursor
-	 *                view coordinate cursor position
-	 * @param edge
-	 *                edge at the cursor position
-	 * @return new or existing breakpoint at cursor position
-	 */
-	private Point getOrCreateBreakpoint(Point cursor, GraphicalEdge edge) {
-		Point modelPoint = transform.applyInverse(cursor);
-		Point breakpoint = edge.getClosestBreakpoint(modelPoint);
-		// Either move existing breakpoint or create a new one.
-		if (breakpoint != null) {
-			return breakpoint;
-		} else {
-			edge.addBreakpointToClosestSegment(modelPoint);
-			return modelPoint;
-		}
-	}
-
 	private void translateBreakpoint(Point dragTarget) {
 		// TODO encapsulate in history command
 		Point breakpoint = (Point) draggedElement;
 		Point modelPoint = transform.applyInverse(dragTarget);
 		breakpoint.setLocation(modelPoint);
-		document.fireDocumentDirty();
-	}
-
-	private void translateNode(Point dragTarget) {
-		// TODO encapsulate in history command
-		GraphicalNode node = (GraphicalNode) draggedElement;
-		Point modelTarget = transform.applyInverse(dragTarget);
-		node.setCenter(modelTarget);
 		document.fireDocumentDirty();
 	}
 

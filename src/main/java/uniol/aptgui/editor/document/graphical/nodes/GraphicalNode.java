@@ -48,6 +48,14 @@ public abstract class GraphicalNode extends GraphicalElement {
 		this.center = center;
 	}
 
+	/**
+	 * Translates the center point by the given amount in x and y direction.
+	 *
+	 * @param dx
+	 *                movement in x direction
+	 * @param dy
+	 *                movement in y direction
+	 */
 	public void translate(int dx, int dy) {
 		center.x += dx;
 		center.y += dy;
