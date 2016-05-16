@@ -52,6 +52,12 @@ public class TsDocument extends Document<TransitionSystem> {
 	}
 
 	@Override
+	public void setName(String name) {
+		super.setName(name);
+		getModel().setName(name);
+	}
+
+	@Override
 	public void draw(Graphics2D graphics) {
 		State initial = null;
 		try {

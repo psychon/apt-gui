@@ -36,7 +36,6 @@ import com.google.inject.Inject;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.io.parser.ParseException;
-import uniol.apt.io.renderer.RenderException;
 import uniol.apt.module.Module;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
@@ -187,7 +186,7 @@ public class ApplicationImpl implements Application {
 		try {
 			renderer.render(document, document.getFile());
 			document.fireDocumentChanged(false);
-		} catch (RenderException | IOException e) {
+		} catch (Exception e) {
 			showException(e);
 		}
 	}

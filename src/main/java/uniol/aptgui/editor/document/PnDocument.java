@@ -63,6 +63,12 @@ public class PnDocument extends Document<PetriNet> {
 	}
 
 	@Override
+	public void setName(String name) {
+		super.setName(name);
+		getModel().setName(name);
+	}
+
+	@Override
 	public void draw(Graphics2D graphics) {
 		Marking marking = getModel().getInitialMarking();
 		for (Place place : getModel().getPlaces()) {
