@@ -17,33 +17,33 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.mainwindow;
+package uniol.aptgui.swing.actions;
 
-import uniol.aptgui.View;
-import uniol.aptgui.internalwindow.InternalWindowView;
-import uniol.aptgui.mainwindow.menu.MenuView;
-import uniol.aptgui.mainwindow.toolbar.ToolbarView;
+import java.awt.event.ActionEvent;
 
-public interface MainWindowView extends View<MainWindowPresenter> {
+import javax.swing.AbstractAction;
 
-	void setVisible(boolean visible);
+import com.google.inject.Inject;
 
-	void close();
+import uniol.aptgui.Application;
 
-	void setTitle(String title);
+@SuppressWarnings("serial")
+public class CascadeWindowsAction extends AbstractAction {
 
-	void addInternalWindow(InternalWindowView windowView);
+	private final Application app;
 
-	void removeInternalWindow(InternalWindowView windowView);
+	@Inject
+	public CascadeWindowsAction(Application app) {
+		this.app = app;
+		String name = "Cascade Windows";
+		putValue(NAME, name);
+		putValue(SHORT_DESCRIPTION, name);
+	}
 
-	void setToolbar(ToolbarView toolbarView);
-
-	void setMenu(MenuView menuView);
-
-	/**
-	 * Arranges the internal windows in a cascade.
-	 */
-	void cascadeInternalWindows();
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		app.getMainWindow().cascadeWindows();
+	}
 
 }
 

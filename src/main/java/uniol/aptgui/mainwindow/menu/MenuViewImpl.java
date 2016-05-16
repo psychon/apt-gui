@@ -32,6 +32,7 @@ import uniol.apt.module.Module;
 import uniol.aptgui.Application;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.JMenuBarView;
+import uniol.aptgui.swing.actions.CascadeWindowsAction;
 import uniol.aptgui.swing.actions.DeleteElementsAction;
 import uniol.aptgui.swing.actions.ExitAction;
 import uniol.aptgui.swing.actions.ModuleAction;
@@ -81,7 +82,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private final List<JMenuItem> recentlyUsedModulesMenuItems;
 
 	private final JMenu windowMenu;
-	private final JMenuItem tileEditorWindows;
+	private final JMenuItem cascadeEditorWindows;
 	private final JMenuItem openWindowsHeader;
 	private final List<JMenuItem> openWindowsMenuItems;
 
@@ -115,7 +116,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		recentlyUsedModulesMenuItems = new ArrayList<>();
 
 		windowMenu = new JMenu("Windows");
-		tileEditorWindows = new JMenuItem("Tile Editor Windows");
+		cascadeEditorWindows = new JMenuItem(injector.getInstance(CascadeWindowsAction.class));
 		openWindowsHeader = new JMenuItem("Currently Opened Windows");
 		openWindowsHeader.setEnabled(false);
 		openWindowsMenuItems = new ArrayList<>();
@@ -171,7 +172,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private void setupWindowMenu() {
 		add(windowMenu);
 
-		windowMenu.add(tileEditorWindows);
+		windowMenu.add(cascadeEditorWindows);
 		windowMenu.addSeparator();
 		windowMenu.add(openWindowsHeader);
 	}

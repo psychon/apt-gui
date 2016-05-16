@@ -21,9 +21,14 @@ package uniol.aptgui.mainwindow;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.WindowEvent;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
 import javax.swing.WindowConstants;
 
@@ -89,6 +94,48 @@ public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implemen
 	public void setMenu(MenuView menuView) {
 		setJMenuBar((JMenuBar) menuView);
 		revalidate();
+	}
+
+	@Override
+	public void cascadeInternalWindows() {
+		cascade(jDesktopPane);
+	}
+
+	public static void cascade(JDesktopPane desktopPane) {
+		JInternalFrame[] frames = desktopPane.getAllFrames();
+		if (frames.length == 0) {
+			return;
+		}
+
+		Arrays.sort(frames, new ZOrderComparator(desktopPane));
+		cascade(frames, desktopPane.getSize());
+	}
+
+	private static void cascade(JInternalFrame[] frames, Dimension desktopSize) {
+		int maxOffset = (int) Math.min(desktopSize.getWidth(), desktopSize.getHeight()) - 30;
+		int offset = 0;
+		for (int i = 0; i < frames.length; i++) {
+			frames[i].setLocation(offset, offset);
+			Dimension frameDim = frames[i].getSize();
+			Dimension contentDim = frames[i].getContentPane().getSize();
+			offset += Math.max(frameDim.width - contentDim.width, frameDim.height - contentDim.height);
+			if (offset >= maxOffset) {
+				offset = 0;
+			}
+		}
+	}
+
+	private static class ZOrderComparator implements Comparator<JInternalFrame> {
+		private final JLayeredPane desktop;
+
+		public ZOrderComparator(JLayeredPane pane) {
+			desktop = pane;
+		}
+
+		@Override
+		public int compare(JInternalFrame o1, JInternalFrame o2) {
+			return desktop.getPosition(o2) - desktop.getPosition(o1);
+		}
 	}
 
 }

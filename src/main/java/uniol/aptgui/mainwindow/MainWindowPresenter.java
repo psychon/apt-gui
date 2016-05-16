@@ -114,6 +114,11 @@ public interface MainWindowPresenter extends Presenter<MainWindowView> {
 	 */
 	String showDocumentNameInputDialog(String title);
 
+	/**
+	 * Cascades the internal windows.
+	 */
+	void cascadeWindows();
+
 	/// VIEW EVENTS ///
 
 	void onCloseButtonClicked();
