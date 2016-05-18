@@ -24,6 +24,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
+/**
+ * Transform2D encapsulates translation and scaling operations and allows to
+ * easily apply them to points.
+ */
 public class Transform2D {
 
 	/**
@@ -31,30 +35,74 @@ public class Transform2D {
 	 */
 	private static final double SCALE_FACTOR = 1.1;
 
+	/**
+	 * Translation in x-axis direction.
+	 */
 	private int translationX = 0;
+
+	/**
+	 * Translation in y-axis direction.
+	 */
 	private int translationY = 0;
+
+	/**
+	 * Scale in both the x and y dimension.
+	 */
 	private double scaleXY = 1.0;
 
+	/**
+	 * Returns the translation in x-axis direction.
+	 *
+	 * @return the translation in x-axis direction
+	 */
 	public int getTranslationX() {
 		return translationX;
 	}
 
+	/**
+	 * Sets the translation in x-axis direction.
+	 *
+	 * @param translationX
+	 *                the new total translation in x-axis direction
+	 */
 	public void setTranslationX(int translationX) {
 		this.translationX = translationX;
 	}
 
+	/**
+	 * Returns the translation in y-axis direction.
+	 *
+	 * @return the translation in y-axis direction
+	 */
 	public int getTranslationY() {
 		return translationY;
 	}
 
+	/**
+	 * Sets the translation in y-axis direction.
+	 *
+	 * @param translationY
+	 *                the new total translation in y-axis direction
+	 */
 	public void setTranslationY(int translationY) {
 		this.translationY = translationY;
 	}
 
+	/**
+	 * Returns the scale in both x and y dimension.
+	 *
+	 * @return the scale in both x and y dimension
+	 */
 	public double getScale() {
 		return scaleXY;
 	}
 
+	/**
+	 * Sets the scale in both x and y dimension.
+	 *
+	 * @param scale
+	 *                the new scale in both x and y dimension
+	 */
 	public void setScale(double scale) {
 		this.scaleXY = scale;
 	}
@@ -81,15 +129,38 @@ public class Transform2D {
 		scaleView(levels / SCALE_FACTOR);
 	}
 
+	/**
+	 * Translates (moves) the view by the given amounts in x and y direction
+	 * respectively.
+	 *
+	 * @param dx
+	 *                translation in x-axis direction
+	 * @param dy
+	 *                translation in y-axis direction
+	 */
 	public void translateView(int dx, int dy) {
 		translationX += dx;
 		translationY += dy;
 	}
 
+	/**
+	 * Scales the view by the given factor.
+	 *
+	 * @param scale
+	 *                scale factor > 0
+	 */
 	public void scaleView(double scale) {
+		assert scale > 0;
 		this.scaleXY = this.scaleXY * scale;
 	}
 
+	/**
+	 * Returns an AffineTransform object that specifies the same transform
+	 * as this object.
+	 *
+	 * @return an AffineTransform object that specifies the same transform
+	 *         as this object
+	 */
 	public AffineTransform getAffineTransform() {
 		AffineTransform tx = new AffineTransform();
 		tx.translate(translationX, translationY);

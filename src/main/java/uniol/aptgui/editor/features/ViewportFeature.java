@@ -47,6 +47,13 @@ public class ViewportFeature extends Feature {
 	 */
 	private Point dragSource;
 
+	/**
+	 * Creates a new viewport feature that operates on the given document.
+	 *
+	 * @param document
+	 *                document whose transform will be modified by this
+	 *                feature
+	 */
 	public ViewportFeature(Document<?> document) {
 		this.document = document;
 		this.dragging = false;
@@ -92,7 +99,7 @@ public class ViewportFeature extends Feature {
 		if (e.getWheelRotation() > 0) {
 			document.getTransform().decreaseScale(e.getWheelRotation());
 		} else {
-			document.getTransform().increaseScale(e.getWheelRotation());
+			document.getTransform().increaseScale(-e.getWheelRotation());
 		}
 		document.fireDocumentDirty();
 	}
