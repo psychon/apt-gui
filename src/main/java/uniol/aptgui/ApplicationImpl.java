@@ -22,6 +22,7 @@ package uniol.aptgui;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +43,6 @@ import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.layout.RandomLayout;
-import uniol.aptgui.events.WindowClosedEvent;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.io.AptDocumentRenderer;
 import uniol.aptgui.io.AptParser;
@@ -100,9 +100,8 @@ public class ApplicationImpl implements Application {
 		if (activeWindow == id) {
 			activeWindow = null;
 		}
-		mainWindow.removeWindow(id);
 		documents.remove(id);
-		eventBus.post(new WindowClosedEvent(id));
+		mainWindow.removeWindow(id);
 		return true;
 	}
 
@@ -204,6 +203,11 @@ public class ApplicationImpl implements Application {
 	@Override
 	public Set<WindowId> getDocumentWindows() {
 		return Collections.unmodifiableSet(documents.keySet());
+	}
+
+	@Override
+	public Collection<Document<?>> getDocuments() {
+		return Collections.unmodifiableCollection(documents.values());
 	}
 
 	@Override

@@ -42,6 +42,7 @@ import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.events.DocumentSelectionChangedEvent;
 import uniol.aptgui.events.WindowClosedEvent;
 import uniol.aptgui.events.WindowFocusGainedEvent;
+import uniol.aptgui.events.WindowOpenedEvent;
 import uniol.aptgui.internalwindow.InternalWindowListener;
 import uniol.aptgui.internalwindow.InternalWindowPresenter;
 import uniol.aptgui.mainwindow.menu.MenuPresenter;
@@ -180,6 +181,8 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 			document.removeListener(documentListener);
 			window.removeWindowListener(windowListener);
 		}
+
+		eventBus.post(new WindowClosedEvent(id));
 	}
 
 	@Override
@@ -192,6 +195,8 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		InternalWindowPresenter window = internalWindows.get(id);
 		view.addInternalWindow(window.getView());
 		updateWindowMenu();
+
+		eventBus.post(new WindowOpenedEvent(id));
 	}
 
 	@Override

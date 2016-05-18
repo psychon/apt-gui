@@ -20,6 +20,7 @@
 package uniol.aptgui;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Set;
 
 import com.google.common.eventbus.EventBus;
@@ -124,6 +125,12 @@ public interface Application {
 	 * @return the ids of all windows that are document editors
 	 */
 	Set<WindowId> getDocumentWindows();
+
+	/**
+	 * Returns an unmodifiable collection of all opened documents.
+	 * @return an unmodifiable collection of all opened documents
+	 */
+	Collection<Document<?>> getDocuments();
 
 	/**
 	 * Returns the document attached to the window with the given id.

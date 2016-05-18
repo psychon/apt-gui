@@ -25,10 +25,15 @@ import java.util.Set;
 
 import javax.swing.AbstractAction;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.events.HistoryChangedEvent;
+import uniol.aptgui.events.WindowClosedEvent;
+import uniol.aptgui.events.WindowOpenedEvent;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.Resource;
 
@@ -39,13 +44,40 @@ public class SaveAllAction extends AbstractAction {
 	private final SaveAction saveAction;
 
 	@Inject
-	public SaveAllAction(Application app, SaveAction saveAction) {
+	public SaveAllAction(Application app, EventBus eventBus, SaveAction saveAction) {
 		this.app = app;
 		this.saveAction = saveAction;
 		String name = "Save all...";
 		putValue(NAME, name);
-		putValue(SMALL_ICON, Resource.getIconSaveFile());
+		putValue(SMALL_ICON, Resource.getIconSaveAll());
 		putValue(SHORT_DESCRIPTION, name);
+		setEnabled(false);
+		eventBus.register(this);
+	}
+
+	@Subscribe
+	public void onHistoryChangedEvent(HistoryChangedEvent e) {
+		updateEnabledStatus();
+	}
+
+	@Subscribe
+	public void onWindowClosedEvent(WindowClosedEvent e) {
+		updateEnabledStatus();
+	}
+
+	@Subscribe
+	public void onWindowOpenedEvent(WindowOpenedEvent e) {
+		updateEnabledStatus();
+	}
+
+	private void updateEnabledStatus() {
+		for (Document<?> document : app.getDocuments()) {
+			if (document.hasUnsavedChanges()) {
+				setEnabled(true);
+				return;
+			}
+		}
+		setEnabled(false);
 	}
 
 	@Override

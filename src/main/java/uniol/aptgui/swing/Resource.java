@@ -91,6 +91,10 @@ public class Resource {
 		return getIcon("Save16.gif");
 	}
 
+	public static ImageIcon getIconSaveAll() {
+		return getIcon("SaveAll16.gif");
+	}
+
 	public static ImageIcon getIconSaveFileAs() {
 		return getIcon("SaveAs16.gif");
 	}
