@@ -25,6 +25,12 @@ import uniol.aptgui.swing.parametertable.WindowRefProvider;
 
 public interface ModuleView extends View<ModulePresenter> {
 
+	/**
+	 * Sets the module description.
+	 *
+	 * @param description
+	 *                module description
+	 */
 	void setDescription(String description);
 
 	void setPetriNetWindowRefProvider(WindowRefProvider refProvider);
@@ -40,6 +46,15 @@ public interface ModuleView extends View<ModulePresenter> {
 	void showErrorModuleException(String message);
 
 	void showResultsPane();
+
+	/**
+	 * Updates the visual appearance and enabled status of several elements
+	 * according to the running status of the module.
+	 *
+	 * @param running
+	 *                true, if the module is currently executing
+	 */
+	void setModuleRunning(boolean running);
 
 }
 

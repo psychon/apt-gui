@@ -131,6 +131,10 @@ public class Resource {
 		return getIcon("Export16.gif");
 	}
 
+	public static ImageIcon getIconSpinner() {
+		return getIcon("Spinner16.gif");
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

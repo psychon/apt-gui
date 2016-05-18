@@ -29,6 +29,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -37,6 +38,7 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
 import uniol.aptgui.swing.JPanelView;
+import uniol.aptgui.swing.Resource;
 import uniol.aptgui.swing.parametertable.PropertyTable;
 import uniol.aptgui.swing.parametertable.PropertyTableModel;
 import uniol.aptgui.swing.parametertable.WindowRefProvider;
@@ -57,6 +59,7 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	private PropertyTable resultsTable;
 
 	private JPanel bottomPanel;
+	private JLabel progressSpinner;
 	private JButton runButton;
 
 	public ModuleViewImpl() {
@@ -113,6 +116,7 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	}
 
 	private void setupBottomPane() {
+		progressSpinner = new JLabel();
 		runButton = new JButton("Run");
 		runButton.addActionListener(new ActionListener() {
 			@Override
@@ -123,9 +127,23 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 		bottomPanel = new JPanel();
 		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.LINE_AXIS));
 		bottomPanel.add(Box.createHorizontalGlue());
+		bottomPanel.add(progressSpinner);
+		bottomPanel.add(Box.createHorizontalStrut(5));
 		bottomPanel.add(runButton);
 
 		add(bottomPanel, BorderLayout.PAGE_END);
+	}
+
+	@Override
+	public void setModuleRunning(boolean running) {
+		if (running) {
+			progressSpinner.setIcon(Resource.getIconSpinner());
+		} else {
+			progressSpinner.setIcon(null);
+		}
+
+		runButton.setEnabled(!running);
+		parametersTable.setEnabled(!running);
 	}
 
 	@Override

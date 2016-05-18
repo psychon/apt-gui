@@ -21,6 +21,12 @@ package uniol.aptgui.module;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import javax.swing.SwingUtilities;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -33,7 +39,6 @@ import uniol.apt.module.impl.ModuleInvoker;
 import uniol.apt.module.impl.ModuleUtils;
 import uniol.apt.module.impl.Parameter;
 import uniol.apt.module.impl.ReturnValue;
-import uniol.apt.ui.ParametersTransformer;
 import uniol.apt.ui.impl.AptParametersTransformer;
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Application;
@@ -51,7 +56,6 @@ import uniol.aptgui.swing.parametertable.WindowRef;
 public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, ModuleView> implements ModulePresenter {
 
 	private final Application application;
-	ParametersTransformer parametersTransformer = AptParametersTransformer.INSTANCE;
 
 	private Module module;
 	private List<Parameter> parameters;
@@ -60,6 +64,8 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 
 	private PropertyTableModel parameterTableModel;
 	private PropertyTableModel resultTableModel;
+
+	private ExecutorService executor = Executors.newSingleThreadExecutor();
 
 	@Inject
 	public ModulePresenterImpl(ModuleView view, Application application) {
@@ -94,18 +100,37 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 	public void onRunButtonClicked() {
 		try {
 			Object[] paramValues = getParameterValues();
+			// Make sure all parameters are filled in.
 			if (paramValues.length < parameters.size()) {
 				view.showErrorTooFewParameters();
 				return;
 			}
 
-			ModuleInvoker invoker = new ModuleInvoker();
-			List<Object> filledReturnValues = invoker.invoke(module, paramValues);
-			application.getEventBus().post(new ModuleExecutedEvent(this, module, filledReturnValues));
+			// Module is executed on another thread. Results come by event.
+			invokeModule(paramValues);
+			view.setModuleRunning(true);
 		} catch (ModuleException e) {
 			view.showErrorModuleException(e.getMessage());
 			e.printStackTrace();
 		}
+	}
+
+	private Future<List<Object>> invokeModule(Object[] paramValues) {
+		return executor.submit(new Callable<List<Object>>() {
+			@Override
+			public List<Object> call() throws Exception {
+				ModuleInvoker invoker = new ModuleInvoker();
+				List<Object> filledReturnValues = invoker.invoke(module, paramValues);
+				ModuleExecutedEvent event = new ModuleExecutedEvent(ModulePresenterImpl.this, module, filledReturnValues);
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						application.getEventBus().post(event);
+					}
+				});
+				return filledReturnValues;
+			}
+		});
 	}
 
 	/**
@@ -141,7 +166,7 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 			return ref.getDocument().getModel();
 		default:
 			String value = parameterTableModel.getPropertyValueAt(row);
-			Object modelValue = parametersTransformer.transform(value, allParameters.get(row).getKlass());
+			Object modelValue = AptParametersTransformer.INSTANCE.transform(value, allParameters.get(row).getKlass());
 			return modelValue;
 		}
 	}
@@ -200,6 +225,7 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 
 		view.setResultTableModel(resultTableModel);
 		view.showResultsPane();
+		view.setModuleRunning(false);
 	}
 
 	private WindowRef openDocument(Document<?> document) {
