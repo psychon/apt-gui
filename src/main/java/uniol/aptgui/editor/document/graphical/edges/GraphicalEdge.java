@@ -27,9 +27,16 @@ import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.*;
+
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 
+/**
+ * Abstract base class for all graphical elements that are edge-like. Each
+ * edge-like element has a source and target graphical element and optional
+ * breakpoints in between that further specify the path the edge takes.
+ */
 public abstract class GraphicalEdge extends GraphicalElement {
 
 	private static final double SELECTION_DISTANCE = 10;
@@ -47,26 +54,59 @@ public abstract class GraphicalEdge extends GraphicalElement {
 		this.label = "";
 	}
 
+	/**
+	 * Returns the source node of this edge.
+	 *
+	 * @return the source node of this edge
+	 */
 	public GraphicalNode getSource() {
 		return source;
 	}
 
+	/**
+	 * Sets the source node of this edge.
+	 *
+	 * @param source
+	 *                the source node of this edge
+	 */
 	public void setSource(GraphicalNode source) {
 		this.source = source;
 	}
 
+	/**
+	 * Returns the target node of this edge.
+	 *
+	 * @return the target node of this edge
+	 */
 	public GraphicalNode getTarget() {
 		return target;
 	}
 
+	/**
+	 * Sets the target node of this edge.
+	 *
+	 * @param target
+	 *                the source node of this edge
+	 */
 	public void setTarget(GraphicalNode target) {
 		this.target = target;
 	}
 
+	/**
+	 * Returns the label.
+	 *
+	 * @return the label
+	 */
 	public String getLabel() {
 		return label;
 	}
 
+	/**
+	 * Sets the label
+	 *
+	 * @param label
+	 *                the label
+	 */
 	public void setLabel(String label) {
 		this.label = label;
 	}
@@ -103,6 +143,15 @@ public abstract class GraphicalEdge extends GraphicalElement {
 	 */
 	public Point getBreakpoint(int index) {
 		return breakpoints.get(index);
+	}
+
+	/**
+	 * Returns the amount of breakpoints this edge has.
+	 *
+	 * @return the amount of breakpoints
+	 */
+	public int getBreakpointCount() {
+		return breakpoints.size();
 	}
 
 	/**
@@ -171,11 +220,12 @@ public abstract class GraphicalEdge extends GraphicalElement {
 	/**
 	 * Removes the breakpoint at the given index.
 	 *
-	 * @param breakpoint
+	 * @param index
 	 *                index of the breakpoint to remove
+	 * @return the breakpoint that was previously at the given index
 	 */
-	public void removeBreakpoint(int index) {
-		breakpoints.remove(index);
+	public Point removeBreakpoint(int index) {
+		return breakpoints.remove(index);
 	}
 
 	/**
@@ -191,6 +241,39 @@ public abstract class GraphicalEdge extends GraphicalElement {
 		for (Point p : breakpoints) {
 			p.translate(dx, dy);
 		}
+	}
+
+	/**
+	 * Returns if the breakpoint at the given index is necessary, in the
+	 * sense that it does not lie on a straight line between the breakpoint
+	 * before and after the specified one with a margin of error.
+	 *
+	 * @param breakpointIndex index of the breakpoint that should be tested
+	 * @return false, if the breakpoint is unnecessary and could potentially be removed
+	 */
+	public boolean isBreakpointNecessary(int breakpointIndex) {
+		assert 0 <= breakpointIndex && breakpointIndex < breakpoints.size();
+
+		Point curr = breakpoints.get(breakpointIndex);
+		Point prev, next;
+		if (breakpointIndex == 0) {
+			prev = source.getCenter();
+		} else {
+			prev = breakpoints.get(breakpointIndex - 1);
+		}
+		if (breakpointIndex == breakpoints.size() - 1) {
+			next = target.getCenter();
+		} else {
+			next = breakpoints.get(breakpointIndex + 1);
+		}
+
+		// Use law of cosines to get angle between the two line segments meeting at the given breakpoint.
+		double a = sqrt(pow(curr.x - next.x, 2) + pow(curr.y - next.y, 2));
+		double b = sqrt(pow(curr.x - prev.x, 2) + pow(curr.y - prev.y, 2));
+		double c = sqrt(pow(prev.x - next.x, 2) + pow(prev.y - next.y, 2));
+		double angle = acos((pow(a, 2) + pow(b, 2) - pow(c, 2)) / (2 * a * b));
+
+		return angle < (PI - 0.15);
 	}
 
 	/**
