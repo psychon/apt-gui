@@ -37,7 +37,7 @@ public interface Presenter<V extends View<?>> {
 	/**
 	 * Sets the associated view.
 	 *
-	 * @param view
+	 * @param view new associated view
 	 */
 	void setView(V view);
 

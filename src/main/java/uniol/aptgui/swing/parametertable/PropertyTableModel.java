@@ -21,6 +21,9 @@ package uniol.aptgui.swing.parametertable;
 
 import javax.swing.table.AbstractTableModel;
 
+/**
+ * Table model for property tables where each row can have a different type.
+ */
 @SuppressWarnings("serial")
 public class PropertyTableModel extends AbstractTableModel {
 

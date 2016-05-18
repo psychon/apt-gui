@@ -147,7 +147,7 @@ public class Transform2D {
 	 * Scales the view by the given factor.
 	 *
 	 * @param scale
-	 *                scale factor > 0
+	 *                scale factor &gt; 0
 	 */
 	public void scaleView(double scale) {
 		assert scale > 0;

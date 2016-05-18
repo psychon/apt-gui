@@ -24,6 +24,7 @@ import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,11 +148,13 @@ public abstract class Document<T> {
 	}
 
 	/**
-	 * Returns the position in this document that was last selected by the user
-	 * while clicking to create a selection or opening a context menu (which
-	 * will also select the element under the cursor).
+	 * Returns the position in this document that was last selected by the
+	 * user while clicking to create a selection or opening a context menu
+	 * (which will also select the element under the cursor).
 	 *
 	 * The point is in model coordinates.
+	 *
+	 * @return position in this document that was last selected
 	 */
 	public Point getLastSelectionPosition() {
 		return lastSelectionPosition;
@@ -170,7 +173,7 @@ public abstract class Document<T> {
 	/**
 	 * Returns a set of all selected elements.
 	 *
-	 * @return
+	 * @return a set of all selected elements
 	 */
 	public Set<GraphicalElement> getSelection() {
 		return selection.getSelection();
@@ -191,6 +194,7 @@ public abstract class Document<T> {
 	 * unselected, it will be selected afterwards and the other way around.
 	 *
 	 * @param elem
+	 *                element to toggle selection status for
 	 */
 	public void toggleSelection(GraphicalElement elem) {
 		selection.toggleSelection(elem);
@@ -266,6 +270,7 @@ public abstract class Document<T> {
 	 * no associated model element.
 	 *
 	 * @param graphicalElem
+	 *                graphical element to add
 	 */
 	public void add(GraphicalElement graphicalElem) {
 		add(graphicalElem, null);
@@ -276,7 +281,9 @@ public abstract class Document<T> {
 	 * corresponding model element.
 	 *
 	 * @param graphicalElem
+	 *                graphical element to add
 	 * @param modelElem
+	 *                associated model element
 	 */
 	public void add(GraphicalElement graphicalElem, IExtensible modelElem) {
 		elements.put(graphicalElem, modelElem);
@@ -288,7 +295,7 @@ public abstract class Document<T> {
 	/**
 	 * Removes the given GraphicalElement from this Document.
 	 *
-	 * @param graphicalElem
+	 * @param graphicalElem graphical element to remove
 	 */
 	public void remove(GraphicalElement graphicalElem) {
 		elements.remove(graphicalElem);
@@ -296,20 +303,22 @@ public abstract class Document<T> {
 	}
 
 	/**
-	 * Returns a view of all GraphicalElements in this Document. The view is
-	 * backed by the Document implementation, so changes to the return value
-	 * are reflected in the Document.
+	 * Returns an unmodifiable view of all GraphicalElements in this
+	 * document.
 	 *
-	 * @return
+	 * @return an unmodifiable view of all GraphicalElements in this
+	 *         document
 	 */
 	public Set<GraphicalElement> getGraphicalElements() {
-		return elements.keySet();
+		return Collections.unmodifiableSet(elements.keySet());
 	}
 
 	/**
 	 * Returns the model element that is associated with the given
 	 * GraphicalElement.
 	 *
+	 * @param <U>
+	 *                type of the model element
 	 * @param graphicalElem
 	 *                GraphicalElement to look for
 	 * @return the associated model element
@@ -399,6 +408,7 @@ public abstract class Document<T> {
 	 * Sets if this document has unsaved changes.
 	 *
 	 * @param hasUnsavedChanges
+	 *                new unsaved changes status
 	 */
 	public void setHasUnsavedChanges(boolean hasUnsavedChanges) {
 		this.hasUnsavedChanges = hasUnsavedChanges;
@@ -454,6 +464,7 @@ public abstract class Document<T> {
 	 * applied to the graphics object.
 	 *
 	 * @param graphics
+	 *                graphics object to use for drawing
 	 */
 	public void draw(Graphics2D graphics) {
 		if (!visible) {
@@ -475,6 +486,8 @@ public abstract class Document<T> {
 	/**
 	 * Returns the GraphicalElement associated with the given model element.
 	 *
+	 * @param <T>
+	 *                type of the graphical element
 	 * @param obj
 	 *                model element
 	 * @return associated graphical element
@@ -544,6 +557,8 @@ public abstract class Document<T> {
 	 * Returns the model element whose associated GraphicalElement covers
 	 * the given point or null if there is not element at that position.
 	 *
+	 * @param <U>
+	 *                type of the model element
 	 * @param point
 	 *                test point in model coordinates
 	 * @return the model element or null

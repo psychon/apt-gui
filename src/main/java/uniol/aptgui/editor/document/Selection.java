@@ -48,6 +48,7 @@ public class Selection {
 	 * unselected, it will be selected afterwards and the other way around.
 	 *
 	 * @param elem
+	 *                element to toggle selection for
 	 */
 	public void toggleSelection(GraphicalElement elem) {
 		if (elem.isSelected()) {
