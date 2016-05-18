@@ -30,6 +30,11 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
+import org.apache.batik.dom.GenericDOMImplementation;
+import org.apache.batik.svggen.SVGGraphics2D;
+import org.apache.batik.svggen.SVGGraphics2DIOException;
+import org.w3c.dom.DOMImplementation;
+
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -267,6 +272,27 @@ public class ApplicationImpl implements Application {
 	@Override
 	public void close() {
 		mainWindow.close();
+	}
+
+	@Override
+	public void exportSvg(Document<?> document, File exportFile) {
+		// Get a DOMImplementation.
+		DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
+		// Create an instance of org.w3c.dom.Document.
+		String svgNS = "http://www.w3.org/2000/svg";
+		org.w3c.dom.Document xmlDoc = domImpl.createDocument(svgNS, "svg", null);
+		// Create an instance of the SVG Generator.
+		SVGGraphics2D svgGenerator = new SVGGraphics2D(xmlDoc);
+
+		// Draw document with SVG generator.
+		document.draw(svgGenerator);
+
+		// Save to file.
+		try {
+			svgGenerator.stream(exportFile.getAbsolutePath());
+		} catch (SVGGraphics2DIOException e) {
+			showException(e);
+		}
 	}
 
 }

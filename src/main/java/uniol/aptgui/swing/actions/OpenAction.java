@@ -49,7 +49,7 @@ public class OpenAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		AptFileChooser fc = new AptFileChooser();
+		AptFileChooser fc = AptFileChooser.openChooser();
 		int res = fc.showOpenDialog((Component) app.getMainWindow().getView());
 		if (res == JFileChooser.APPROVE_OPTION) {
 			app.openFile(fc.getSelectedFile());

@@ -31,8 +31,6 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.PnDocument;
-import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.Resource;
 import uniol.aptgui.swing.actions.base.DocumentAction;
@@ -56,8 +54,10 @@ public class SaveAction extends DocumentAction {
 		WindowId activeWindow = app.getActiveInternalWindow();
 		Document<?> document = app.getDocument(activeWindow);
 		if (shouldShowSaveDialog(document)) {
-			File file = getSaveFileLocation(document);
-			if (file != null) {
+			AptFileChooser fc = AptFileChooser.saveChooser(document);
+			int res = fc.showSaveDialog((Component) app.getMainWindow().getView());
+			if (res == JFileChooser.APPROVE_OPTION) {
+				File file = fc.getSelectedFileWithExtension();
 				document.setFile(file);
 				app.saveToFile(document);
 			}
@@ -75,41 +75,6 @@ public class SaveAction extends DocumentAction {
 	 */
 	protected boolean shouldShowSaveDialog(Document<?> document) {
 		return document.getFile() == null;
-	}
-
-	/**
-	 * Shows a file chooser to save the given document.
-	 *
-	 * @param document
-	 *                the document to save
-	 * @return the file that the user selected as the save location or null
-	 *         if the process was cancelled
-	 */
-	private File getSaveFileLocation(Document<?> document) {
-		AptFileChooser fc = new AptFileChooser(
-				document instanceof PnDocument,
-				document instanceof TsDocument
-		);
-		fc.setSelectedFile(new File(toValidFileName(document.getName())));
-		fc.setDialogTitle("Save " + document.getName());
-		int res = fc.showSaveDialog((Component) app.getMainWindow().getView());
-		if (res == JFileChooser.APPROVE_OPTION) {
-			return fc.getSelectedFileWithExtension();
-		}
-		return null;
-	}
-
-	/**
-	 * Turns the given string into a string that is allowed as a file name,
-	 * i.e. special characters are removed or replaced.
-	 *
-	 * @param str
-	 *                input string that may contain chars that are not
-	 *                allowed in file names
-	 * @return output string that can be used as a file name
-	 */
-	private String toValidFileName(String str) {
-		return str.replaceAll("[^a-zA-Z0-9.-]", "_");
 	}
 
 }

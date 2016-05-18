@@ -20,6 +20,7 @@
 package uniol.aptgui.editor;
 
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -147,6 +148,7 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 	@Override
 	public void onPaint(Graphics2D graphics) {
 		if (document.isVisible()) {
+			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			document.draw(graphics);
 		}
 	}

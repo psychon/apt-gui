@@ -192,6 +192,16 @@ public interface Application {
 	 */
 	WindowId openDocument(Document<?> document);
 
+	/**
+	 * Exports the given document as an SVG vector image.
+	 *
+	 * @param document
+	 *                document to export
+	 * @param exportFile
+	 *                output file
+	 */
+	void exportSvg(Document<?> document, File exportFile);
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

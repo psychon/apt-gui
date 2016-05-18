@@ -20,6 +20,8 @@ dependencies {
 	// APT-GUI dependencies
 	compile 'com.google.inject:guice:4.0'
 	compile 'com.google.guava:guava:19.0'
+	compile 'org.apache.xmlgraphics:batik-dom:1.8'
+	compile 'org.apache.xmlgraphics:batik-svggen:1.8'
 	testCompile 'junit:junit:4.12'
 }
 

@@ -33,7 +33,7 @@ import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.Resource;
 import uniol.aptgui.swing.actions.base.DocumentAction;
-import uniol.aptgui.swing.filechooser.ExportFileChooser;
+import uniol.aptgui.swing.filechooser.AptFileChooser;
 
 @SuppressWarnings("serial")
 public class ExportAction extends DocumentAction {
@@ -52,27 +52,15 @@ public class ExportAction extends DocumentAction {
 		WindowId activeWindow = app.getActiveInternalWindow();
 		Document<?> document = app.getDocument(activeWindow);
 
-		ExportFileChooser fc = new ExportFileChooser();
-		fc.setSelectedFile(new File(toValidFileName(document.getName())));
-		fc.setDialogTitle("Export " + document.getName());
+		AptFileChooser fc = AptFileChooser.exportChooser(document);
 		int res = fc.showSaveDialog((Component) app.getMainWindow().getView());
 		if (res == JFileChooser.APPROVE_OPTION) {
 			File exportFile = fc.getSelectedFileWithExtension();
 			// TODO actually export
+			if (fc.isSvgFilterSelected()) {
+				app.exportSvg(document, exportFile);
+			}
 		}
-	}
-
-	/**
-	 * Turns the given string into a string that is allowed as a file name,
-	 * i.e. special characters are removed or replaced.
-	 *
-	 * @param str
-	 *                input string that may contain chars that are not
-	 *                allowed in file names
-	 * @return output string that can be used as a file name
-	 */
-	private String toValidFileName(String str) {
-		return str.replaceAll("[^a-zA-Z0-9.-]", "_");
 	}
 
 }

@@ -61,7 +61,6 @@ public class AptParser {
 			petriNet = parser.parseFile(file);
 			return true;
 		} catch (ParseException e) {
-			e.printStackTrace();
 			return false;
 		}
 	}
@@ -72,7 +71,6 @@ public class AptParser {
 			transitionSystem = parser.parseFile(file);
 			return true;
 		} catch (ParseException e) {
-			e.printStackTrace();
 			return false;
 		}
 	}

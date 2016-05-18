@@ -23,31 +23,94 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import uniol.apt.io.parser.impl.AptLTSParser;
 import uniol.apt.io.parser.impl.AptPNParser;
+import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.PnDocument;
+import uniol.aptgui.editor.document.TsDocument;
 
 @SuppressWarnings("serial")
 public class AptFileChooser extends JFileChooser {
 
-	public AptFileChooser() {
-		this(true, true);
+	private static FileFilter filterPn = new ParserFileFilter("Petri Net", new AptPNParser());
+	private static FileFilter filterTs = new ParserFileFilter("Transition system", new AptLTSParser());
+	private static FileFilter filterSvg = new FileNameExtensionFilter("SVG vector image", "svg");
+	private static FileFilter filterPng = new FileNameExtensionFilter("PNG raster image", "png");
+
+	/**
+	 * Creates a new file chooser that allows the user to save the given
+	 * document to a file of the correct type.
+	 *
+	 * @param document
+	 *                document to save
+	 * @return file chooser set-up for save action
+	 */
+	public static AptFileChooser saveChooser(Document<?> document) {
+		AptFileChooser fc = new AptFileChooser();
+		if (document instanceof PnDocument) {
+			fc.addChoosableFileFilter(filterPn);
+			fc.setFileFilter(filterPn);
+		} else if (document instanceof TsDocument) {
+			fc.addChoosableFileFilter(filterTs);
+			fc.setFileFilter(filterTs);
+		}
+		File defaultSave = new File(toValidFileName(document.getName()));
+		fc.setSelectedFile(defaultSave);
+		fc.setDialogTitle("Save " + document.getName());
+		return fc;
 	}
 
-	public AptFileChooser(boolean allowPn, boolean allowTs) {
-		if (allowPn) {
-			FileFilter ff = new ParserFileFilter("Petri Net", new AptPNParser());
-			addChoosableFileFilter(ff);
-			setFileFilter(ff);
-		}
-		if (allowTs) {
-			FileFilter ff = new ParserFileFilter("Transition system", new AptLTSParser());
-			addChoosableFileFilter(ff);
-			setFileFilter(ff);
-		}
-		if (allowPn && allowTs) {
-			setFileFilter(getAcceptAllFileFilter());
-		}
+	/**
+	 * Creates a new file chooser that allows the user to open documents.
+	 *
+	 * @return file chooser set-up for open action
+	 */
+	public static AptFileChooser openChooser() {
+		AptFileChooser fc = new AptFileChooser();
+		fc.addChoosableFileFilter(filterPn);
+		fc.addChoosableFileFilter(filterTs);
+		fc.setFileFilter(fc.getAcceptAllFileFilter());
+		return fc;
+	}
+
+	/**
+	 * Creates a new file chooser that allows the user to export documents
+	 * into other formats.
+	 *
+	 * @param document
+	 *                document to export
+	 * @return file chooser set-up for export action
+	 */
+	public static AptFileChooser exportChooser(Document<?> document) {
+		AptFileChooser fc = new AptFileChooser();
+		fc.addChoosableFileFilter(filterSvg);
+		fc.addChoosableFileFilter(filterPng);
+		fc.setAcceptAllFileFilterUsed(false);
+		File defaultSave = new File(toValidFileName(document.getName()));
+		fc.setSelectedFile(defaultSave);
+		fc.setDialogTitle("Export " + document.getName());
+		return fc;
+	}
+
+	/**
+	 * Turns the given string into a string that is allowed as a file name,
+	 * i.e. special characters are removed or replaced.
+	 *
+	 * @param str
+	 *                input string that may contain chars that are not
+	 *                allowed in file names
+	 * @return output string that can be used as a file name
+	 */
+	private static String toValidFileName(String str) {
+		return str.replaceAll("[^a-zA-Z0-9.-]", "_");
+	}
+
+	/**
+	 * Force creation through static factory methods.
+	 */
+	private AptFileChooser() {
 	}
 
 	/**
@@ -66,9 +129,36 @@ public class AptFileChooser extends JFileChooser {
 			if (!pFilter.accept(file)) {
 				file = new File(file.getAbsolutePath() + "." + pFilter.getDefaultExtension());
 			}
+		} else if (filter instanceof FileNameExtensionFilter) {
+			FileNameExtensionFilter extFilter = (FileNameExtensionFilter) filter;
+			if (!extFilter.accept(file)) {
+				file = new File(file.getAbsolutePath() + "." + extFilter.getExtensions()[0]);
+			}
 		}
 
 		return file;
+	}
+
+	/**
+	 * Returns if the currently selected file filter is the SVG extension
+	 * filter.
+	 *
+	 * @return if the currently selected file filter is the SVG extension
+	 *         filter
+	 */
+	public boolean isSvgFilterSelected() {
+		return getFileFilter() == filterSvg;
+	}
+
+	/**
+	 * Returns if the currently selected file filter is the PNG extension
+	 * filter.
+	 *
+	 * @return if the currently selected file filter is the PNG extension
+	 *         filter
+	 */
+	public boolean isPngFilterSelected() {
+		return getFileFilter() == filterPng;
 	}
 
 }

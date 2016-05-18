@@ -21,7 +21,6 @@ package uniol.aptgui.editor.document;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.util.ArrayList;
@@ -461,14 +460,10 @@ public abstract class Document<T> {
 			return;
 		}
 
-		// Setup graphics object.
-		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		// Save original transform.
 		AffineTransform originalTransform = graphics.getTransform();
 		// Apply document transform.
-		// graphics.transform(transform.getAffineTransform());
-		graphics.translate(transform.getTranslationX(), transform.getTranslationY());
-		graphics.scale(transform.getScale(), transform.getScale());
+		graphics.transform(transform.getAffineTransform());
 		// Draw document.
 		for (GraphicalElement elem : elements.keySet()) {
 			elem.draw(graphics);
