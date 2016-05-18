@@ -45,7 +45,9 @@ import uniol.aptgui.swing.moduletable.ModuleTableModel;
 @SuppressWarnings("serial")
 public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> implements ModuleBrowserView {
 
+	private final JLabel categoryFilterText;
 	private final JComboBox<String> categoryFilter;
+	private final JLabel searchBoxText;
 	private final JTextField searchBox;
 	private final JLabel explanatoryText;
 	private final ModuleTable moduleTable;
@@ -59,7 +61,11 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setPreferredSize(new Dimension(300, 400));
 
+		categoryFilterText = new JLabel("Category filter");
+		categoryFilterText.setAlignmentX(Component.LEFT_ALIGNMENT);
+
 		categoryFilter = new JComboBox<>();
+		categoryFilter.setAlignmentX(Component.LEFT_ALIGNMENT);
 		categoryFilter.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -67,7 +73,11 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 			}
 		});
 
+		searchBoxText = new JLabel("Name filter");
+		searchBoxText.setAlignmentX(Component.LEFT_ALIGNMENT);
+
 		searchBox = new JTextField();
+		searchBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		searchBox.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void removeUpdate(DocumentEvent e) {
@@ -86,6 +96,7 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 		});
 
 		explanatoryText = new JLabel("Double-click a module to open it...");
+		explanatoryText.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		moduleTable = new ModuleTable();
 		moduleTable.addMouseListener(new MouseAdapter() {
@@ -98,18 +109,18 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 		});
 
 		JScrollPane scrollPane = new JScrollPane(moduleTable);
-
-		categoryFilter.setAlignmentX(Component.LEFT_ALIGNMENT);
-		searchBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-		explanatoryText.setAlignmentX(Component.LEFT_ALIGNMENT);
 		scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+		add(categoryFilterText);
+		add(Box.createVerticalStrut(2));
 		add(categoryFilter);
-		add(Box.createVerticalStrut(3));
+		add(Box.createVerticalStrut(5));
+		add(searchBoxText);
+		add(Box.createVerticalStrut(2));
 		add(searchBox);
-		add(Box.createVerticalStrut(3));
+		add(Box.createVerticalStrut(5));
 		add(explanatoryText);
-		add(Box.createVerticalStrut(3));
+		add(Box.createVerticalStrut(2));
 		add(scrollPane);
 	}
 
