@@ -21,6 +21,7 @@ package uniol.aptgui.module;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -28,11 +29,11 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
 import uniol.aptgui.swing.JPanelView;
@@ -46,7 +47,8 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	private static final int WIDTH = 250;
 	private static final int HEIGHT = 350;
 
-	private JEditorPane descriptionPane;
+	private JTextArea descriptionPane;
+	private JScrollPane descriptionScrollPane;
 
 	private JTabbedPane tabbedPane;
 	private JPanel parametersContainer;
@@ -67,12 +69,15 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	}
 
 	private void setupDescriptionPane() {
-		descriptionPane = new JEditorPane();
+		descriptionPane = new JTextArea();
 		descriptionPane.setEditable(false);
-		JScrollPane editorScrollPane = new JScrollPane(descriptionPane);
-		editorScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		editorScrollPane.setPreferredSize(new Dimension(WIDTH, 100));
-		add(editorScrollPane, BorderLayout.PAGE_START);
+		descriptionPane.setLineWrap(true);
+		descriptionPane.setWrapStyleWord(true);
+		descriptionPane.setMargin(new Insets(2, 2, 2, 2));
+		descriptionScrollPane = new JScrollPane(descriptionPane);
+		descriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		descriptionScrollPane.setPreferredSize(new Dimension(WIDTH, 100));
+		add(descriptionScrollPane, BorderLayout.PAGE_START);
 	}
 
 	private void setupParametersContainer() {
@@ -126,6 +131,7 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	@Override
 	public void setDescription(String description) {
 		descriptionPane.setText(description);
+		descriptionPane.setCaretPosition(0);
 	}
 
 	@Override
