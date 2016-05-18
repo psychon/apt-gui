@@ -123,6 +123,14 @@ public class Resource {
 		return getIcon("ZoomOut16.gif");
 	}
 
+	public static ImageIcon getIconImport() {
+		return getIcon("Import16.gif");
+	}
+
+	public static ImageIcon getIconExport() {
+		return getIcon("Export16.gif");
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

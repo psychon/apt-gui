@@ -35,6 +35,8 @@ import uniol.aptgui.swing.JMenuBarView;
 import uniol.aptgui.swing.actions.CascadeWindowsAction;
 import uniol.aptgui.swing.actions.DeleteElementsAction;
 import uniol.aptgui.swing.actions.ExitAction;
+import uniol.aptgui.swing.actions.ExportAction;
+import uniol.aptgui.swing.actions.ImportAction;
 import uniol.aptgui.swing.actions.ModuleAction;
 import uniol.aptgui.swing.actions.ModuleBrowserAction;
 import uniol.aptgui.swing.actions.NewPetriNetAction;
@@ -62,6 +64,8 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private final JMenuItem save;
 	private final JMenuItem saveAs;
 	private final JMenuItem saveAll;
+	private final JMenuItem import_;
+	private final JMenuItem export;
 	private final JMenuItem exit;
 
 	private final JMenu editMenu;
@@ -95,6 +99,8 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		save = new JMenuItem(injector.getInstance(SaveAction.class));
 		saveAs = new JMenuItem(injector.getInstance(SaveAsAction.class));
 		saveAll = new JMenuItem(injector.getInstance(SaveAllAction.class));
+		import_ = new JMenuItem(injector.getInstance(ImportAction.class));
+		export = new JMenuItem(injector.getInstance(ExportAction.class));
 		exit = new JMenuItem(injector.getInstance(ExitAction.class));
 
 		editMenu = new JMenu("Edit");
@@ -145,6 +151,9 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		fileMenu.add(save);
 		fileMenu.add(saveAs);
 		fileMenu.add(saveAll);
+		fileMenu.addSeparator();
+		fileMenu.add(import_);
+		fileMenu.add(export);
 		fileMenu.addSeparator();
 		fileMenu.add(exit);
 	}
