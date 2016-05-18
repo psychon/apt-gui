@@ -21,19 +21,33 @@ package uniol.aptgui.editor.layout;
 
 import uniol.aptgui.editor.document.Document;
 
+/**
+ * Interface for layout algorithms that can be applied to documents. A layout
+ * algorithm is supposed to arrange the graphical elements of the document
+ * within the given layout area.
+ */
 public interface Layout {
 
 	/**
 	 * Applies this layout algorithm to the given document.
 	 *
 	 * @param document
+	 *                the document that should be laid out
+	 * @param x0
+	 *                lower x-axis bound of layout area
+	 * @param y0
+	 *                lower y-axis bound of layout area
+	 * @param x1
+	 *                upper x-axis bound of layout area
+	 * @param y1
+	 *                upper y-axis bound of layout area
 	 */
-	public void applyTo(Document<?> document);
+	public void applyTo(Document<?> document, int x0, int y0, int x1, int y1);
 
 	/**
 	 * Returns a user-friendly name of this layout algorithm.
 	 *
-	 * @return
+	 * @return a user-friendly name of this layout algorithm
 	 */
 	public String getName();
 

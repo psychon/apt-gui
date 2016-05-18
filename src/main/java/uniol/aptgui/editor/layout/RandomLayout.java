@@ -25,20 +25,32 @@ import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 
+/**
+ * Simple layout algorithm that randomly scatters nodes across the layout area.
+ */
 public class RandomLayout implements Layout {
 
-	private static int randomInt(int max) {
-		return (int) (Math.random() * (max + 1));
+	/**
+	 * Returns a random integer between min and max (both inclusive).
+	 *
+	 * @param min
+	 *                minimum value
+	 * @param max
+	 *                maximum value
+	 * @return random integer in [min, max]
+	 */
+	private static int randomInt(int min, int max) {
+		return (int) (min + (max - min + 1) * Math.random());
 	}
 
 	@Override
-	public void applyTo(Document<?> document) {
+	public void applyTo(Document<?> document, int x0, int y0, int x1, int y1) {
 		for (GraphicalElement elem : document.getGraphicalElements()) {
 			// Only nodes are positioned directly.
 			if (elem instanceof GraphicalNode) {
 				GraphicalNode node = (GraphicalNode) elem;
-				int x = randomInt(document.getWidth());
-				int y = randomInt(document.getHeight());
+				int x = randomInt(x0, x1);
+				int y = randomInt(y0, y1);
 				node.setCenter(new Point(x, y));
 			}
 		}

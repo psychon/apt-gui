@@ -444,7 +444,9 @@ public abstract class Document<T> {
 	 *                layout to apply
 	 */
 	public void applyLayout(Layout layout) {
-		layout.applyTo(this);
+		Point min = transform.applyInverse(new Point(0, 0));
+		Point max = transform.applyInverse(new Point(width, height));
+		layout.applyTo(this, min.x, min.y, max.x, max.y);
 	}
 
 	/**
