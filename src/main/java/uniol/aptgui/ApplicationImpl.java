@@ -20,6 +20,10 @@
 package uniol.aptgui;
 
 import java.awt.Component;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -28,6 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import org.apache.batik.dom.GenericDOMImplementation;
@@ -283,7 +288,7 @@ public class ApplicationImpl implements Application {
 		org.w3c.dom.Document xmlDoc = domImpl.createDocument(svgNS, "svg", null);
 		// Create an instance of the SVG Generator.
 		SVGGraphics2D svgGenerator = new SVGGraphics2D(xmlDoc);
-
+		svgGenerator.setFont(Font.decode("Arial"));
 		// Draw document with SVG generator.
 		document.draw(svgGenerator);
 
@@ -291,6 +296,22 @@ public class ApplicationImpl implements Application {
 		try {
 			svgGenerator.stream(exportFile.getAbsolutePath());
 		} catch (SVGGraphics2DIOException e) {
+			showException(e);
+		}
+	}
+
+	@Override
+	public void exportPng(Document<?> document, File exportFile) {
+		BufferedImage bufferedImage = new BufferedImage(
+				document.getWidth(), document.getHeight(),
+				BufferedImage.TYPE_INT_ARGB
+		);
+		Graphics2D imageGraphics = (Graphics2D) bufferedImage.getGraphics();
+		imageGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		document.draw(imageGraphics);
+		try {
+			ImageIO.write(bufferedImage, "png", exportFile);
+		} catch (IOException e) {
 			showException(e);
 		}
 	}

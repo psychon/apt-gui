@@ -56,9 +56,10 @@ public class ExportAction extends DocumentAction {
 		int res = fc.showSaveDialog((Component) app.getMainWindow().getView());
 		if (res == JFileChooser.APPROVE_OPTION) {
 			File exportFile = fc.getSelectedFileWithExtension();
-			// TODO actually export
 			if (fc.isSvgFilterSelected()) {
 				app.exportSvg(document, exportFile);
+			} else if (fc.isPngFilterSelected()) {
+				app.exportPng(document, exportFile);
 			}
 		}
 	}

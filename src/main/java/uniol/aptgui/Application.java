@@ -128,6 +128,7 @@ public interface Application {
 
 	/**
 	 * Returns an unmodifiable collection of all opened documents.
+	 *
 	 * @return an unmodifiable collection of all opened documents
 	 */
 	Collection<Document<?>> getDocuments();
@@ -193,7 +194,7 @@ public interface Application {
 	WindowId openDocument(Document<?> document);
 
 	/**
-	 * Exports the given document as an SVG vector image.
+	 * Exports the given document as a SVG vector image.
 	 *
 	 * @param document
 	 *                document to export
@@ -201,6 +202,16 @@ public interface Application {
 	 *                output file
 	 */
 	void exportSvg(Document<?> document, File exportFile);
+
+	/**
+	 * Exports the given document as a PNG raster image.
+	 *
+	 * @param document
+	 *                document to export
+	 * @param exportFile
+	 *                output file
+	 */
+	void exportPng(Document<?> document, File exportFile);
 
 }
 
