@@ -22,6 +22,7 @@ package uniol.aptgui.editor.features;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
+import uniol.aptgui.commands.AddBreakpointCommand;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.commands.TranslateBreakpointCommand;
 import uniol.aptgui.commands.TranslateElementsCommand;
@@ -106,7 +107,7 @@ public class SelectionTool extends Feature {
 		if (elem != null) {
 			if (elem instanceof GraphicalEdge) {
 				GraphicalEdge edge = (GraphicalEdge) elem;
-				int breakpointIndex = edge.getClosestBreakpointIndex(modelPosition);
+				int breakpointIndex = getOrCreateBreakpointIndex(edge, modelPosition);
 				// If the click hit a breakpoint, drag it.
 				if (breakpointIndex != -1) {
 					dragType = DragType.BREAKPOINT;
@@ -139,6 +140,26 @@ public class SelectionTool extends Feature {
 			document.fireSelectionChanged();
 			document.fireDocumentDirty();
 		}
+	}
+
+	/**
+	 * Returns the index of the breakpoint closest to the given position or
+	 * creates a new breakpoint if there is near at the given position.
+	 *
+	 * @param edge
+	 *                parent edge of the breakpoint
+	 * @param position
+	 *                breakpoint position
+	 * @return the index of the breakpoint closest to the given position
+	 */
+	private int getOrCreateBreakpointIndex(GraphicalEdge edge, Point position) {
+		int breakpointIndex = edge.getClosestBreakpointIndex(position);
+		if (breakpointIndex == -1) {
+			AddBreakpointCommand cmd = new AddBreakpointCommand(document, edge, position);
+			history.execute(cmd);
+			breakpointIndex = cmd.getNewBreakpointIndex();
+		}
+		return breakpointIndex;
 	}
 
 	@Override

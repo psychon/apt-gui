@@ -37,6 +37,10 @@ public class AddBreakpointCommand extends Command {
 		this.newBreakpointPosition = newBreakpointPosition;
 	}
 
+	public int getNewBreakpointIndex() {
+		return newBreakpointIndex;
+	}
+
 	@Override
 	public String getName() {
 		return "Add Breakpoint";
