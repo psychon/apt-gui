@@ -28,6 +28,7 @@ import com.google.common.eventbus.EventBus;
 import uniol.apt.module.Module;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.mainwindow.MainWindowPresenter;
 import uniol.aptgui.mainwindow.WindowId;
 
@@ -58,6 +59,12 @@ public interface Application {
 	 * @return the main window presenter
 	 */
 	MainWindowPresenter getMainWindow();
+
+	/**
+	 * Returns the application-wide rendering options object.
+	 * @return the application-wide rendering options object
+	 */
+	RenderingOptions getRenderingOptions();
 
 	/**
 	 * Shows the main window.

@@ -23,6 +23,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
+import uniol.aptgui.editor.document.RenderingOptions;
+
 /**
  * Base class for graphical elements of a document. It contains basic properties
  * such as colors or highlight states.
@@ -99,8 +101,9 @@ public abstract class GraphicalElement {
 	 *
 	 * @param graphics
 	 *                graphics object
+	 * @param renderingOptions TODO
 	 */
-	public void draw(Graphics2D graphics) {
+	public void draw(Graphics2D graphics, RenderingOptions renderingOptions) {
 		if (!visible) {
 			return;
 		}

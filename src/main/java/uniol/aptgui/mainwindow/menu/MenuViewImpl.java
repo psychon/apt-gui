@@ -22,6 +22,7 @@ package uniol.aptgui.mainwindow.menu;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
@@ -30,6 +31,7 @@ import com.google.inject.Injector;
 
 import uniol.apt.module.Module;
 import uniol.aptgui.Application;
+import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.JMenuBarView;
 import uniol.aptgui.swing.actions.CascadeWindowsAction;
@@ -51,7 +53,10 @@ import uniol.aptgui.swing.actions.SaveAsAction;
 import uniol.aptgui.swing.actions.SetColorAction;
 import uniol.aptgui.swing.actions.SetInitialStateAction;
 import uniol.aptgui.swing.actions.SetLabelAction;
+import uniol.aptgui.swing.actions.SetPlaceIdLabelVisibleAction;
+import uniol.aptgui.swing.actions.SetStateIdLabelVisibleAction;
 import uniol.aptgui.swing.actions.SetTokensAction;
+import uniol.aptgui.swing.actions.SetTransitionIdLabelVisibleAction;
 import uniol.aptgui.swing.actions.ShowWindowAction;
 import uniol.aptgui.swing.actions.UndoAction;
 
@@ -81,6 +86,9 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private final JMenu documentMenu;
 	private final JMenuItem renameDocument;
 	private final JMenuItem layoutRandom;
+	private final JMenuItem showIdLabelsState;
+	private final JMenuItem showIdLabelsPlace;
+	private final JMenuItem showIdLabelsTransition;
 
 	private final JMenu moduleMenu;
 	private final JMenuItem moduleBrowser;
@@ -93,7 +101,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private final List<JMenuItem> openWindowsMenuItems;
 
 	@Inject
-	public MenuViewImpl(Injector injector) {
+	public MenuViewImpl(Injector injector, RenderingOptions renderingOptions) {
 		fileMenu = new JMenu("File");
 		newPn = new JMenuItem(injector.getInstance(NewPetriNetAction.class));
 		newTs = new JMenuItem(injector.getInstance(NewTransitionSystemAction.class));
@@ -117,6 +125,13 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		documentMenu = new JMenu("Document");
 		renameDocument = new JMenuItem(injector.getInstance(RenameDocumentAction.class));
 		layoutRandom = new JMenuItem(injector.getInstance(RandomLayoutAction.class));
+		showIdLabelsState = new JCheckBoxMenuItem(injector.getInstance(SetStateIdLabelVisibleAction.class));
+		showIdLabelsPlace = new JCheckBoxMenuItem(injector.getInstance(SetPlaceIdLabelVisibleAction.class));
+		showIdLabelsTransition = new JCheckBoxMenuItem(injector.getInstance(SetTransitionIdLabelVisibleAction.class));
+
+		showIdLabelsState.setSelected(renderingOptions.isStateIdLabelVisible());
+		showIdLabelsPlace.setSelected(renderingOptions.isPlaceIdLabelVisible());
+		showIdLabelsTransition.setSelected(renderingOptions.isTransitionIdLabelVisible());
 
 		moduleMenu = new JMenu("Modules");
 		moduleBrowser = new JMenuItem(injector.getInstance(ModuleBrowserAction.class));
@@ -142,6 +157,10 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 
 		documentMenu.add(renameDocument);
 		documentMenu.add(layoutRandom);
+		documentMenu.addSeparator();
+		documentMenu.add(showIdLabelsState);
+		documentMenu.add(showIdLabelsPlace);
+		documentMenu.add(showIdLabelsTransition);
 	}
 
 	private void setupFileMenu() {

@@ -58,7 +58,7 @@ public class TsDocument extends Document<TransitionSystem> {
 	}
 
 	@Override
-	public void draw(Graphics2D graphics) {
+	public void draw(Graphics2D graphics, RenderingOptions renderingOptions) {
 		State initial = null;
 		try {
 			initial = getModel().getInitialState();
@@ -73,7 +73,7 @@ public class TsDocument extends Document<TransitionSystem> {
 			GraphicalArc elem = getGraphicalExtension(arc);
 			elem.setLabel(arc.getLabel());
 		}
-		super.draw(graphics);
+		super.draw(graphics, renderingOptions);
 	}
 
 }

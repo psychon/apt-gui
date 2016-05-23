@@ -38,6 +38,7 @@ public class CreateStateCommand extends Command {
 	@Override
 	public void execute() {
 		tsState = tsDocument.getModel().createState();
+		graphicalState.setId(tsState.getId());
 		tsState.putExtension(GraphicalElement.EXTENSION_KEY, graphicalState);
 		tsDocument.add(graphicalState, tsState);
 		tsDocument.fireDocumentChanged(true);

@@ -17,43 +17,40 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.document.graphical.special;
+package uniol.aptgui.swing.actions;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.event.ActionEvent;
 
+import javax.swing.AbstractAction;
+
+import com.google.inject.Inject;
+
+import uniol.aptgui.Application;
+import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.RenderingOptions;
-import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 
-public class BreakpointHandle extends GraphicalNode {
+/**
+ * Action that modifies the rendering option "place id visibility".
+ */
+@SuppressWarnings("serial")
+public class SetPlaceIdLabelVisibleAction extends AbstractAction {
 
-	public BreakpointHandle() {
-		setColor(Color.BLUE);
-		setVisible(false);
+	private final Application app;
+
+	@Inject
+	public SetPlaceIdLabelVisibleAction(Application app, RenderingOptions renderingOptions) {
+		this.app = app;
+		String name = "Show Place IDs";
+		putValue(NAME, name);
+		putValue(SHORT_DESCRIPTION, name);
 	}
 
 	@Override
-	public Point getBoundaryIntersection(Point point) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public boolean coversPoint(Point point) {
-		return false;
-	}
-
-	@Override
-	protected void drawShape(Graphics2D graphics, RenderingOptions renderingOptions) {
-		drawSquare(graphics, center, 5);
-	}
-
-	@Override
-	protected void drawId(Graphics2D graphics, RenderingOptions renderingOptions) {
-	}
-
-	@Override
-	protected void drawSelectionMarkers(Graphics2D graphics, RenderingOptions renderingOptions) {
+	public void actionPerformed(ActionEvent e) {
+		app.getRenderingOptions().togglePlaceIdLabelVisible();
+		for (Document<?> doc : app.getDocuments()) {
+			doc.fireDocumentDirty();
+		}
 	}
 
 }

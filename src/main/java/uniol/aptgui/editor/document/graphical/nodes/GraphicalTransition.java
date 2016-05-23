@@ -22,6 +22,7 @@ package uniol.aptgui.editor.document.graphical.nodes;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
+import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.editor.document.graphical.traits.HasLabel;
 
 public class GraphicalTransition extends GraphicalNode implements HasLabel {
@@ -56,7 +57,7 @@ public class GraphicalTransition extends GraphicalNode implements HasLabel {
 	}
 
 	@Override
-	protected void drawShape(Graphics2D graphics) {
+	protected void drawShape(Graphics2D graphics, RenderingOptions renderingOptions) {
 		drawSquare(graphics, center, 20);
 		if (label != null) {
 			drawCenteredString(graphics, center, label);
@@ -64,13 +65,15 @@ public class GraphicalTransition extends GraphicalNode implements HasLabel {
 	}
 
 	@Override
-	protected void drawId(Graphics2D graphics) {
-		Point idLabelPosition = new Point(center.x + RADIUS + 7, center.y - RADIUS - 7);
-		drawCenteredString(graphics, idLabelPosition, id);
+	protected void drawId(Graphics2D graphics, RenderingOptions renderingOptions) {
+		if (renderingOptions.isTransitionIdLabelVisible()) {
+			Point idLabelPosition = new Point(center.x + RADIUS + 7, center.y - RADIUS - 7);
+			drawCenteredString(graphics, idLabelPosition, id);
+		}
 	}
 
 	@Override
-	protected void drawSelectionMarkers(Graphics2D graphics) {
+	protected void drawSelectionMarkers(Graphics2D graphics, RenderingOptions renderingOptions) {
 		drawSelectionMarkers(graphics, center, RADIUS + 2);
 	}
 

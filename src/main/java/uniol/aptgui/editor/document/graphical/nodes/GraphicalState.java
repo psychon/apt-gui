@@ -24,6 +24,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 
 /**
@@ -64,7 +65,7 @@ public class GraphicalState extends GraphicalNode {
 	}
 
 	@Override
-	protected void drawShape(Graphics2D graphics) {
+	protected void drawShape(Graphics2D graphics, RenderingOptions renderingOptions) {
 		drawCircle(graphics, center, RADIUS);
 		if (isInitialState) {
 			Point outside = new Point(center.x - RADIUS - 30, center.y);
@@ -77,12 +78,14 @@ public class GraphicalState extends GraphicalNode {
 	}
 
 	@Override
-	protected void drawId(Graphics2D graphics) {
-		drawCenteredString(graphics, center, id);
+	protected void drawId(Graphics2D graphics, RenderingOptions renderingOptions) {
+		if (renderingOptions.isStateIdLabelVisible()) {
+			drawCenteredString(graphics, center, id);
+		}
 	}
 
 	@Override
-	protected void drawSelectionMarkers(Graphics2D graphics) {
+	protected void drawSelectionMarkers(Graphics2D graphics, RenderingOptions renderingOptions) {
 		drawSelectionMarkers(graphics, center, RADIUS + 2);
 	}
 

@@ -22,7 +22,9 @@ package uniol.aptgui.editor.document.graphical.nodes;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-public class GraphicalPlace extends GraphicalNode{
+import uniol.aptgui.editor.document.RenderingOptions;
+
+public class GraphicalPlace extends GraphicalNode {
 
 	private static final int RADIUS = 20;
 	protected long tokens;
@@ -46,20 +48,22 @@ public class GraphicalPlace extends GraphicalNode{
 	}
 
 	@Override
-	protected void drawShape(Graphics2D graphics) {
+	protected void drawShape(Graphics2D graphics, RenderingOptions renderingOptions) {
 		drawCircle(graphics, center, RADIUS);
 		// TODO draw tokens as points if it is a low number
 		drawCenteredString(graphics, center, String.valueOf(tokens));
 	}
 
 	@Override
-	protected void drawId(Graphics2D graphics) {
-		Point idLabelPosition = new Point(center.x + RADIUS + 7, center.y - RADIUS - 7);
-		drawCenteredString(graphics, idLabelPosition, id);
+	protected void drawId(Graphics2D graphics, RenderingOptions renderingOptions) {
+		if (renderingOptions.isPlaceIdLabelVisible()) {
+			Point idLabelPosition = new Point(center.x + RADIUS + 7, center.y - RADIUS - 7);
+			drawCenteredString(graphics, idLabelPosition, id);
+		}
 	}
 
 	@Override
-	protected void drawSelectionMarkers(Graphics2D graphics) {
+	protected void drawSelectionMarkers(Graphics2D graphics, RenderingOptions renderingOptions) {
 		drawSelectionMarkers(graphics, center, RADIUS + 2);
 	}
 

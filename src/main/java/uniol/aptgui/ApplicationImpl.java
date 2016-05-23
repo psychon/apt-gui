@@ -51,6 +51,7 @@ import uniol.apt.module.Module;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.PnDocument;
+import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.layout.RandomLayout;
 import uniol.aptgui.events.WindowFocusGainedEvent;
@@ -66,17 +67,19 @@ public class ApplicationImpl implements Application {
 	private final MainWindowPresenter mainWindow;
 	private final EventBus eventBus;
 	private final History history;
+	private final RenderingOptions renderingOptions;
 
 	private final Map<WindowId, Document<?>> documents;
 
 	private WindowId activeWindow;
 
 	@Inject
-	public ApplicationImpl(MainWindowPresenter mainWindow, EventBus eventBus, History history) {
+	public ApplicationImpl(MainWindowPresenter mainWindow, EventBus eventBus, History history, RenderingOptions renderingOptions) {
 		this.mainWindow = mainWindow;
 		this.eventBus = eventBus;
 		this.history = history;
 		this.documents = new HashMap<>();
+		this.renderingOptions = renderingOptions;
 
 		eventBus.register(this);
 	}
@@ -290,7 +293,7 @@ public class ApplicationImpl implements Application {
 		SVGGraphics2D svgGenerator = new SVGGraphics2D(xmlDoc);
 		svgGenerator.setFont(Font.decode("Arial"));
 		// Draw document with SVG generator.
-		document.draw(svgGenerator);
+		document.draw(svgGenerator, renderingOptions);
 
 		// Save to file.
 		try {
@@ -308,12 +311,17 @@ public class ApplicationImpl implements Application {
 		);
 		Graphics2D imageGraphics = (Graphics2D) bufferedImage.getGraphics();
 		imageGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		document.draw(imageGraphics);
+		document.draw(imageGraphics, renderingOptions);
 		try {
 			ImageIO.write(bufferedImage, "png", exportFile);
 		} catch (IOException e) {
 			showException(e);
 		}
+	}
+
+	@Override
+	public RenderingOptions getRenderingOptions() {
+		return renderingOptions;
 	}
 
 }

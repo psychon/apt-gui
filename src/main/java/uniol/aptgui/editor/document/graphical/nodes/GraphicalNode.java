@@ -23,6 +23,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
+import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 
 import static java.lang.Math.*;
@@ -67,26 +68,26 @@ public abstract class GraphicalNode extends GraphicalElement {
 	}
 
 	@Override
-	public void draw(Graphics2D graphics) {
+	public void draw(Graphics2D graphics, RenderingOptions renderingOptions) {
 		if (!visible) {
 			return;
 		}
-		super.draw(graphics);
+		super.draw(graphics, renderingOptions);
 
-		drawShape(graphics);
+		drawShape(graphics, renderingOptions);
 		if (id != null) {
-			drawId(graphics);
+			drawId(graphics, renderingOptions);
 		}
 		if (selected) {
-			drawSelectionMarkers(graphics);
+			drawSelectionMarkers(graphics, renderingOptions);
 		}
 	}
 
-	protected abstract void drawShape(Graphics2D graphics);
+	protected abstract void drawShape(Graphics2D graphics, RenderingOptions renderingOptions);
 
-	protected abstract void drawId(Graphics2D graphics);
+	protected abstract void drawId(Graphics2D graphics, RenderingOptions renderingOptions);
 
-	protected abstract void drawSelectionMarkers(Graphics2D graphics);
+	protected abstract void drawSelectionMarkers(Graphics2D graphics, RenderingOptions renderingOptions);
 
 	/**
 	 * Returns the intersection point of this GraphicalNode's boundary with

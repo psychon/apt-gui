@@ -459,14 +459,28 @@ public abstract class Document<T> {
 	}
 
 	/**
-	 * Draw this document with the given Graphics2D object. Before any
-	 * GraphicalElements are called to draw themselves the transform is
-	 * applied to the graphics object.
+	 * Draws this document by calling
+	 * {@link Document#draw(Graphics2D, RenderingOptions)} with default
+	 * rendering options.
 	 *
 	 * @param graphics
 	 *                graphics object to use for drawing
 	 */
 	public void draw(Graphics2D graphics) {
+		draw(graphics, RenderingOptions.DEFAULT);
+	}
+
+	/**
+	 * Draws this document with the given Graphics2D object and rendering
+	 * options. Before any GraphicalElements are called to draw themselves
+	 * the transform is applied to the graphics object.
+	 *
+	 * @param graphics
+	 *                graphics object to use for drawing
+	 * @param renderingOptions
+	 *                settings that influence the drawing process
+	 */
+	public void draw(Graphics2D graphics, RenderingOptions renderingOptions) {
 		if (!visible) {
 			return;
 		}
@@ -477,7 +491,7 @@ public abstract class Document<T> {
 		graphics.transform(transform.getAffineTransform());
 		// Draw document.
 		for (GraphicalElement elem : elements.keySet()) {
-			elem.draw(graphics);
+			elem.draw(graphics, renderingOptions);
 		}
 		// Restore original transform.
 		graphics.setTransform(originalTransform);

@@ -29,6 +29,7 @@ import java.util.List;
 
 import static java.lang.Math.*;
 
+import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 
@@ -112,11 +113,11 @@ public abstract class GraphicalEdge extends GraphicalElement {
 	}
 
 	@Override
-	public void draw(Graphics2D graphics) {
+	public void draw(Graphics2D graphics, RenderingOptions renderingOptions) {
 		if (!visible) {
 			return;
 		}
-		super.draw(graphics);
+		super.draw(graphics, renderingOptions);
 
 		List<Point> path = getPath();
 		drawPathWithArrowhead(graphics, path);

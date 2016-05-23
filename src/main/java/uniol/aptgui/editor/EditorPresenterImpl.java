@@ -149,7 +149,7 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 	public void onPaint(Graphics2D graphics) {
 		if (document.isVisible()) {
 			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			document.draw(graphics);
+			document.draw(graphics, application.getRenderingOptions());
 		}
 	}
 

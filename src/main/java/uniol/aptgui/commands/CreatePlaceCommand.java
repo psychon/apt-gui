@@ -38,6 +38,7 @@ public class CreatePlaceCommand extends Command {
 	@Override
 	public void execute() {
 		pnPlace = pnDocument.getModel().createPlace();
+		graphicalPlace.setId(pnPlace.getId());
 		pnPlace.putExtension(GraphicalElement.EXTENSION_KEY, graphicalPlace);
 		pnDocument.add(graphicalPlace, pnPlace);
 		pnDocument.fireDocumentChanged(true);

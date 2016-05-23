@@ -69,7 +69,7 @@ public class PnDocument extends Document<PetriNet> {
 	}
 
 	@Override
-	public void draw(Graphics2D graphics) {
+	public void draw(Graphics2D graphics, RenderingOptions renderingOptions) {
 		Marking marking = getModel().getInitialMarking();
 		for (Place place : getModel().getPlaces()) {
 			GraphicalPlace elem = getGraphicalExtension(place);
@@ -78,14 +78,13 @@ public class PnDocument extends Document<PetriNet> {
 		}
 		for (Transition transition : getModel().getTransitions()) {
 			GraphicalTransition elem = getGraphicalExtension(transition);
-			elem.setId(transition.getId());
 			elem.setLabel(transition.getLabel());
 		}
 		for (Flow flow : getModel().getEdges()) {
 			GraphicalFlow elem = getGraphicalExtension(flow);
 			elem.setMultiplicity(flow.getWeight());
 		}
-		super.draw(graphics);
+		super.draw(graphics, renderingOptions);
 	}
 
 }
