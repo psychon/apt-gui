@@ -36,6 +36,7 @@ import uniol.aptgui.swing.JPanelView;
 import uniol.aptgui.swing.actions.AddBreakpointAction;
 import uniol.aptgui.swing.actions.DeleteElementsAction;
 import uniol.aptgui.swing.actions.RemoveBreakpointAction;
+import uniol.aptgui.swing.actions.SetColorAction;
 import uniol.aptgui.swing.actions.SetInitialStateAction;
 import uniol.aptgui.swing.actions.SetLabelAction;
 import uniol.aptgui.swing.actions.SetMultiplicityAction;
@@ -47,6 +48,7 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 	private final Injector injector;
 
 	private JPopupMenu popupMenu;
+	private JMenuItem setColor;
 	private JMenuItem setLabel;
 	private JMenuItem setTokens;
 	private JMenuItem setMultiplicity;
@@ -65,6 +67,7 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 
 	private void createPopupMenu() {
 		popupMenu = new JPopupMenu();
+		setColor = new JMenuItem(injector.getInstance(SetColorAction.class));
 		setLabel = new JMenuItem(injector.getInstance(SetLabelAction.class));
 		setTokens = new JMenuItem(injector.getInstance(SetTokensAction.class));
 		setMultiplicity = new JMenuItem(injector.getInstance(SetMultiplicityAction.class));
@@ -73,6 +76,7 @@ public class EditorViewImpl extends JPanelView<EditorPresenter> implements Edito
 		removeBreakpoint = new JMenuItem(injector.getInstance(RemoveBreakpointAction.class));
 		delete = new JMenuItem(injector.getInstance(DeleteElementsAction.class));
 
+		popupMenu.add(setColor);
 		popupMenu.add(setLabel);
 		popupMenu.add(setTokens);
 		popupMenu.add(setMultiplicity);

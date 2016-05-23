@@ -48,6 +48,7 @@ import uniol.aptgui.swing.actions.RenameDocumentAction;
 import uniol.aptgui.swing.actions.SaveAction;
 import uniol.aptgui.swing.actions.SaveAllAction;
 import uniol.aptgui.swing.actions.SaveAsAction;
+import uniol.aptgui.swing.actions.SetColorAction;
 import uniol.aptgui.swing.actions.SetInitialStateAction;
 import uniol.aptgui.swing.actions.SetLabelAction;
 import uniol.aptgui.swing.actions.SetTokensAction;
@@ -71,6 +72,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private final JMenu editMenu;
 	private final JMenuItem undo;
 	private final JMenuItem redo;
+	private final JMenuItem setColor;
 	private final JMenuItem setLabel;
 	private final JMenuItem setTokens;
 	private final JMenuItem setInitialState;
@@ -106,6 +108,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		editMenu = new JMenu("Edit");
 		undo = new JMenuItem(injector.getInstance(UndoAction.class));
 		redo = new JMenuItem(injector.getInstance(RedoAction.class));
+		setColor = new JMenuItem(injector.getInstance(SetColorAction.class));
 		setLabel = new JMenuItem(injector.getInstance(SetLabelAction.class));
 		setTokens = new JMenuItem(injector.getInstance(SetTokensAction.class));
 		setInitialState = new JMenuItem(injector.getInstance(SetInitialStateAction.class));
@@ -164,6 +167,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		editMenu.add(undo);
 		editMenu.add(redo);
 		editMenu.addSeparator();
+		editMenu.add(setColor);
 		editMenu.add(setLabel);
 		editMenu.add(setTokens);
 		editMenu.add(setInitialState);
