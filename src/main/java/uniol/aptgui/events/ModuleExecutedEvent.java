@@ -19,8 +19,6 @@
 
 package uniol.aptgui.events;
 
-import java.util.List;
-
 import uniol.apt.module.Module;
 import uniol.aptgui.module.ModulePresenter;
 
@@ -28,12 +26,10 @@ public class ModuleExecutedEvent {
 
 	private final ModulePresenter source;
 	private final Module module;
-	private final List<Object> returnValues;
 
-	public ModuleExecutedEvent(ModulePresenter source, Module module, List<Object> returnValues) {
+	public ModuleExecutedEvent(ModulePresenter source, Module module) {
 		this.source = source;
 		this.module = module;
-		this.returnValues = returnValues;
 	}
 
 	public ModulePresenter getSource() {
@@ -44,13 +40,9 @@ public class ModuleExecutedEvent {
 		return module;
 	}
 
-	public List<Object> getReturnValues() {
-		return returnValues;
-	}
-
 	@Override
 	public String toString() {
-		return "ModuleExecutedEvent [module=" + module + ", returnValues=" + returnValues + "]";
+		return "ModuleExecutedEvent [module=" + module + "]";
 	}
 
 }
