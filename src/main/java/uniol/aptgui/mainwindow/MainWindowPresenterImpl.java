@@ -109,6 +109,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		@Override
 		public void onDocumentChanged(Document<?> source) {
 			updateWindowMenu();
+			updateMainTitle();
 			eventBus.post(new DocumentChangedEvent(source));
 		}
 	};
@@ -153,14 +154,12 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 
 	@Subscribe
 	public void onWindowFocusGainedEvent(WindowFocusGainedEvent e) {
-		view.setTitle(getWindowTitle(e.getWindowId()) + " - " + TITLE);
+		updateMainTitle();
 	}
 
 	@Subscribe
 	public void onWindowClosedEvent(WindowClosedEvent e) {
-		if (internalWindows.isEmpty()) {
-			view.setTitle(TITLE);
-		}
+		updateMainTitle();
 	}
 
 	@Override
@@ -292,6 +291,19 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	 */
 	private void updateWindowMenu() {
 		menu.setInternalWindows(internalWindows.keySet());
+	}
+
+	/**
+	 * Updates the main window title so that the currently active internal
+	 * window title is a part of it.
+	 */
+	private void updateMainTitle() {
+		WindowId active = application.getActiveInternalWindow();
+		if (active != null) {
+			view.setTitle(getWindowTitle(active) + " - " + TITLE);
+		} else {
+			view.setTitle(TITLE);
+		}
 	}
 
 	@Override
