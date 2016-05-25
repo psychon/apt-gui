@@ -20,6 +20,7 @@
 package uniol.aptgui.internalwindow;
 
 import uniol.aptgui.View;
+import uniol.aptgui.mainwindow.WindowType;
 
 public interface InternalWindowView extends View<InternalWindowPresenter> {
 
@@ -52,6 +53,14 @@ public interface InternalWindowView extends View<InternalWindowPresenter> {
 	 *                padding in pixels
 	 */
 	void setPadding(int padding);
+
+	/**
+	 * Sets the icon of the internal window according to the window type.
+	 *
+	 * @param windowType
+	 *                type of the window
+	 */
+	void setIcon(WindowType windowType);
 
 }
 

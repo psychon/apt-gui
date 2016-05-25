@@ -25,6 +25,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
+import javax.swing.KeyStroke;
 
 import com.google.inject.Inject;
 
@@ -45,6 +46,7 @@ public class OpenAction extends AbstractAction {
 		putValue(SMALL_ICON, Resource.getIconOpenFile());
 		putValue(SHORT_DESCRIPTION, name);
 		putValue(MNEMONIC_KEY, KeyEvent.VK_O);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl O"));
 	}
 
 	@Override

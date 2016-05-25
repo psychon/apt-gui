@@ -118,6 +118,7 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 		}
 
 		this.id = id;
+		view.setIcon(id.getType());
 		updateTitle();
 	}
 

@@ -27,6 +27,7 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.swing.Resource;
 
 /**
  * Action that modifies the rendering option "state id visibility".
@@ -42,6 +43,7 @@ public class SetStateIdLabelVisibleAction extends AbstractAction {
 		String name = "Show State Identifiers";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
+		putValue(SMALL_ICON, Resource.getIconStateId());
 	}
 
 	@Override

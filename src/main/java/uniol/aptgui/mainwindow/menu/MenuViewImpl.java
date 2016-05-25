@@ -59,6 +59,8 @@ import uniol.aptgui.swing.actions.SetTokensAction;
 import uniol.aptgui.swing.actions.SetTransitionIdLabelVisibleAction;
 import uniol.aptgui.swing.actions.ShowWindowAction;
 import uniol.aptgui.swing.actions.UndoAction;
+import uniol.aptgui.swing.actions.ZoomDecreaseAction;
+import uniol.aptgui.swing.actions.ZoomIncreaseAction;
 
 @SuppressWarnings("serial")
 public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuView {
@@ -86,14 +88,18 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private final JMenu documentMenu;
 	private final JMenuItem renameDocument;
 	private final JMenuItem layoutRandom;
-	private final JMenuItem showIdLabelsState;
-	private final JMenuItem showIdLabelsPlace;
-	private final JMenuItem showIdLabelsTransition;
 
 	private final JMenu moduleMenu;
 	private final JMenuItem moduleBrowser;
 	private final JMenuItem recentlyUsedHeader;
 	private final List<JMenuItem> recentlyUsedModulesMenuItems;
+
+	private final JMenu viewMenu;
+	private final JMenuItem zoomIn;
+	private final JMenuItem zoomOut;
+	private final JMenuItem showIdLabelsState;
+	private final JMenuItem showIdLabelsPlace;
+	private final JMenuItem showIdLabelsTransition;
 
 	private final JMenu windowMenu;
 	private final JMenuItem cascadeEditorWindows;
@@ -102,6 +108,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 
 	@Inject
 	public MenuViewImpl(Injector injector, RenderingOptions renderingOptions) {
+		// File
 		fileMenu = new JMenu("File");
 		newPn = new JMenuItem(injector.getInstance(NewPetriNetAction.class));
 		newTs = new JMenuItem(injector.getInstance(NewTransitionSystemAction.class));
@@ -113,6 +120,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		export = new JMenuItem(injector.getInstance(ExportAction.class));
 		exit = new JMenuItem(injector.getInstance(ExitAction.class));
 
+		// Edit
 		editMenu = new JMenu("Edit");
 		undo = new JMenuItem(injector.getInstance(UndoAction.class));
 		redo = new JMenuItem(injector.getInstance(RedoAction.class));
@@ -122,23 +130,30 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		setInitialState = new JMenuItem(injector.getInstance(SetInitialStateAction.class));
 		delete = new JMenuItem(injector.getInstance(DeleteElementsAction.class));
 
+		// Document
 		documentMenu = new JMenu("Document");
 		renameDocument = new JMenuItem(injector.getInstance(RenameDocumentAction.class));
 		layoutRandom = new JMenuItem(injector.getInstance(RandomLayoutAction.class));
-		showIdLabelsState = new JCheckBoxMenuItem(injector.getInstance(SetStateIdLabelVisibleAction.class));
-		showIdLabelsPlace = new JCheckBoxMenuItem(injector.getInstance(SetPlaceIdLabelVisibleAction.class));
-		showIdLabelsTransition = new JCheckBoxMenuItem(injector.getInstance(SetTransitionIdLabelVisibleAction.class));
 
-		showIdLabelsState.setSelected(renderingOptions.isStateIdLabelVisible());
-		showIdLabelsPlace.setSelected(renderingOptions.isPlaceIdLabelVisible());
-		showIdLabelsTransition.setSelected(renderingOptions.isTransitionIdLabelVisible());
-
+		// Modules
 		moduleMenu = new JMenu("Modules");
 		moduleBrowser = new JMenuItem(injector.getInstance(ModuleBrowserAction.class));
 		recentlyUsedHeader = new JMenuItem("Recently Used");
 		recentlyUsedHeader.setEnabled(false);
 		recentlyUsedModulesMenuItems = new ArrayList<>();
 
+		// View
+		viewMenu = new JMenu("View");
+		zoomIn = new JMenuItem(injector.getInstance(ZoomIncreaseAction.class));
+		zoomOut = new JMenuItem(injector.getInstance(ZoomDecreaseAction.class));
+		showIdLabelsState = new JCheckBoxMenuItem(injector.getInstance(SetStateIdLabelVisibleAction.class));
+		showIdLabelsPlace = new JCheckBoxMenuItem(injector.getInstance(SetPlaceIdLabelVisibleAction.class));
+		showIdLabelsTransition = new JCheckBoxMenuItem(injector.getInstance(SetTransitionIdLabelVisibleAction.class));
+		showIdLabelsState.setSelected(renderingOptions.isStateIdLabelVisible());
+		showIdLabelsPlace.setSelected(renderingOptions.isPlaceIdLabelVisible());
+		showIdLabelsTransition.setSelected(renderingOptions.isTransitionIdLabelVisible());
+
+		// Windows
 		windowMenu = new JMenu("Windows");
 		cascadeEditorWindows = new JMenuItem(injector.getInstance(CascadeWindowsAction.class));
 		openWindowsHeader = new JMenuItem("Currently Opened Windows");
@@ -149,18 +164,8 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		setupEditMenu();
 		setupDocumentMenu();
 		setupModuleMenu();
+		setupViewMenu();
 		setupWindowMenu();
-	}
-
-	private void setupDocumentMenu() {
-		add(documentMenu);
-
-		documentMenu.add(renameDocument);
-		documentMenu.add(layoutRandom);
-		documentMenu.addSeparator();
-		documentMenu.add(showIdLabelsState);
-		documentMenu.add(showIdLabelsPlace);
-		documentMenu.add(showIdLabelsTransition);
 	}
 
 	private void setupFileMenu() {
@@ -193,12 +198,31 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		editMenu.add(delete);
 	}
 
+	private void setupDocumentMenu() {
+		add(documentMenu);
+
+		documentMenu.add(renameDocument);
+		documentMenu.add(layoutRandom);
+
+	}
+
 	private void setupModuleMenu() {
 		add(moduleMenu);
 
 		moduleMenu.add(moduleBrowser);
 		moduleMenu.addSeparator();
 		moduleMenu.add(recentlyUsedHeader);
+	}
+
+	private void setupViewMenu() {
+		add(viewMenu);
+
+		viewMenu.add(zoomIn);
+		viewMenu.add(zoomOut);
+		viewMenu.addSeparator();
+		viewMenu.add(showIdLabelsState);
+		viewMenu.add(showIdLabelsPlace);
+		viewMenu.add(showIdLabelsTransition);
 	}
 
 	private void setupWindowMenu() {

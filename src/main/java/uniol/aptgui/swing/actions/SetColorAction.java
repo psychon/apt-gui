@@ -34,6 +34,7 @@ import uniol.aptgui.commands.Command;
 import uniol.aptgui.commands.SetColorCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.swing.Resource;
 import uniol.aptgui.swing.actions.base.DocumentAction;
 
 /**
@@ -48,6 +49,7 @@ public class SetColorAction extends DocumentAction {
 		String name = "Set Color";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
+		putValue(SMALL_ICON, Resource.getIconColor());
 	}
 
 	@Override

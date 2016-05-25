@@ -32,6 +32,7 @@ import uniol.aptgui.commands.SetTokensCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalPlace;
+import uniol.aptgui.swing.Resource;
 import uniol.aptgui.swing.actions.base.SetSimpleAttributeAction;
 
 /**
@@ -43,6 +44,7 @@ public class SetTokensAction extends SetSimpleAttributeAction<GraphicalPlace, Lo
 	@Inject
 	public SetTokensAction(Application app, EventBus eventBus) {
 		super("Set Tokens", "New token count:", app, eventBus);
+		putValue(SMALL_ICON, Resource.getIconTokens());
 	}
 
 	@Override

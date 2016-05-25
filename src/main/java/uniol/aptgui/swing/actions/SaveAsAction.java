@@ -19,6 +19,8 @@
 
 package uniol.aptgui.swing.actions;
 
+import javax.swing.KeyStroke;
+
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
@@ -32,10 +34,12 @@ public class SaveAsAction extends SaveAction {
 	@Inject
 	public SaveAsAction(Application app, EventBus eventBus) {
 		super(app, eventBus);
-		String name = "Save File As...";
+		String name = "Save As...";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconSaveFileAs());
 		putValue(SHORT_DESCRIPTION, name);
+		putValue(MNEMONIC_KEY, null);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl alt S"));
 	}
 
 	@Override

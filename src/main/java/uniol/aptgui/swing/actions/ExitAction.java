@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
+import javax.swing.KeyStroke;
 
 import com.google.inject.Inject;
 
@@ -42,6 +43,7 @@ public class ExitAction extends AbstractAction {
 		String name = "Exit";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("alt F4"));
 	}
 
 	@Override

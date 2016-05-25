@@ -30,6 +30,7 @@ import uniol.aptgui.commands.SetInitialStateCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
+import uniol.aptgui.swing.Resource;
 import uniol.aptgui.swing.actions.base.DocumentAction;
 
 /**
@@ -44,6 +45,7 @@ public class SetInitialStateAction extends DocumentAction {
 		String name = "Set Initial State";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
+		putValue(SMALL_ICON, Resource.getIconInitialState());
 	}
 
 	@Override

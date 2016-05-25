@@ -37,22 +37,34 @@ public class Resource {
 		return tk.createCustomCursor(image, new Point(0, 0), path);
 	}
 
+	public static Cursor getCursorCreateEdge() {
+		return getCursor("Arc32.gif");
+	}
+
 	private static ImageIcon getIcon(String path) {
 		path = "/icons/" + path;
 		URL url = Resource.class.getResource(path);
 		return new ImageIcon(url);
 	}
 
-	public static Cursor getCursorCreateEdge() {
-		return getCursor("Arc32.gif");
+	public static ImageIcon getIconApplication() {
+		return getIcon("Application32.png");
 	}
 
 	public static ImageIcon getIconArc() {
 		return getIcon("Arc16.gif");
 	}
 
+	public static ImageIcon getIconColor() {
+		return getIcon("Color16.gif");
+	}
+
 	public static ImageIcon getIconDelete() {
 		return getIcon("Delete16.gif");
+	}
+
+	public static ImageIcon getIconExport() {
+		return getIcon("Export16.gif");
 	}
 
 	public static ImageIcon getIconFireTransition() {
@@ -63,12 +75,24 @@ public class Resource {
 		return getIconArc();
 	}
 
+	public static ImageIcon getIconImport() {
+		return getIcon("Import16.gif");
+	}
+
+	public static ImageIcon getIconInitialState() {
+		return getIcon("InitialState16.gif");
+	}
+
 	public static ImageIcon getIconLabel() {
 		return getIcon("Label16.gif");
 	}
 
 	public static ImageIcon getIconLayout() {
 		return getIcon("Layout16.gif");
+	}
+
+	public static ImageIcon getIconMultiplicity() {
+		return getIcon("Multiplicity16.gif");
 	}
 
 	public static ImageIcon getIconNewFile() {
@@ -79,20 +103,28 @@ public class Resource {
 		return getIcon("Open16.gif");
 	}
 
+	public static ImageIcon getIconPetriNetDocument() {
+		return getIcon("NewPn16.gif");
+	}
+
 	public static ImageIcon getIconPlace() {
 		return getIcon("Place16.gif");
+	}
+
+	public static ImageIcon getIconPlaceId() {
+		return getIcon("PlaceId16.gif");
 	}
 
 	public static ImageIcon getIconRedo() {
 		return getIcon("Redo16.gif");
 	}
 
-	public static ImageIcon getIconSaveFile() {
-		return getIcon("Save16.gif");
-	}
-
 	public static ImageIcon getIconSaveAll() {
 		return getIcon("SaveAll16.gif");
+	}
+
+	public static ImageIcon getIconSaveFile() {
+		return getIcon("Save16.gif");
 	}
 
 	public static ImageIcon getIconSaveFileAs() {
@@ -103,12 +135,32 @@ public class Resource {
 		return getIcon("Select16.gif");
 	}
 
+	public static ImageIcon getIconSpinner() {
+		return getIcon("Spinner16.gif");
+	}
+
 	public static ImageIcon getIconState() {
 		return getIconPlace();
 	}
 
+	public static ImageIcon getIconStateId() {
+		return getIcon("StateId16.gif");
+	}
+
+	public static ImageIcon getIconTokens() {
+		return getIcon("Tokens16.gif");
+	}
+
 	public static ImageIcon getIconTransition() {
 		return getIcon("Transition16.gif");
+	}
+
+	public static ImageIcon getIconTransitionId() {
+		return getIcon("TransitionId16.gif");
+	}
+
+	public static ImageIcon getIconTransitionSystemDocument() {
+		return getIcon("NewTs16.gif");
 	}
 
 	public static ImageIcon getIconUndo() {
@@ -121,18 +173,6 @@ public class Resource {
 
 	public static ImageIcon getIconZoomOut() {
 		return getIcon("ZoomOut16.gif");
-	}
-
-	public static ImageIcon getIconImport() {
-		return getIcon("Import16.gif");
-	}
-
-	public static ImageIcon getIconExport() {
-		return getIcon("Export16.gif");
-	}
-
-	public static ImageIcon getIconSpinner() {
-		return getIcon("Spinner16.gif");
 	}
 
 }

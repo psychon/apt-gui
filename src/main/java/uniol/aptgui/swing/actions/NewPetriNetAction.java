@@ -38,7 +38,7 @@ public class NewPetriNetAction extends AbstractAction {
 		this.app = app;
 		String name = "New Petri Net";
 		putValue(NAME, name);
-		putValue(SMALL_ICON, Resource.getIconNewFile());
+		putValue(SMALL_ICON, Resource.getIconPetriNetDocument());
 		putValue(SHORT_DESCRIPTION, name);
 	}
 

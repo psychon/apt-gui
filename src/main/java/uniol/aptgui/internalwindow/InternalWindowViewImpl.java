@@ -32,7 +32,9 @@ import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
 import uniol.aptgui.View;
+import uniol.aptgui.mainwindow.WindowType;
 import uniol.aptgui.swing.JInternalFrameView;
+import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
 public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPresenter> implements InternalWindowView {
@@ -91,6 +93,20 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 	@Override
 	public void setPadding(int padding) {
 		contentPanel.setBorder(BorderFactory.createEmptyBorder(padding, padding, padding, padding));
+	}
+
+	@Override
+	public void setIcon(WindowType windowType) {
+		switch (windowType) {
+		case PETRI_NET:
+			setFrameIcon(Resource.getIconPetriNetDocument());
+			break;
+		case TRANSITION_SYSTEM:
+			setFrameIcon(Resource.getIconTransitionSystemDocument());
+			break;
+		default:
+			break;
+		}
 	}
 
 }

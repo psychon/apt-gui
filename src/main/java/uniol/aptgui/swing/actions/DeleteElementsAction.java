@@ -22,6 +22,8 @@ package uniol.aptgui.swing.actions;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
+import javax.swing.KeyStroke;
+
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
@@ -50,6 +52,7 @@ public class DeleteElementsAction extends DocumentAction {
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconDelete());
 		putValue(SHORT_DESCRIPTION, name);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("DELETE"));
 	}
 
 	@Override

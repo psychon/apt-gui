@@ -22,6 +22,7 @@ package uniol.aptgui.swing.actions;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.KeyStroke;
 
 import com.google.inject.Inject;
 
@@ -38,6 +39,7 @@ public class ModuleBrowserAction extends AbstractAction {
 		String name = "Open Module Browser...";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl B"));
 	}
 
 	@Override

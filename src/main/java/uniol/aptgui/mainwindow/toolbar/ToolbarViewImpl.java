@@ -92,6 +92,8 @@ public class ToolbarViewImpl extends JToolBarView<ToolbarPresenter> implements T
 		zoomIn = new JButton(injector.getInstance(ZoomIncreaseAction.class));
 		zoomOut = new JButton(injector.getInstance(ZoomDecreaseAction.class));
 
+		newPetriNet.setHideActionText(true);
+		newTransitionSystem.setHideActionText(true);
 		open.setHideActionText(true);
 		save.setHideActionText(true);
 		saveAll.setHideActionText(true);

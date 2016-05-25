@@ -29,6 +29,7 @@ import uniol.aptgui.commands.Command;
 import uniol.aptgui.commands.SetMultiplicityCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalFlow;
+import uniol.aptgui.swing.Resource;
 import uniol.aptgui.swing.actions.base.SetSimpleAttributeAction;
 
 /**
@@ -40,6 +41,7 @@ public class SetMultiplicityAction extends SetSimpleAttributeAction<GraphicalFlo
 	@Inject
 	public SetMultiplicityAction(Application app, EventBus eventBus) {
 		super("Set Multiplicity", "New multiplicity:", app, eventBus);
+		putValue(SMALL_ICON, Resource.getIconMultiplicity());
 	}
 
 	@Override

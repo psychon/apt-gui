@@ -36,6 +36,7 @@ import uniol.aptgui.internalwindow.InternalWindowView;
 import uniol.aptgui.mainwindow.menu.MenuView;
 import uniol.aptgui.mainwindow.toolbar.ToolbarView;
 import uniol.aptgui.swing.JFrameView;
+import uniol.aptgui.swing.Resource;
 import uniol.aptgui.swing.WindowClosingListener;
 
 @SuppressWarnings("serial")
@@ -48,6 +49,7 @@ public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implemen
 		setLayout(new BorderLayout());
 		setSize(1280, 720);
 		setLocationByPlatform(true);
+		setIconImage(Resource.getIconApplication().getImage());
 
 		jDesktopPane = createDesktopPane();
 		add(jDesktopPane, BorderLayout.CENTER);

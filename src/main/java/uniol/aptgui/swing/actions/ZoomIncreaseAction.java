@@ -21,6 +21,8 @@ package uniol.aptgui.swing.actions;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.KeyStroke;
+
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
@@ -35,10 +37,11 @@ public class ZoomIncreaseAction extends DocumentAction {
 	@Inject
 	public ZoomIncreaseAction(Application app, EventBus eventBus) {
 		super(app, eventBus);
-		String name = "Increase Zoom Level";
+		String name = "Zoom In";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
 		putValue(SMALL_ICON, Resource.getIconZoomIn());
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl PLUS"));
 	}
 
 	@Override

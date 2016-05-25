@@ -25,6 +25,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.KeyStroke;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -42,11 +43,12 @@ public class SaveAction extends DocumentAction {
 	@Inject
 	public SaveAction(Application app, EventBus eventBus) {
 		super(app, eventBus);
-		String name = "Save File...";
+		String name = "Save";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconSaveFile());
 		putValue(SHORT_DESCRIPTION, name);
 		putValue(MNEMONIC_KEY, KeyEvent.VK_S);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl S"));
 	}
 
 	@Override

@@ -27,6 +27,7 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.swing.Resource;
 
 /**
  * Action that modifies the rendering option "transition id visibility".
@@ -42,6 +43,7 @@ public class SetTransitionIdLabelVisibleAction extends AbstractAction {
 		String name = "Show Transition Identifiers";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
+		putValue(SMALL_ICON, Resource.getIconTransitionId());
 	}
 
 	@Override

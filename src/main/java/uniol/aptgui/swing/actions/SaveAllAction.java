@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
+import javax.swing.KeyStroke;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -47,10 +48,11 @@ public class SaveAllAction extends AbstractAction {
 	public SaveAllAction(Application app, EventBus eventBus, SaveAction saveAction) {
 		this.app = app;
 		this.saveAction = saveAction;
-		String name = "Save All...";
+		String name = "Save All";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconSaveAll());
 		putValue(SHORT_DESCRIPTION, name);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl shift S"));
 		setEnabled(false);
 		eventBus.register(this);
 	}
