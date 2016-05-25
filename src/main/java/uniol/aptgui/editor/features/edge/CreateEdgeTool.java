@@ -145,6 +145,7 @@ public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalE
 			// Clicked second node. If possible, stop creation.
 			if (elem != null && isValidTarget(elem)) {
 				creating = false;
+				document.remove(graphicalEdge);
 				graphicalTarget = (GraphicalNode) elem;
 				graphicalEdge.setTarget(graphicalTarget);
 				commitEdgeCreation(graphicalEdge);

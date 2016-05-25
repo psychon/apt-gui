@@ -24,6 +24,7 @@ import java.util.List;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
+import uniol.aptgui.Application;
 import uniol.aptgui.events.HistoryChangedEvent;
 
 /**
@@ -31,13 +32,15 @@ import uniol.aptgui.events.HistoryChangedEvent;
  */
 public class History {
 
+	private final Application application;
 	private final EventBus eventBus;
 
 	private List<Command> executedCommands = new ArrayList<Command>();
 	private int currentCommandIndex = -1;
 
 	@Inject
-	public History(EventBus eventBus) {
+	public History(Application application, EventBus eventBus) {
+		this.application = application;
 		this.eventBus = eventBus;
 	}
 
@@ -48,19 +51,23 @@ public class History {
 	 *                command to be executed
 	 */
 	public void execute(Command command) {
-		command.execute();
+		try {
+			command.execute();
 
-		// Only modify history if the command can be undone.
-		if (command.canUndo()) {
-			List<Command> nonRedoneCommandsView = executedCommands.subList(
-				currentCommandIndex + 1,
-				executedCommands.size()
-			);
-			List<Command> nonRedoedCommands = new ArrayList<>(nonRedoneCommandsView);
-			executedCommands.removeAll(nonRedoedCommands);
-			executedCommands.add(command);
-			currentCommandIndex = executedCommands.size() - 1;
-			eventBus.post(new HistoryChangedEvent(this));
+			// Only modify history if the command can be undone.
+			if (command.canUndo()) {
+				List<Command> nonRedoneCommandsView = executedCommands.subList(
+					currentCommandIndex + 1,
+					executedCommands.size()
+				);
+				List<Command> nonRedoedCommands = new ArrayList<>(nonRedoneCommandsView);
+				executedCommands.removeAll(nonRedoedCommands);
+				executedCommands.add(command);
+				currentCommandIndex = executedCommands.size() - 1;
+				eventBus.post(new HistoryChangedEvent(this));
+			}
+		} catch (Exception ex) {
+			application.getMainWindow().showException("Error", ex);
 		}
 	}
 

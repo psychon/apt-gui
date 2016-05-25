@@ -296,6 +296,13 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		view.cascadeInternalWindows();
 	}
 
+	@Override
+	public void showException(String title, Exception exception) {
+		JOptionPane.showMessageDialog((Component) view, exception.getMessage(), title,
+				JOptionPane.ERROR_MESSAGE);
+		exception.printStackTrace();
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

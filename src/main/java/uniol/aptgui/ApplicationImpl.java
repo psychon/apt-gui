@@ -156,7 +156,7 @@ public class ApplicationImpl implements Application {
 			AptParser parser = new AptParser();
 			return openDocument(parser.parse(file));
 		} catch (ParseException|IOException e) {
-			showException(e);
+			mainWindow.showException("Open Error", e);
 			return null;
 		}
 	}
@@ -199,7 +199,7 @@ public class ApplicationImpl implements Application {
 			renderer.render(document, document.getFile());
 			document.fireDocumentChanged(false);
 		} catch (Exception e) {
-			showException(e);
+			mainWindow.showException("Save Error", e);
 		}
 	}
 
@@ -236,19 +236,6 @@ public class ApplicationImpl implements Application {
 	@Override
 	public String getWindowTitle(WindowId id) {
 		return mainWindow.getWindowTitle(id);
-	}
-
-	/**
-	 * Shows an exception's message in a dialog box and prints the trace to
-	 * stderr.
-	 *
-	 * @param e
-	 *                exception
-	 */
-	private void showException(Exception e) {
-		JOptionPane.showMessageDialog((Component) mainWindow.getView(), e.getMessage(), "Error",
-				JOptionPane.ERROR_MESSAGE);
-		e.printStackTrace();
 	}
 
 	/**
@@ -299,7 +286,7 @@ public class ApplicationImpl implements Application {
 		try {
 			svgGenerator.stream(exportFile.getAbsolutePath());
 		} catch (SVGGraphics2DIOException e) {
-			showException(e);
+			mainWindow.showException("Export Error", e);
 		}
 	}
 
@@ -315,7 +302,7 @@ public class ApplicationImpl implements Application {
 		try {
 			ImageIO.write(bufferedImage, "png", exportFile);
 		} catch (IOException e) {
-			showException(e);
+			mainWindow.showException("Export Error", e);
 		}
 	}
 
