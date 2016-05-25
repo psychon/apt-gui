@@ -29,6 +29,10 @@ import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 import uniol.aptgui.editor.document.graphical.special.BreakpointHandle;
 import uniol.aptgui.editor.features.base.HoverEffectFeature;
 
+/**
+ * The hover feature highlights graphical elements while the user is hovering
+ * over them with the mouse.
+ */
 public class HoverFeature extends HoverEffectFeature {
 
 	/**

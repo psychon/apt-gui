@@ -25,6 +25,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A FeatureCollection is itself a feature. Internally it keeps a set of
+ * features. Every method call to this feature is then replicated on every
+ * feature in the internal set. This effectively combines the behaviour of many
+ * features into a single one.
+ */
 public class FeatureCollection extends Feature {
 
 	private final Map<FeatureId, Feature> features;

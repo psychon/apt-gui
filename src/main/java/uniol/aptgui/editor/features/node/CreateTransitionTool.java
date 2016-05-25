@@ -24,6 +24,9 @@ import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalTransition;
 
+/**
+ * Tool that creates transitions in Petri net documents.
+ */
 public class CreateTransitionTool extends CreateNodeTool<PnDocument, GraphicalTransition> {
 
 	private final History history;

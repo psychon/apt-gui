@@ -22,6 +22,11 @@ package uniol.aptgui.editor.features.base;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 
+/**
+ * Superclass of every other feature or tool. It extends MouseAdapter so that
+ * information about mouse activity gets provided once the feature is registered
+ * as a listener. (This is done by the EditorPresenter.)
+ */
 public abstract class Feature extends MouseAdapter {
 
 	/**

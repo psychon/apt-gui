@@ -25,6 +25,9 @@ import uniol.aptgui.Presenter;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.mainwindow.WindowId;
 
+/**
+ * Presenter class for the document editor component.
+ */
 public interface EditorPresenter extends Presenter<EditorView> {
 
 	/// ACTIONS ///

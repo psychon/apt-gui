@@ -24,6 +24,9 @@ import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalPlace;
 
+/**
+ * Tool that creates places in Petri net documents.
+ */
 public class CreatePlaceTool extends CreateNodeTool<PnDocument, GraphicalPlace> {
 
 	private final History history;

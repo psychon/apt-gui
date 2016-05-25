@@ -24,6 +24,9 @@ import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
 
+/**
+ * Tool that creates states in transition system documents.
+ */
 public class CreateStateTool extends CreateNodeTool<TsDocument, GraphicalState> {
 
 	private final History history;

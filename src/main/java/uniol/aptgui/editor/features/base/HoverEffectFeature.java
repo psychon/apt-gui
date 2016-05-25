@@ -21,6 +21,11 @@ package uniol.aptgui.editor.features.base;
 
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 
+/**
+ * Abstract base class for all features that need to display highlight effects
+ * when hovering over elements. It provides convenience methods that make it
+ * easy to apply or remove highlights correctly.
+ */
 public abstract class HoverEffectFeature extends Feature {
 
 	/**

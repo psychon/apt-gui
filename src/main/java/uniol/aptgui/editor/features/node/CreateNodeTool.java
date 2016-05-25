@@ -27,6 +27,14 @@ import uniol.aptgui.editor.document.Transform2D;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 import uniol.aptgui.editor.features.base.Feature;
 
+/**
+ * Abstract tool that provides a template to create nodes in documents.
+ *
+ * @param <T>
+ *                document type
+ * @param <U>
+ *                node type
+ */
 public abstract class CreateNodeTool<T extends Document<?>, U extends GraphicalNode> extends Feature {
 
 	/**

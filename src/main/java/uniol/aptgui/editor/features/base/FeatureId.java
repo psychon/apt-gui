@@ -19,6 +19,9 @@
 
 package uniol.aptgui.editor.features.base;
 
+/**
+ * Enumeration to identify features.
+ */
 public enum FeatureId {
 
 	// Features

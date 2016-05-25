@@ -23,6 +23,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * A FeatureCollection with only a single feature being active at a time while
+ * all others are inactive. The active feature can be set and all other features
+ * are deactivated.
+ */
 public class SingleFeatureCollection extends FeatureCollection {
 
 	private Feature activeFeature;
