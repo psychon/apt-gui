@@ -97,11 +97,14 @@ public abstract class GraphicalElement {
 	}
 
 	/**
-	 * Draws this element using the given graphics object.
+	 * Draws this element using the given graphics object. The
+	 * RenderingOptions object may influence what is drawn or how it is
+	 * drawn.
 	 *
 	 * @param graphics
 	 *                graphics object
-	 * @param renderingOptions TODO
+	 * @param renderingOptions
+	 *                settings that influence the rendering
 	 */
 	public void draw(Graphics2D graphics, RenderingOptions renderingOptions) {
 		if (!visible) {
