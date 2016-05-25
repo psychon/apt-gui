@@ -86,6 +86,7 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	private void setupParametersContainer() {
 		parametersTable = new PropertyTable();
 		parametersTable.setFillsViewportHeight(true);
+		parametersTable.putClientProperty("terminateEditOnFocusLost", true);
 
 		parametersContainer = new JPanel();
 		parametersContainer.setLayout(new BorderLayout());
