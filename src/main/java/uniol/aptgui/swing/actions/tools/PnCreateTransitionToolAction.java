@@ -38,7 +38,7 @@ public class PnCreateTransitionToolAction extends AbstractAction {
 	@Inject
 	public PnCreateTransitionToolAction(EventBus eventBus) {
 		this.eventBus = eventBus;
-		String name = "Create transition";
+		String name = "Create Transition";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconTransition());
 		putValue(SHORT_DESCRIPTION, name);

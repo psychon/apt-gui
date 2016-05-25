@@ -38,7 +38,7 @@ public class TsCreateStateToolAction extends AbstractAction {
 	@Inject
 	public TsCreateStateToolAction(EventBus eventBus) {
 		this.eventBus = eventBus;
-		String name = "Create state";
+		String name = "Create State";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconState());
 		putValue(SHORT_DESCRIPTION, name);

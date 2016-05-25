@@ -32,7 +32,7 @@ public class SaveAsAction extends SaveAction {
 	@Inject
 	public SaveAsAction(Application app, EventBus eventBus) {
 		super(app, eventBus);
-		String name = "Save file as...";
+		String name = "Save File As...";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconSaveFileAs());
 		putValue(SHORT_DESCRIPTION, name);

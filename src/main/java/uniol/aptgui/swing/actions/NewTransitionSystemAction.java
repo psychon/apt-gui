@@ -36,7 +36,7 @@ public class NewTransitionSystemAction extends AbstractAction {
 	@Inject
 	public NewTransitionSystemAction(Application app) {
 		this.app = app;
-		String name = "New transition system";
+		String name = "New Transition System";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconNewFile());
 		putValue(SHORT_DESCRIPTION, name);

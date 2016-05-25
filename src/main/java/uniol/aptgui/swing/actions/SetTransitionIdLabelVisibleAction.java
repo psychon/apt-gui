@@ -39,7 +39,7 @@ public class SetTransitionIdLabelVisibleAction extends AbstractAction {
 	@Inject
 	public SetTransitionIdLabelVisibleAction(Application app) {
 		this.app = app;
-		String name = "Show Transition IDs";
+		String name = "Show Transition Identifiers";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
 	}

@@ -19,10 +19,7 @@
 
 package uniol.aptgui.swing.actions;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
-
-import javax.swing.JOptionPane;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -61,9 +58,7 @@ public class RenameDocumentAction extends DocumentAction {
 	}
 
 	public String showNameInputDialog(String currentName) {
-		Component parentComponent = (Component) app.getMainWindow().getView();
-		return (String) JOptionPane.showInputDialog(parentComponent, "Document Name: ", "Rename Document",
-				JOptionPane.QUESTION_MESSAGE, null, null, currentName);
+		return app.getMainWindow().showDocumentNameInputDialog("Rename Document", currentName);
 	}
 
 }

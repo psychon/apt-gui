@@ -42,7 +42,7 @@ public class SaveAction extends DocumentAction {
 	@Inject
 	public SaveAction(Application app, EventBus eventBus) {
 		super(app, eventBus);
-		String name = "Save file...";
+		String name = "Save File...";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconSaveFile());
 		putValue(SHORT_DESCRIPTION, name);

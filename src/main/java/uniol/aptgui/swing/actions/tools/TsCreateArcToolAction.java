@@ -38,7 +38,7 @@ public class TsCreateArcToolAction extends AbstractAction {
 	@Inject
 	public TsCreateArcToolAction(EventBus eventBus) {
 		this.eventBus = eventBus;
-		String name = "Create arc";
+		String name = "Create Arc";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconArc());
 		putValue(SHORT_DESCRIPTION, name);

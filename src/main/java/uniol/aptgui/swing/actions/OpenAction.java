@@ -40,7 +40,7 @@ public class OpenAction extends AbstractAction {
 	@Inject
 	public OpenAction(Application app) {
 		this.app = app;
-		String name = "Open file...";
+		String name = "Open File...";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconOpenFile());
 		putValue(SHORT_DESCRIPTION, name);

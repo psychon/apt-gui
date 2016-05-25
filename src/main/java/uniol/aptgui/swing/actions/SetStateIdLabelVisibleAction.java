@@ -39,7 +39,7 @@ public class SetStateIdLabelVisibleAction extends AbstractAction {
 	@Inject
 	public SetStateIdLabelVisibleAction(Application app) {
 		this.app = app;
-		String name = "Show State IDs";
+		String name = "Show State Identifiers";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
 	}

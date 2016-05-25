@@ -47,7 +47,7 @@ public class SaveAllAction extends AbstractAction {
 	public SaveAllAction(Application app, EventBus eventBus, SaveAction saveAction) {
 		this.app = app;
 		this.saveAction = saveAction;
-		String name = "Save all...";
+		String name = "Save All...";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconSaveAll());
 		putValue(SHORT_DESCRIPTION, name);

@@ -38,7 +38,7 @@ public class PnCreateFlowToolAction extends AbstractAction {
 	@Inject
 	public PnCreateFlowToolAction(EventBus eventBus) {
 		this.eventBus = eventBus;
-		String name = "Create flow";
+		String name = "Create Flow";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconArc());
 		putValue(SHORT_DESCRIPTION, name);

@@ -35,7 +35,7 @@ public class ModuleBrowserAction extends AbstractAction {
 	@Inject
 	public ModuleBrowserAction(Application app) {
 		this.app = app;
-		String name = "Open module browser...";
+		String name = "Open Module Browser...";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
 	}

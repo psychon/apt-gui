@@ -40,7 +40,7 @@ public class SetPlaceIdLabelVisibleAction extends AbstractAction {
 	@Inject
 	public SetPlaceIdLabelVisibleAction(Application app, RenderingOptions renderingOptions) {
 		this.app = app;
-		String name = "Show Place IDs";
+		String name = "Show Place Identifiers";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
 	}

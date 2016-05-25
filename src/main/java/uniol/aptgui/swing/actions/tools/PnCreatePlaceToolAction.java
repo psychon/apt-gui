@@ -38,7 +38,7 @@ public class PnCreatePlaceToolAction extends AbstractAction {
 	@Inject
 	public PnCreatePlaceToolAction(EventBus eventBus) {
 		this.eventBus = eventBus;
-		String name = "Create place";
+		String name = "Create Place";
 		putValue(NAME, name);
 		putValue(SMALL_ICON, Resource.getIconPlace());
 		putValue(SHORT_DESCRIPTION, name);

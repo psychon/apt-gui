@@ -261,9 +261,9 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	}
 
 	@Override
-	public String showDocumentNameInputDialog(String title) {
-		return (String) JOptionPane.showInputDialog((Component) view, "Document Name: ", title,
-				JOptionPane.QUESTION_MESSAGE, null, null, "");
+	public String showDocumentNameInputDialog(String title, String defaultValue) {
+		return (String) JOptionPane.showInputDialog((Component) view, "Document name:", title,
+				JOptionPane.QUESTION_MESSAGE, null, null, defaultValue);
 	}
 
 	/**

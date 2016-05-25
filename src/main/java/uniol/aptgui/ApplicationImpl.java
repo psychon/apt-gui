@@ -93,7 +93,7 @@ public class ApplicationImpl implements Application {
 	public WindowId newPetriNet() {
 		PetriNet pn = new PetriNet();
 		Document<?> document = new PnDocument(pn);
-		String name = mainWindow.showDocumentNameInputDialog("New Petri Net");
+		String name = mainWindow.showDocumentNameInputDialog("New Petri Net", "unnamed");
 		if (name != null) {
 			document.setName(name);
 			return openDocument(document);
@@ -132,7 +132,7 @@ public class ApplicationImpl implements Application {
 	public WindowId newTransitionSystem() {
 		TransitionSystem ts = new TransitionSystem();
 		Document<?> document = new TsDocument(ts);
-		String name = mainWindow.showDocumentNameInputDialog("New Transition System");
+		String name = mainWindow.showDocumentNameInputDialog("New Transition System", "unnamed");
 		if (name != null) {
 			document.setName(name);
 			return openDocument(document);
@@ -169,7 +169,7 @@ public class ApplicationImpl implements Application {
 	@Override
 	public WindowId openDocument(Document<?> document) {
 		if (document.getName().isEmpty()) {
-			document.setName("UNNAMED");
+			document.setName("unnamed");
 		}
 
 		WindowId id = mainWindow.createDocumentWindowId(document);
