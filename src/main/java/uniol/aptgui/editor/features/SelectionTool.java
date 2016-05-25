@@ -39,7 +39,7 @@ import uniol.aptgui.editor.features.base.Feature;
 public class SelectionTool extends Feature {
 
 	private static enum DragType {
-		NONE, SELECTION, BREAKPOINT
+		NONE, SELECTION, BREAKPOINT, CREATE_BREAKPOINT
 	}
 
 	/**
@@ -103,20 +103,106 @@ public class SelectionTool extends Feature {
 
 		Point modelPosition = transform.applyInverse(e.getPoint());
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
+		if (elem instanceof GraphicalEdge) {
+			dragType = DragType.CREATE_BREAKPOINT;
+		} else {
+			selectElementAt(modelPosition, e.isControlDown());
+		}
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		if (dragType == DragType.BREAKPOINT && !translateBreakpointCommand.isIdentity()) {
+			translateBreakpointCommand.unapplyTranslation();
+			history.execute(translateBreakpointCommand);
+		}
+		if (dragType == DragType.SELECTION && !translateElementsCommand.isIdentity()) {
+			translateElementsCommand.unapplyTranslation();
+			history.execute(translateElementsCommand);
+		}
+		// If the mouse was not dragged since CREATE_BREAKPOINT was set, simply select the edge.
+		if (dragType == DragType.CREATE_BREAKPOINT) {
+			Point modelPosition = transform.applyInverse(e.getPoint());
+			selectElementAt(modelPosition, e.isControlDown());
+		}
+
+		dragType = DragType.NONE;
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		Point dragTarget = e.getPoint();
+		int dx = (int) ((dragTarget.x - dragSource.x) / transform.getScale());
+		int dy = (int) ((dragTarget.y - dragSource.y) / transform.getScale());
+
+		switch (dragType) {
+		case CREATE_BREAKPOINT:
+			Point modelPosition = transform.applyInverse(dragSource);
+			dragCreateBreakpoint(modelPosition);
+			// Fall-through!
+		case BREAKPOINT:
+			translateBreakpointCommand.unapplyTranslation();
+			translateBreakpointCommand.translate(dx, dy);
+			translateBreakpointCommand.applyTranslation();
+			break;
+		case SELECTION:
+			if (!GraphicalEdge.class.isAssignableFrom(document.getSelectionCommonBaseClass())) {
+				// Only translate elements if the selection is not only edges.
+				translateElementsCommand.unapplyTranslation();
+				translateElementsCommand.translate(dx, dy);
+				translateElementsCommand.applyTranslation();
+			}
+			break;
+		default:
+			break;
+		}
+
+		dragSource = dragTarget;
+	}
+
+	/**
+	 * Creates or retrieves a breakpoint at the given model position and
+	 * sets it up for translation using mouse dragging.
+	 *
+	 * @param modelPosition
+	 *                model position of a breakpoint (retrieval) or near a
+	 *                breakpoint (creation)
+	 */
+	private void dragCreateBreakpoint(Point modelPosition) {
+		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
+		if (elem instanceof GraphicalEdge) {
+			GraphicalEdge edge = (GraphicalEdge) elem;
+			// Try to retrieve breakpoint at given position.
+			int bpIndex = edge.getClosestBreakpointIndex(modelPosition);
+			// If it does not exist, create one.
+			if (bpIndex == -1) {
+				AddBreakpointCommand cmd = new AddBreakpointCommand(document, edge, modelPosition);
+				history.execute(cmd);
+				bpIndex = cmd.getNewBreakpointIndex();
+			}
+			// If a breakpoint existed or was created, set it up for
+			// dragging.
+			if (bpIndex != -1) {
+				dragType = DragType.BREAKPOINT;
+				translateBreakpointCommand = new TranslateBreakpointCommand(document, edge, bpIndex);
+			}
+		}
+	}
+
+	/**
+	 * Selects the element at the given model position. Depending on
+	 * toggleModifier, the clicked element gets added to/removed from the
+	 * selection or the selection is replaced.
+	 *
+	 * @param modelPosition
+	 * @param toggleModifier
+	 */
+	private void selectElementAt(Point modelPosition, boolean toggleModifier) {
+		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
 
 		if (elem != null) {
-			if (elem instanceof GraphicalEdge) {
-				GraphicalEdge edge = (GraphicalEdge) elem;
-				int breakpointIndex = getOrCreateBreakpointIndex(edge, modelPosition);
-				// If the click hit a breakpoint, drag it.
-				if (breakpointIndex != -1) {
-					dragType = DragType.BREAKPOINT;
-					translateBreakpointCommand = new TranslateBreakpointCommand(document, edge, breakpointIndex);
-					return;
-				}
-			}
 
-			if (e.isControlDown()) {
+			if (toggleModifier) {
 				// If CTRL was pressed, add to/remove from
 				// selection.
 				document.toggleSelection(elem);
@@ -140,67 +226,6 @@ public class SelectionTool extends Feature {
 			document.fireSelectionChanged();
 			document.fireDocumentDirty();
 		}
-	}
-
-	/**
-	 * Returns the index of the breakpoint closest to the given position or
-	 * creates a new breakpoint if there is near at the given position.
-	 *
-	 * @param edge
-	 *                parent edge of the breakpoint
-	 * @param position
-	 *                breakpoint position
-	 * @return the index of the breakpoint closest to the given position
-	 */
-	private int getOrCreateBreakpointIndex(GraphicalEdge edge, Point position) {
-		int breakpointIndex = edge.getClosestBreakpointIndex(position);
-		if (breakpointIndex == -1) {
-			AddBreakpointCommand cmd = new AddBreakpointCommand(document, edge, position);
-			history.execute(cmd);
-			breakpointIndex = cmd.getNewBreakpointIndex();
-		}
-		return breakpointIndex;
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		if (dragType == DragType.BREAKPOINT && !translateBreakpointCommand.isIdentity()) {
-			translateBreakpointCommand.unapplyTranslation();
-			history.execute(translateBreakpointCommand);
-		}
-		if (dragType == DragType.SELECTION && !translateElementsCommand.isIdentity()) {
-			translateElementsCommand.unapplyTranslation();
-			history.execute(translateElementsCommand);
-		}
-
-		dragType = DragType.NONE;
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		Point dragTarget = e.getPoint();
-		int dx = (int) ((dragTarget.x - dragSource.x) / transform.getScale());
-		int dy = (int) ((dragTarget.y - dragSource.y) / transform.getScale());
-
-		switch (dragType) {
-		case BREAKPOINT:
-			translateBreakpointCommand.unapplyTranslation();
-			translateBreakpointCommand.translate(dx, dy);
-			translateBreakpointCommand.applyTranslation();
-			break;
-		case SELECTION:
-			if (!GraphicalEdge.class.isAssignableFrom(document.getSelectionCommonBaseClass())) {
-				// Only translate elements if the selection is not only edges.
-				translateElementsCommand.unapplyTranslation();
-				translateElementsCommand.translate(dx, dy);
-				translateElementsCommand.applyTranslation();
-			}
-			break;
-		default:
-			break;
-		}
-
-		dragSource = dragTarget;
 	}
 
 }
