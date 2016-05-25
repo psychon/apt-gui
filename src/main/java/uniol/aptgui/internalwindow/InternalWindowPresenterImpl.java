@@ -74,9 +74,9 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	 */
 	private DocumentListener titleChangeListener = new DocumentListener() {
 		@Override public void onSelectionChanged(Document<?> source) {}
-		@Override public void onDocumentDirty() {}
+		@Override public void onDocumentDirty(Document<?> source) {}
 		@Override
-		public void onDocumentChanged() {
+		public void onDocumentChanged(Document<?> source) {
 			updateTitle();
 		}
 	};

@@ -34,14 +34,14 @@ import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.swing.Resource;
-import uniol.aptgui.swing.actions.base.SelectionAction;
+import uniol.aptgui.swing.actions.base.DocumentAction;
 
 /**
  * Action that deletes all currently selected elements in the currently active
  * document.
  */
 @SuppressWarnings("serial")
-public class DeleteElementsAction extends SelectionAction {
+public class DeleteElementsAction extends DocumentAction {
 
 	@Inject
 	public DeleteElementsAction(Application app, EventBus eventBus) {

@@ -32,13 +32,13 @@ import uniol.aptgui.commands.Command;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
-import uniol.aptgui.swing.actions.base.SelectionAction;
+import uniol.aptgui.swing.actions.base.DocumentAction;
 
 /**
  * Action that adds a new breakpoint to an edge.
  */
 @SuppressWarnings("serial")
-public class AddBreakpointAction extends SelectionAction {
+public class AddBreakpointAction extends DocumentAction {
 
 	@Inject
 	public AddBreakpointAction(Application app, EventBus eventBus) {

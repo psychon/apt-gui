@@ -154,7 +154,7 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 	}
 
 	@Override
-	public void onDocumentDirty() {
+	public void onDocumentDirty(Document<?> source) {
 		if (document.isVisible()) {
 			getView().repaint();
 		}
@@ -166,9 +166,9 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 	}
 
 	@Override
-	public void onDocumentChanged() {
+	public void onDocumentChanged(Document<?> source) {
 		// No other action necessary except a repaint.
-		onDocumentDirty();
+		onDocumentDirty(source);
 	}
 
 }

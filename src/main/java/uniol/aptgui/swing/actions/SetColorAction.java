@@ -34,13 +34,13 @@ import uniol.aptgui.commands.Command;
 import uniol.aptgui.commands.SetColorCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
-import uniol.aptgui.swing.actions.base.SelectionAction;
+import uniol.aptgui.swing.actions.base.DocumentAction;
 
 /**
  * Action that sets the color of graphical elements.
  */
 @SuppressWarnings("serial")
-public class SetColorAction extends SelectionAction {
+public class SetColorAction extends DocumentAction {
 
 	@Inject
 	public SetColorAction(Application app, EventBus eventBus) {

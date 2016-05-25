@@ -39,6 +39,7 @@ import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.DocumentListener;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
+import uniol.aptgui.events.DocumentChangedEvent;
 import uniol.aptgui.events.DocumentSelectionChangedEvent;
 import uniol.aptgui.events.WindowClosedEvent;
 import uniol.aptgui.events.WindowFocusGainedEvent;
@@ -103,10 +104,12 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		@Override public void onSelectionChanged(Document<?> source) {
 			eventBus.post(new DocumentSelectionChangedEvent(source));
 		}
-		@Override public void onDocumentDirty() {}
+		@Override public void onDocumentDirty(Document<?> source) {
+		}
 		@Override
-		public void onDocumentChanged() {
+		public void onDocumentChanged(Document<?> source) {
 			updateWindowMenu();
+			eventBus.post(new DocumentChangedEvent(source));
 		}
 	};
 

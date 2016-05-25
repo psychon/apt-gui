@@ -30,13 +30,13 @@ import uniol.aptgui.commands.SetInitialStateCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
-import uniol.aptgui.swing.actions.base.SelectionAction;
+import uniol.aptgui.swing.actions.base.DocumentAction;
 
 /**
  * Action that sets a state to be the initial state of a LTS.
  */
 @SuppressWarnings("serial")
-public class SetInitialStateAction extends SelectionAction {
+public class SetInitialStateAction extends DocumentAction {
 
 	@Inject
 	public SetInitialStateAction(Application app, EventBus eventBus) {

@@ -33,11 +33,11 @@ import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.Resource;
-import uniol.aptgui.swing.actions.base.SelectionAction;
+import uniol.aptgui.swing.actions.base.DocumentAction;
 import uniol.aptgui.swing.filechooser.AptFileChooser;
 
 @SuppressWarnings("serial")
-public class SaveAction extends SelectionAction {
+public class SaveAction extends DocumentAction {
 
 	@Inject
 	public SaveAction(Application app, EventBus eventBus) {

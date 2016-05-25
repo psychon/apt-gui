@@ -43,7 +43,7 @@ import uniol.aptgui.editor.document.Document;
  *                attribute type
  */
 @SuppressWarnings("serial")
-public abstract class SetSimpleAttributeAction<T, U> extends SelectionAction {
+public abstract class SetSimpleAttributeAction<T, U> extends DocumentAction {
 
 	private final String name;
 	private final String inputMessage;

@@ -26,13 +26,16 @@ import com.google.common.eventbus.Subscribe;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.events.DocumentChangedEvent;
+import uniol.aptgui.events.DocumentSelectionChangedEvent;
 import uniol.aptgui.events.WindowClosedEvent;
 import uniol.aptgui.events.WindowFocusGainedEvent;
-import uniol.aptgui.mainwindow.WindowType;
 
 /**
- * Abstract base class for all actions that should only be enabled when a
- * document editor is the active window.
+ * Action super-class for all actions that should only be enabled if a document
+ * editor is active and optionally if a certain document state is met. Override
+ * {@link checkEnabled} to provide the optional state check.
  */
 @SuppressWarnings("serial")
 public abstract class DocumentAction extends AbstractAction {
@@ -46,15 +49,64 @@ public abstract class DocumentAction extends AbstractAction {
 	}
 
 	@Subscribe
-	public void onWindowFocusGainedEvent(WindowFocusGainedEvent e) {
-		WindowType type = e.getWindowId().getType();
-		setEnabled(type.isEditorWindow());
+	public void onDocumentSelectionChangedEvent(DocumentSelectionChangedEvent e) {
+		setEnabled(checkEnabled(e.getDocument()));
+	}
+
+	@Subscribe
+	public void onDocumentChangedEvent(DocumentChangedEvent e) {
+		setEnabled(checkEnabled(e.getDocument()));
 	}
 
 	@Subscribe
 	public void onWindowClosedEvent(WindowClosedEvent e) {
-		Document<?> document = app.getActiveDocument();
-		setEnabled(document != null);
+		// Disable action, if the last document editor was closed.
+		if (app.getDocumentWindows().isEmpty()) {
+			setEnabled(false);
+		}
+	}
+
+	@Subscribe
+	public void onWindowFocusGainedEvent(WindowFocusGainedEvent e) {
+		Document<?> document = app.getDocument(e.getWindowId());
+		if (document != null) {
+			setEnabled(checkEnabled(document));
+		} else {
+			setEnabled(false);
+		}
+	}
+
+	/**
+	 * Returns if this action should be enabled given the document's
+	 * selection state.
+	 *
+	 * @param document
+	 *                document whose selection will be examined to decide if
+	 *                this action should be enabled
+	 * @return true, if this action should be enabled for the given document
+	 */
+	private boolean checkEnabled(Document<?> document) {
+		Class<? extends GraphicalElement> commonBase = document.getSelectionCommonBaseClass();
+		// Compare traits with Object if commonBase is null, since it
+		// will not throw an exception but return false for the
+		// isAssignableFrom calls as expected.
+		Class<?> testClass = (commonBase == null) ? Object.class : commonBase;
+
+		return checkEnabled(document, testClass);
+	}
+
+	/**
+	 * Called by the superclass when the document selection changes. This
+	 * method must return true, if the action should still be enabled.
+	 *
+	 * @param document
+	 *                the document which contains the selection
+	 * @param commonBaseTestClass
+	 *                base class of selection with null replaced by Object
+	 * @return true, if the action is applicable for the given selection
+	 */
+	protected boolean checkEnabled(Document<?> document, Class<?> commonBaseTestClass) {
+		return true;
 	}
 
 }

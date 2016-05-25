@@ -30,13 +30,13 @@ import uniol.aptgui.commands.Command;
 import uniol.aptgui.commands.RemoveBreakpointCommand;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
-import uniol.aptgui.swing.actions.base.SelectionAction;
+import uniol.aptgui.swing.actions.base.DocumentAction;
 
 /**
  * Action that removes a breakpoint from an edge.
  */
 @SuppressWarnings("serial")
-public class RemoveBreakpointAction extends SelectionAction {
+public class RemoveBreakpointAction extends DocumentAction {
 
 	@Inject
 	public RemoveBreakpointAction(Application app, EventBus eventBus) {

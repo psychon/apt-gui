@@ -31,7 +31,7 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.events.HistoryChangedEvent;
+import uniol.aptgui.events.DocumentChangedEvent;
 import uniol.aptgui.events.WindowClosedEvent;
 import uniol.aptgui.events.WindowOpenedEvent;
 import uniol.aptgui.mainwindow.WindowId;
@@ -56,7 +56,7 @@ public class SaveAllAction extends AbstractAction {
 	}
 
 	@Subscribe
-	public void onHistoryChangedEvent(HistoryChangedEvent e) {
+	public void onDocumentChangedEvent(DocumentChangedEvent e) {
 		updateEnabledStatus();
 	}
 

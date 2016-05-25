@@ -419,7 +419,7 @@ public abstract class Document<T> {
 	 */
 	public void fireDocumentDirty() {
 		for (DocumentListener l : listeners) {
-			l.onDocumentDirty();
+			l.onDocumentDirty(this);
 		}
 	}
 
@@ -433,7 +433,7 @@ public abstract class Document<T> {
 	public void fireDocumentChanged(boolean saveNecessary) {
 		setHasUnsavedChanges(saveNecessary);
 		for (DocumentListener l : listeners) {
-			l.onDocumentChanged();
+			l.onDocumentChanged(this);
 		}
 	}
 
