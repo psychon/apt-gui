@@ -19,6 +19,10 @@
 
 package uniol.aptgui.editor.document.graphical.nodes;
 
+import static java.lang.Math.atan;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -26,8 +30,9 @@ import java.awt.Point;
 import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 
-import static java.lang.Math.*;
-
+/**
+ * Abstract base class for all node-like GraphicalElements.
+ */
 public abstract class GraphicalNode extends GraphicalElement {
 
 	protected String id;
