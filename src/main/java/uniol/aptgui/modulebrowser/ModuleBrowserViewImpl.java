@@ -66,6 +66,7 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 
 		categoryFilter = new JComboBox<>();
 		categoryFilter.setAlignmentX(Component.LEFT_ALIGNMENT);
+		categoryFilter.setMaximumSize(new Dimension(Integer.MAX_VALUE, categoryFilter.getPreferredSize().height));
 		categoryFilter.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -78,6 +79,7 @@ public class ModuleBrowserViewImpl extends JPanelView<ModuleBrowserPresenter> im
 
 		searchBox = new JTextField();
 		searchBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+		searchBox.setMaximumSize(new Dimension(Integer.MAX_VALUE, searchBox.getPreferredSize().height));
 		searchBox.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void removeUpdate(DocumentEvent e) {
