@@ -168,13 +168,15 @@ public interface Application {
 	WindowId openFile(File file);
 
 	/**
-	 * Saves the given document to a file. The file must already be set on
-	 * the document object.
+	 * Saves the given document to a file. The file will be set as the
+	 * document's default save file.
 	 *
 	 * @param document
 	 *                the document to save
+	 * @param file
+	 *                file to save to
 	 */
-	void saveToFile(Document<?> document);
+	void saveToFile(Document<?> document, File file);
 
 	/**
 	 * Opens a window that allows to use the given module.

@@ -191,12 +191,12 @@ public class ApplicationImpl implements Application {
 	}
 
 	@Override
-	public void saveToFile(Document<?> document) {
+	public void saveToFile(Document<?> document, File file) {
 		assert document != null;
-		assert document.getFile() != null;
 		DocumentRenderer renderer = new AptDocumentRenderer();
 		try {
-			renderer.render(document, document.getFile());
+			renderer.render(document, file);
+			document.setFile(file);
 			document.fireDocumentChanged(false);
 		} catch (Exception e) {
 			mainWindow.showException("Save Error", e);

@@ -58,11 +58,10 @@ public class SaveAction extends DocumentAction {
 			int res = fc.showSaveDialog((Component) app.getMainWindow().getView());
 			if (res == JFileChooser.APPROVE_OPTION) {
 				File file = fc.getSelectedFileWithExtension();
-				document.setFile(file);
-				app.saveToFile(document);
+				app.saveToFile(document, file);
 			}
 		} else {
-			app.saveToFile(document);
+			app.saveToFile(document, document.getFile());
 		}
 	}
 
