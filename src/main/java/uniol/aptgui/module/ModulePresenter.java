@@ -22,15 +22,36 @@ package uniol.aptgui.module;
 import uniol.apt.module.Module;
 import uniol.aptgui.Presenter;
 
+/**
+ * The ModulePresenter controls a GUI component that allows to set input
+ * parameters for a module, run it and view the results.
+ */
 public interface ModulePresenter extends Presenter<ModuleView> {
 
 	// ACTIONS
 
-	public void setModule(Module module);
+	/**
+	 * Sets the module this presenter will work with.
+	 *
+	 * @param module
+	 *                apt module
+	 */
+	void setModule(Module module);
 
 	// VIEW EVENTS
 
-	public void onRunButtonClicked();
+	/**
+	 * Called when the run module button is clicked.
+	 */
+	void onRunButtonClicked();
+
+	/**
+	 * Called when a row in the results table is double clicked.
+	 *
+	 * @param modelRow
+	 *                row in model index
+	 */
+	void onResultsTableDoubleClick(int modelRow);
 
 }
 

@@ -262,6 +262,18 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 		}
 	}
 
+	@Override
+	public void onResultsTableDoubleClick(int modelRow) {
+		PropertyType type = resultTableModel.getPropertyTypeAt(modelRow);
+		if (type == PropertyType.PETRI_NET || type == PropertyType.TRANSITION_SYSTEM) {
+			WindowRef ref = resultTableModel.getPropertyValueAt(modelRow);
+			// If the referenced window is still open, focus it.
+			if (application.getDocument(ref.getWindowId()) != null) {
+				application.focusWindow(ref.getWindowId());
+			}
+		}
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

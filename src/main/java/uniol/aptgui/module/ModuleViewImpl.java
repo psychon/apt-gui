@@ -24,6 +24,8 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -97,6 +99,16 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	private void setupResultsContainer() {
 		resultsTable = new PropertyTable();
 		resultsTable.setFillsViewportHeight(true);
+		resultsTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					int viewRow = resultsTable.getSelectedRow();
+					int modelRow = resultsTable.convertRowIndexToModel(viewRow);
+					getPresenter().onResultsTableDoubleClick(modelRow);
+				}
+			}
+		});
 
 		resultsContainer = new JPanel();
 		resultsContainer.setLayout(new BorderLayout());
