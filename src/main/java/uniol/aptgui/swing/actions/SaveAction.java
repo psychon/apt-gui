@@ -33,11 +33,11 @@ import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.Resource;
-import uniol.aptgui.swing.actions.base.DocumentAction;
+import uniol.aptgui.swing.actions.base.SelectionAction;
 import uniol.aptgui.swing.filechooser.AptFileChooser;
 
 @SuppressWarnings("serial")
-public class SaveAction extends DocumentAction {
+public class SaveAction extends SelectionAction {
 
 	@Inject
 	public SaveAction(Application app, EventBus eventBus) {
@@ -75,6 +75,11 @@ public class SaveAction extends DocumentAction {
 	 */
 	protected boolean shouldShowSaveDialog(Document<?> document) {
 		return document.getFile() == null;
+	}
+
+	@Override
+	protected boolean checkEnabled(Document<?> document, Class<?> commonBaseTestClass) {
+		return document.hasUnsavedChanges();
 	}
 
 }
