@@ -22,6 +22,7 @@ package uniol.aptgui;
 import java.io.File;
 import java.util.Collection;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 
 import com.google.common.eventbus.EventBus;
 
@@ -65,6 +66,14 @@ public interface Application {
 	 * @return the application-wide rendering options object
 	 */
 	RenderingOptions getRenderingOptions();
+
+	/**
+	 * Returns the application-wide executor service that allows to submit
+	 * tasks to be run in threads.
+	 *
+	 * @return the application-wide executor service
+	 */
+	ExecutorService getExecutorService();
 
 	/**
 	 * Shows the main window.

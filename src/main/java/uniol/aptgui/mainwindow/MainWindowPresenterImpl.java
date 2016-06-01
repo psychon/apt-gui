@@ -189,7 +189,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 
 	@Override
 	public void onCloseButtonClicked() {
-		close();
+		application.close();
 	}
 
 	@Override

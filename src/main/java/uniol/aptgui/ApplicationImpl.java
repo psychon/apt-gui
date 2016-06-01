@@ -31,6 +31,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
@@ -69,6 +73,11 @@ public class ApplicationImpl implements Application {
 	private final History history;
 	private final RenderingOptions renderingOptions;
 
+	/**
+	 * ExecutorService for parallel task such as module executions.
+	 */
+	private final ExecutorService executor;
+
 	private final Map<WindowId, Document<?>> documents;
 
 	private WindowId activeWindow;
@@ -80,6 +89,8 @@ public class ApplicationImpl implements Application {
 		this.history = history;
 		this.documents = new HashMap<>();
 		this.renderingOptions = renderingOptions;
+		this.executor = new ThreadPoolExecutor(2, Integer.MAX_VALUE, 1, TimeUnit.SECONDS,
+				new LinkedBlockingQueue<Runnable>());
 
 		eventBus.register(this);
 	}
@@ -267,6 +278,7 @@ public class ApplicationImpl implements Application {
 	@Override
 	public void close() {
 		mainWindow.close();
+		executor.shutdownNow();
 	}
 
 	@Override
@@ -309,6 +321,11 @@ public class ApplicationImpl implements Application {
 	@Override
 	public RenderingOptions getRenderingOptions() {
 		return renderingOptions;
+	}
+
+	@Override
+	public ExecutorService getExecutorService() {
+		return executor;
 	}
 
 }

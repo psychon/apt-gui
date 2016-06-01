@@ -22,11 +22,8 @@ package uniol.aptgui.module;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.SwingUtilities;
 
@@ -67,14 +64,12 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 	private PropertyTableModel parameterTableModel;
 	private PropertyTableModel resultTableModel;
 
-	private ExecutorService executor;
 	private Future<List<Object>> moduleFuture;
 
 	@Inject
 	public ModulePresenterImpl(ModuleView view, Application application) {
 		super(view);
 		this.application = application;
-		this.executor = new ThreadPoolExecutor(0, 1, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 		application.getEventBus().register(this);
 	}
 
@@ -109,17 +104,11 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 				view.showErrorTooFewParameters();
 				return;
 			}
-
 			// Module is executed on another thread.
 			moduleFuture = invokeModule(paramValues);
 			view.setModuleRunning(true);
 			// Invoke new thread that blocks until results are available.
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					waitForModuleExecution();
-				}
-			});
+			displayResultsWhenFinished();
 		} catch (ModuleException e) {
 			view.showErrorModuleException(e.getMessage());
 			e.printStackTrace();
@@ -127,12 +116,21 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 	}
 
 	private Future<List<Object>> invokeModule(final Object[] paramValues) {
-		return executor.submit(new Callable<List<Object>>() {
+		return application.getExecutorService().submit(new Callable<List<Object>>() {
 			@Override
 			public List<Object> call() throws Exception {
 				ModuleInvoker invoker = new ModuleInvoker();
 				List<Object> filledReturnValues = invoker.invoke(module, paramValues);
 				return filledReturnValues;
+			}
+		});
+	}
+
+	private void displayResultsWhenFinished() {
+		application.getExecutorService().submit(new Runnable() {
+			@Override
+			public void run() {
+				waitForModuleExecution();
 			}
 		});
 	}
@@ -180,17 +178,32 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 	 * module results in the view.
 	 */
 	private void waitForModuleExecution() {
-		List<Object> filledReturnValues = null;
 		try {
-			filledReturnValues = moduleFuture.get();
-			showModuleResults(filledReturnValues);
-			application.getEventBus().post(new ModuleExecutedEvent(this, module));
-		} catch (Exception ex) {
-			view.showErrorModuleException(ex.getMessage());
-			ex.printStackTrace();
-			return;
+			final List<Object> filledReturnValues = moduleFuture.get();
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					showModuleResults(filledReturnValues);
+					application.getEventBus().post(new ModuleExecutedEvent(ModulePresenterImpl.this, module));
+				}
+			});
+		} catch (InterruptedException | CancellationException ex) {
+			// Ignore these two types of exceptions.
+		} catch (final Exception ex) {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					view.showErrorModuleException(ex.getMessage());
+					ex.printStackTrace();
+				}
+			});
 		} finally {
-			view.setModuleRunning(false);
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					view.setModuleRunning(false);
+				}
+			});
 		}
 	}
 
