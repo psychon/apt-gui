@@ -161,11 +161,16 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 	 */
 	private Object getParameterValueAt(int row) throws ModuleException {
 		PropertyType type = parameterTableModel.getPropertyTypeAt(row);
+		WindowRef ref;
 		switch (type) {
 		case PETRI_NET:
+			ref = parameterTableModel.getPropertyValueAt(row);
+			PetriNet pn = (PetriNet) ref.getDocument().getModel();
+			return new PetriNet(pn);
 		case TRANSITION_SYSTEM:
-			WindowRef ref = parameterTableModel.getPropertyValueAt(row);
-			return ref.getDocument().getModel();
+			ref = parameterTableModel.getPropertyValueAt(row);
+			TransitionSystem ts = (TransitionSystem) ref.getDocument().getModel();
+			return new TransitionSystem(ts);
 		default:
 			String value = parameterTableModel.getPropertyValueAt(row);
 			Object modelValue = AptParametersTransformer.INSTANCE.transform(value, allParameters.get(row).getKlass());
