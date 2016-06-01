@@ -19,6 +19,7 @@
 
 package uniol.aptgui.commands;
 
+import uniol.apt.adt.exception.StructureException;
 import uniol.apt.adt.ts.State;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
@@ -35,9 +36,21 @@ public class CreateStateCommand extends Command {
 		this.graphicalState = graphicalState;
 	}
 
+	private boolean hasInitialState() {
+		// Of course there is no "hasInitialState()"...
+		try {
+			tsDocument.getModel().getInitialState();
+			return true;
+		} catch (StructureException e) {
+			return false;
+		}
+	}
+
 	@Override
 	public void execute() {
 		tsState = tsDocument.getModel().createState();
+		if (!hasInitialState())
+			tsDocument.getModel().setInitialState(tsState);
 		graphicalState.setId(tsState.getId());
 		tsState.putExtension(GraphicalElement.EXTENSION_KEY, graphicalState);
 		tsDocument.add(graphicalState, tsState);
