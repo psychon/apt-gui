@@ -126,7 +126,7 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 		}
 	}
 
-	private Future<List<Object>> invokeModule(Object[] paramValues) {
+	private Future<List<Object>> invokeModule(final Object[] paramValues) {
 		return executor.submit(new Callable<List<Object>>() {
 			@Override
 			public List<Object> call() throws Exception {
