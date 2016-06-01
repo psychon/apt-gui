@@ -105,6 +105,9 @@ public class RemoveTsElementsCommand extends Command {
 		for (Entry<State, GraphicalState> entry : removedStates.entrySet()) {
 			State state = model.createState(entry.getKey());
 			document.add(entry.getValue(), state);
+
+			if (entry.getValue().isInitialState())
+				model.setInitialState(state);
 		}
 
 		// Restore flows.
