@@ -102,7 +102,7 @@ public class SelectionTool extends Feature {
 		dragSource = e.getPoint();
 
 		Point modelPosition = transform.applyInverse(e.getPoint());
-		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
+		GraphicalElement elem = document.getGraphicalElementAt(modelPosition, true);
 		if (elem instanceof GraphicalEdge) {
 			dragType = DragType.CREATE_BREAKPOINT;
 		} else {
@@ -198,7 +198,7 @@ public class SelectionTool extends Feature {
 	 * @param toggleModifier
 	 */
 	private void selectElementAt(Point modelPosition, boolean toggleModifier) {
-		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
+		GraphicalElement elem = document.getGraphicalElementAt(modelPosition, true);
 
 		if (elem != null) {
 

@@ -32,6 +32,7 @@ import java.util.Set;
 
 import uniol.apt.adt.extension.IExtensible;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 import uniol.aptgui.editor.layout.Layout;
 
 /**
@@ -559,12 +560,34 @@ public abstract class Document<T> {
 	 * @return the GraphicalElement or null
 	 */
 	public GraphicalElement getGraphicalElementAt(Point point) {
+		return getGraphicalElementAt(point, false);
+	}
+
+	/**
+	 * Returns a GraphicalElement that covers the given point and has an
+	 * associated model element. That means standalone GraphicalElements are
+	 * not considered for this check!
+	 *
+	 * @param point
+	 *                test point in model coordinates
+	 * @param preferNodes
+	 *                if there are multiple elements at the given point and
+	 *                preferNodes is set to true, a node will be returned if
+	 *                possible
+	 * @return the GraphicalElement or null
+	 */
+	public GraphicalElement getGraphicalElementAt(Point point, boolean preferNodes) {
+		GraphicalElement nonNodeChoice = null;
 		for (GraphicalElement elem : elements.keySet()) {
 			if (elem.coversPoint(point) && elements.get(elem) != null) {
-				return elem;
+				if (preferNodes && !(elem instanceof GraphicalNode)) {
+					nonNodeChoice = elem;
+				} else {
+					return elem;
+				}
 			}
 		}
-		return null;
+		return nonNodeChoice;
 	}
 
 	/**

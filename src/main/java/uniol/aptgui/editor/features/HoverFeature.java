@@ -69,7 +69,7 @@ public class HoverFeature extends HoverEffectFeature {
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		Point modelPosition = transform.applyInverse(e.getPoint());
-		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
+		GraphicalElement elem = document.getGraphicalElementAt(modelPosition, true);
 
 		// Display breakpoint handle if necessary.
 		if (elem instanceof GraphicalEdge) {
