@@ -252,10 +252,12 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 
 	@Override
 	public void openModuleWindow(Module module) {
+		WindowId id = new WindowId(WindowType.MODULE);
+
 		ModulePresenter modulePresenter = injector.getInstance(ModulePresenter.class);
 		modulePresenter.setModule(module);
+		modulePresenter.setWindowId(id);
 
-		WindowId id = new WindowId(WindowType.MODULE);
 		InternalWindowPresenter iwp = createInternalWindow(id, modulePresenter);
 		iwp.setTitle(module.getTitle());
 

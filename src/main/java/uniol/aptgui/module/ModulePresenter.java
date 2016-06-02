@@ -21,6 +21,7 @@ package uniol.aptgui.module;
 
 import uniol.apt.module.Module;
 import uniol.aptgui.Presenter;
+import uniol.aptgui.mainwindow.WindowId;
 
 /**
  * The ModulePresenter controls a GUI component that allows to set input
@@ -29,6 +30,12 @@ import uniol.aptgui.Presenter;
 public interface ModulePresenter extends Presenter<ModuleView> {
 
 	// ACTIONS
+
+	/**
+	 * Sets the window id of the window that contains this presenter.
+	 * @param windowId window id of parent window
+	 */
+	void setWindowId(WindowId windowId);
 
 	/**
 	 * Sets the module this presenter will work with.

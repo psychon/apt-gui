@@ -57,7 +57,9 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 
 	private final Application application;
 
+	private WindowId windowId;
 	private Module module;
+
 	private List<Parameter> parameters;
 	private List<Parameter> allParameters;
 	private List<ReturnValue> returnValues;
@@ -72,6 +74,11 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 		super(view);
 		this.application = application;
 		application.getEventBus().register(this);
+	}
+
+	@Override
+	public void setWindowId(WindowId windowId) {
+		this.windowId = windowId;
 	}
 
 	@Override
@@ -285,6 +292,7 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 
 	@Subscribe
 	public void onWindowClosedEvent(WindowClosedEvent e) {
+		// Unset window chosen as a parameter if it was closed
 		for (int row = 0; row < parameterTableModel.getRowCount(); row++) {
 			PropertyType type = parameterTableModel.getPropertyTypeAt(row);
 			if (type == PropertyType.PETRI_NET || type == PropertyType.TRANSITION_SYSTEM) {
@@ -293,6 +301,11 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 					parameterTableModel.setPropertyValue(row, null);
 				}
 			}
+		}
+
+		// Cancel module execution when parent window closes
+		if (e.getWindowId() == windowId) {
+			moduleFuture.cancel(true);
 		}
 	}
 
