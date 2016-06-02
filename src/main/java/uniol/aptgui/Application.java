@@ -81,7 +81,14 @@ public interface Application {
 	void show();
 
 	/**
-	 * Closes the application and all its windows.
+	 * Closes the application and all its windows without asking about
+	 * unsaved documents.
+	 */
+	void closeNow();
+
+	/**
+	 * Begins to close the application. For each unsaved document the user
+	 * will be asked if he wants to save it.
 	 */
 	void close();
 

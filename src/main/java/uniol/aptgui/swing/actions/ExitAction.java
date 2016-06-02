@@ -20,8 +20,6 @@
 package uniol.aptgui.swing.actions;
 
 import java.awt.event.ActionEvent;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
@@ -29,8 +27,6 @@ import javax.swing.KeyStroke;
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
-import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.mainwindow.WindowId;
 
 @SuppressWarnings("serial")
 public class ExitAction extends AbstractAction {
@@ -48,21 +44,7 @@ public class ExitAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		boolean abortExit = false;
-		Set<WindowId> windowIds = new HashSet<>(app.getDocumentWindows());
-		for (WindowId id : windowIds) {
-			Document<?> document = app.getDocument(id);
-			if (document.hasUnsavedChanges()) {
-				if (!app.closeWindow(id)) {
-					abortExit = true;
-					break;
-				}
-			}
-		}
-
-		if (!abortExit) {
-			app.close();
-		}
+		app.close();
 	}
 
 }

@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -276,9 +277,30 @@ public class ApplicationImpl implements Application {
 	}
 
 	@Override
-	public void close() {
+	public void closeNow() {
 		mainWindow.close();
 		executor.shutdownNow();
+	}
+
+	@Override
+	public void close() {
+		boolean abortExit = false;
+		// Copy ids so that external windows (which when closed become internal windows)
+		// don't mess up the process
+		Set<WindowId> ids = new HashSet<>(documents.keySet());
+		for (WindowId id : ids) {
+			Document<?> document = documents.get(id);
+			if (document.hasUnsavedChanges()) {
+				if (!closeWindow(id)) {
+					abortExit = true;
+					break;
+				}
+			}
+		}
+
+		if (!abortExit) {
+			closeNow();
+		}
 	}
 
 	@Override
