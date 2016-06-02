@@ -17,37 +17,30 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.swing;
+package uniol.aptgui.window.external;
 
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import com.google.common.eventbus.EventBus;
+import com.google.inject.Inject;
 
-public abstract class WindowClosingListener implements WindowListener {
+import uniol.aptgui.Application;
+import uniol.aptgui.window.WindowPresenterImpl;
 
-	public abstract void windowClosing(WindowEvent e);
+public class ExternalWindowPresenterImpl
+		extends WindowPresenterImpl<ExternalWindowPresenterImpl, ExternalWindowViewImpl>
+		implements ExternalWindowPresenter {
 
-	@Override
-	public void windowOpened(WindowEvent e) {
+	@Inject
+	public ExternalWindowPresenterImpl(ExternalWindowView view, Application application, EventBus eventBus) {
+		super(view, application, eventBus);
 	}
 
 	@Override
-	public void windowClosed(WindowEvent e) {
+	public void onCloseButtonClicked() {
+		application.getMainWindow().removeWindow(id);
 	}
 
 	@Override
-	public void windowIconified(WindowEvent e) {
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-	}
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
+	public void onWindowMoved(int newX, int newY) {
 	}
 
 }

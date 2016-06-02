@@ -21,6 +21,7 @@ package uniol.aptgui.mainwindow;
 
 import java.awt.Component;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,12 +46,13 @@ import uniol.aptgui.events.DocumentSelectionChangedEvent;
 import uniol.aptgui.events.WindowClosedEvent;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.events.WindowOpenedEvent;
-import uniol.aptgui.internalwindow.InternalWindowListener;
-import uniol.aptgui.internalwindow.InternalWindowPresenter;
 import uniol.aptgui.mainwindow.menu.MenuPresenter;
 import uniol.aptgui.mainwindow.toolbar.ToolbarPresenter;
 import uniol.aptgui.module.ModulePresenter;
 import uniol.aptgui.modulebrowser.ModuleBrowserPresenter;
+import uniol.aptgui.window.WindowListener;
+import uniol.aptgui.window.external.ExternalWindowPresenter;
+import uniol.aptgui.window.internal.InternalWindowPresenter;
 
 public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresenter, MainWindowView>
 		implements MainWindowPresenter {
@@ -82,9 +84,14 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	private final Injector injector;
 
 	/**
-	 * Map that contains all windows by id.
+	 * Map that contains all internal windows by id.
 	 */
 	private final Map<WindowId, InternalWindowPresenter> internalWindows;
+
+	/**
+	 * Map that contains all external windows by id.
+	 */
+	private final Map<WindowId, ExternalWindowPresenter> externalWindows;
 
 	/**
 	 * Toolbar presenter.
@@ -125,7 +132,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	 * Listener for window events that updates the document size when the
 	 * window size changes.
 	 */
-	private final InternalWindowListener windowListener = new InternalWindowListener() {
+	private final WindowListener windowListener = new WindowListener() {
 		@Override
 		public void windowResized(WindowId id, int width, int height) {
 			Document<?> document = application.getDocument(id);
@@ -149,6 +156,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		this.eventBus = eventBus;
 		this.injector = injector;
 		this.internalWindows = new HashMap<>();
+		this.externalWindows = new HashMap<>();
 		this.toolbar = toolbar;
 		this.menu = menu;
 
@@ -177,12 +185,25 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	@Override
 	public void close() {
 		getView().close();
+		for (ExternalWindowPresenter extWindow : externalWindows.values()) {
+			extWindow.close();
+		}
 	}
 
 	@Override
 	public void removeWindow(WindowId id) {
+		if (internalWindows.containsKey(id)) {
+			removeInternalWindow(id);
+		}
+		if (externalWindows.containsKey(id)) {
+			transformToInternalWindow(id);
+		}
+	}
+
+	private void removeInternalWindow(WindowId id) {
 		InternalWindowPresenter window = internalWindows.remove(id);
 		view.removeInternalWindow(window.getView());
+		window.close();
 		updateWindowMenu();
 
 		Document<?> document = application.getDocument(id);
@@ -200,13 +221,13 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	}
 
 	@Override
-	public void showWindow(WindowId id) {
+	public void showInternalWindow(WindowId id) {
 		InternalWindowPresenter window = internalWindows.get(id);
 		view.addInternalWindow(window.getView());
 
 		// Set window starting position in relation to currently active window.
-		WindowId activeId = application.getActiveInternalWindow();
-		if (activeId != null) {
+		WindowId activeId = application.getActiveWindow();
+		if (activeId != null && activeId != id && isInternalWindow(activeId)) {
 			InternalWindowPresenter active = internalWindows.get(activeId);
 			Point activePos = active.getPosition();
 			window.setPosition(
@@ -244,7 +265,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 			ModuleBrowserPresenter moduleBrowser = injector.getInstance(ModuleBrowserPresenter.class);
 			InternalWindowPresenter iwp = createInternalWindow(moduleBrowserWindowId, moduleBrowser);
 			iwp.setTitle("Module Browser");
-			showWindow(moduleBrowserWindowId);
+			showInternalWindow(moduleBrowserWindowId);
 		}
 
 		focus(moduleBrowserWindowId);
@@ -261,7 +282,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		InternalWindowPresenter iwp = createInternalWindow(id, modulePresenter);
 		iwp.setTitle(module.getTitle());
 
-		showWindow(id);
+		showInternalWindow(id);
 		focus(id);
 	}
 
@@ -279,7 +300,11 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 
 	@Override
 	public String getWindowTitle(WindowId id) {
-		return internalWindows.get(id).getDisplayedTitle();
+		if (internalWindows.containsKey(id)) {
+			return internalWindows.get(id).getDisplayedTitle();
+		} else {
+			return externalWindows.get(id).getDisplayedTitle();
+		}
 	}
 
 	@Override
@@ -307,6 +332,24 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	}
 
 	/**
+	 * Creates a new ExternalWindowPresenter with the given Presenter as its
+	 * content presenter.
+	 *
+	 * @param id
+	 *                the WindowId
+	 * @param contentPresenter
+	 *                the content/child presenter
+	 * @return a new InternalWindowPresenter
+	 */
+	private ExternalWindowPresenter createExternalWindow(WindowId id, Presenter<?> contentPresenter) {
+		ExternalWindowPresenter window = injector.getInstance(ExternalWindowPresenter.class);
+		window.setWindowId(id);
+		window.setContentPresenter(contentPresenter);
+		externalWindows.put(id, window);
+		return window;
+	}
+
+	/**
 	 * Updates the Menu presenter with the current set of windows.
 	 */
 	private void updateWindowMenu() {
@@ -318,7 +361,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	 * window title is a part of it.
 	 */
 	private void updateMainTitle() {
-		WindowId active = application.getActiveInternalWindow();
+		WindowId active = application.getActiveWindow();
 		if (active != null) {
 			view.setTitle(getWindowTitle(active) + " - " + TITLE);
 		} else {
@@ -336,6 +379,40 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		JOptionPane.showMessageDialog((Component) view, exception.getMessage(), title,
 				JOptionPane.ERROR_MESSAGE);
 		exception.printStackTrace();
+	}
+
+	@Override
+	public void transformToExternalWindow(WindowId id, Point origin) {
+		InternalWindowPresenter intWindow = internalWindows.remove(id);
+		view.removeInternalWindow(intWindow.getView());
+		intWindow.close();
+		ExternalWindowPresenter extWindow = createExternalWindow(id, intWindow.getContentPresenter());
+		extWindow.setPosition(origin.x, origin.y);
+	}
+
+	@Override
+	public void transformToInternalWindow(WindowId id) {
+		ExternalWindowPresenter extWindow = externalWindows.remove(id);
+		extWindow.close();
+
+		createInternalWindow(id, extWindow.getContentPresenter());
+		showInternalWindow(id);
+		focus(id);
+	}
+
+	@Override
+	public boolean isInternalWindow(WindowId id) {
+		return internalWindows.containsKey(id);
+	}
+
+	@Override
+	public Rectangle getMainWindowBounds() {
+		return view.getBounds();
+	}
+
+	@Override
+	public void onDeactivated() {
+		view.unfocusAllInternalWindows();
 	}
 
 }

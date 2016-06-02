@@ -31,10 +31,6 @@ import uniol.aptgui.editor.EditorPresenterImpl;
 import uniol.aptgui.editor.EditorView;
 import uniol.aptgui.editor.EditorViewImpl;
 import uniol.aptgui.editor.document.RenderingOptions;
-import uniol.aptgui.internalwindow.InternalWindowPresenter;
-import uniol.aptgui.internalwindow.InternalWindowPresenterImpl;
-import uniol.aptgui.internalwindow.InternalWindowView;
-import uniol.aptgui.internalwindow.InternalWindowViewImpl;
 import uniol.aptgui.mainwindow.MainWindowPresenter;
 import uniol.aptgui.mainwindow.MainWindowPresenterImpl;
 import uniol.aptgui.mainwindow.MainWindowView;
@@ -55,6 +51,14 @@ import uniol.aptgui.modulebrowser.ModuleBrowserPresenter;
 import uniol.aptgui.modulebrowser.ModuleBrowserPresenterImpl;
 import uniol.aptgui.modulebrowser.ModuleBrowserView;
 import uniol.aptgui.modulebrowser.ModuleBrowserViewImpl;
+import uniol.aptgui.window.external.ExternalWindowPresenter;
+import uniol.aptgui.window.external.ExternalWindowPresenterImpl;
+import uniol.aptgui.window.external.ExternalWindowView;
+import uniol.aptgui.window.external.ExternalWindowViewImpl;
+import uniol.aptgui.window.internal.InternalWindowPresenter;
+import uniol.aptgui.window.internal.InternalWindowPresenterImpl;
+import uniol.aptgui.window.internal.InternalWindowView;
+import uniol.aptgui.window.internal.InternalWindowViewImpl;
 
 public class DependenyModule extends AbstractModule {
 
@@ -65,6 +69,8 @@ public class DependenyModule extends AbstractModule {
 		bind(MainWindowView.class).to(MainWindowViewImpl.class);
 		bind(MenuPresenter.class).to(MenuPresenterImpl.class);
 		bind(MenuView.class).to(MenuViewImpl.class);
+		bind(ExternalWindowPresenter.class).to(ExternalWindowPresenterImpl.class);
+		bind(ExternalWindowView.class).to(ExternalWindowViewImpl.class);
 		bind(InternalWindowPresenter.class).to(InternalWindowPresenterImpl.class);
 		bind(InternalWindowView.class).to(InternalWindowViewImpl.class);
 		bind(EditorPresenter.class).to(EditorPresenterImpl.class);

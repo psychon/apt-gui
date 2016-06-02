@@ -17,32 +17,57 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.internalwindow;
+package uniol.aptgui.window.external;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.beans.PropertyVetoException;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
-import javax.swing.event.InternalFrameAdapter;
-import javax.swing.event.InternalFrameEvent;
 
 import uniol.aptgui.View;
 import uniol.aptgui.mainwindow.WindowType;
-import uniol.aptgui.swing.JInternalFrameView;
+import uniol.aptgui.swing.JFrameView;
 import uniol.aptgui.swing.Resource;
 
 @SuppressWarnings("serial")
-public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPresenter> implements InternalWindowView {
+public class ExternalWindowViewImpl extends JFrameView<ExternalWindowPresenterImpl> implements ExternalWindowView {
 
 	private final JPanel contentPanel;
 
-	public InternalWindowViewImpl() {
+	private final WindowAdapter windowAdapter = new WindowAdapter() {
+		@Override
+		public void windowClosing(WindowEvent e) {
+			getPresenter().onCloseButtonClicked();
+		}
+		@Override
+		public void windowActivated(WindowEvent e) {
+			getPresenter().onActivated();
+		}
+		@Override
+		public void windowDeactivated(WindowEvent e) {
+			getPresenter().onDeactivated();
+		}
+	};
+
+	private final ComponentAdapter componentAdapter = new ComponentAdapter() {
+		@Override
+		public void componentResized(ComponentEvent e) {
+			getPresenter().onWindowResized(contentPanel.getWidth(), contentPanel.getHeight());
+		}
+		@Override
+		public void componentMoved(ComponentEvent e) {
+			getPresenter().onWindowMoved(getX(), getY());
+		}
+	};
+
+	public ExternalWindowViewImpl() {
 		initWindowListener();
 		contentPanel = new JPanel();
 		getContentPane().add(contentPanel);
@@ -50,28 +75,8 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 
 	private void initWindowListener() {
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		addInternalFrameListener(new InternalFrameAdapter() {
-			@Override
-			public void internalFrameClosing(InternalFrameEvent e) {
-				getPresenter().onCloseButtonClicked();
-			}
-
-			@Override
-			public void internalFrameActivated(InternalFrameEvent e) {
-				getPresenter().onActivated();
-			}
-
-			@Override
-			public void internalFrameDeactivated(InternalFrameEvent e) {
-				getPresenter().onDeactivated();
-			}
-		});
-		addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentResized(ComponentEvent e) {
-				getPresenter().onWindowResized(contentPanel.getWidth(), contentPanel.getHeight());
-			}
-		});
+		addWindowListener(windowAdapter);
+		addComponentListener(componentAdapter);
 	}
 
 	@Override
@@ -85,10 +90,8 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 
 	@Override
 	public void focus() {
-		try {
-			setSelected(true);
-		} catch (PropertyVetoException e) {
-		}
+		toFront();
+		requestFocus();
 	}
 
 	@Override
@@ -100,10 +103,10 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 	public void setIcon(WindowType windowType) {
 		switch (windowType) {
 		case PETRI_NET:
-			setFrameIcon(Resource.getIconPetriNetDocument());
+			setIconImage(Resource.getIconPetriNetDocument().getImage());
 			break;
 		case TRANSITION_SYSTEM:
-			setFrameIcon(Resource.getIconTransitionSystemDocument());
+			setIconImage(Resource.getIconTransitionSystemDocument().getImage());
 			break;
 		default:
 			break;
@@ -118,6 +121,13 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 	@Override
 	public void setPosition(int x, int y) {
 		setBounds(x, y, getWidth(), getHeight());
+	}
+
+	@Override
+	public void dispose() {
+		removeComponentListener(componentAdapter);
+		removeWindowListener(windowAdapter);
+		super.dispose();
 	}
 
 }

@@ -49,7 +49,7 @@ public class ExportAction extends DocumentAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		WindowId activeWindow = app.getActiveInternalWindow();
+		WindowId activeWindow = app.getActiveWindow();
 		Document<?> document = app.getDocument(activeWindow);
 
 		AptFileChooser fc = AptFileChooser.exportChooser(document);

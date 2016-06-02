@@ -53,7 +53,7 @@ public class SaveAction extends DocumentAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		WindowId activeWindow = app.getActiveInternalWindow();
+		WindowId activeWindow = app.getActiveWindow();
 		Document<?> document = app.getDocument(activeWindow);
 		if (shouldShowSaveDialog(document)) {
 			AptFileChooser fc = AptFileChooser.saveChooser(document);

@@ -19,6 +19,9 @@
 
 package uniol.aptgui.mainwindow;
 
+import java.awt.Point;
+import java.awt.Rectangle;
+
 import uniol.apt.module.Module;
 import uniol.aptgui.Presenter;
 import uniol.aptgui.editor.document.Document;
@@ -63,7 +66,7 @@ public interface MainWindowPresenter extends Presenter<MainWindowView> {
 	 * @param id
 	 *                window id
 	 */
-	void showWindow(WindowId id);
+	void showInternalWindow(WindowId id);
 
 	/**
 	 * Removes the window identified by the given id from the desktop pane.
@@ -131,9 +134,52 @@ public interface MainWindowPresenter extends Presenter<MainWindowView> {
 	 */
 	void cascadeWindows();
 
+	/**
+	 * Transforms an internal window to an external window.
+	 *
+	 * @param id
+	 *                the window to transform
+	 * @param origin
+	 *                window position
+	 */
+	void transformToExternalWindow(WindowId id, Point origin);
+
+	/**
+	 * Transforms an external window to an internal window.
+	 *
+	 * @param id
+	 *                the window to transform
+	 */
+	void transformToInternalWindow(WindowId id);
+
+	/**
+	 * Returns if the window with the given id is an internal window.
+	 *
+	 * @param id
+	 *                window id
+	 * @return true if the window is internal; false if the window is
+	 *         external
+	 */
+	boolean isInternalWindow(WindowId id);
+
+	/**
+	 * Returns the bounds of the main window.
+	 *
+	 * @return the bounds of the main window
+	 */
+	Rectangle getMainWindowBounds();
+
 	/// VIEW EVENTS ///
 
+	/**
+	 * Called by the view when the close button is clicked.
+	 */
 	void onCloseButtonClicked();
+
+	/**
+	 * Called by the view when the main window loses focus.
+	 */
+	void onDeactivated();
 
 }
 

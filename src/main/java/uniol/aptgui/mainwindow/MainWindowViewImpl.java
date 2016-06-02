@@ -22,7 +22,9 @@ package uniol.aptgui.mainwindow;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyVetoException;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -32,12 +34,11 @@ import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
 import javax.swing.WindowConstants;
 
-import uniol.aptgui.internalwindow.InternalWindowView;
+import uniol.aptgui.View;
 import uniol.aptgui.mainwindow.menu.MenuView;
 import uniol.aptgui.mainwindow.toolbar.ToolbarView;
 import uniol.aptgui.swing.JFrameView;
 import uniol.aptgui.swing.Resource;
-import uniol.aptgui.swing.WindowClosingListener;
 
 @SuppressWarnings("serial")
 public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implements MainWindowView {
@@ -57,10 +58,15 @@ public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implemen
 
 	private void initWindowListener() {
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowClosingListener() {
+		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				getPresenter().onCloseButtonClicked();
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				getPresenter().onDeactivated();
 			}
 		});
 	}
@@ -76,12 +82,12 @@ public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implemen
 	}
 
 	@Override
-	public void addInternalWindow(InternalWindowView windowView) {
+	public void addInternalWindow(View<?> windowView) {
 		jDesktopPane.add((Component) windowView);
 	}
 
 	@Override
-	public void removeInternalWindow(InternalWindowView windowView) {
+	public void removeInternalWindow(View<?> windowView) {
 		jDesktopPane.remove((Component) windowView);
 		jDesktopPane.repaint();
 	}
@@ -137,6 +143,17 @@ public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implemen
 		@Override
 		public int compare(JInternalFrame o1, JInternalFrame o2) {
 			return desktop.getPosition(o2) - desktop.getPosition(o1);
+		}
+	}
+
+	@Override
+	public void unfocusAllInternalWindows() {
+		for (JInternalFrame frame : jDesktopPane.getAllFrames()) {
+			try {
+				frame.setSelected(false);
+			} catch (PropertyVetoException e) {
+				// Ignore.
+			}
 		}
 	}
 

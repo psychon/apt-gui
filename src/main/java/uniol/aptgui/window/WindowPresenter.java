@@ -17,16 +17,29 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.internalwindow;
+package uniol.aptgui.window;
 
 import java.awt.Point;
 
 import uniol.aptgui.Presenter;
+import uniol.aptgui.View;
 import uniol.aptgui.mainwindow.WindowId;
 
-public interface InternalWindowPresenter extends Presenter<InternalWindowView> {
+public interface WindowPresenter {
 
 	/// ACTIONS ///
+
+	/**
+	 * Returns the associated view.
+	 *
+	 * @return the associated view.
+	 */
+	View<?> getView();
+
+	/**
+	 * Closes this window.
+	 */
+	void close();
 
 	/**
 	 * Sets the content presenter associated with this window. Its view will
@@ -36,6 +49,13 @@ public interface InternalWindowPresenter extends Presenter<InternalWindowView> {
 	 *                the new content presenter
 	 */
 	void setContentPresenter(Presenter<?> presenter);
+
+	/**
+	 * Returns the content presenter associated with this window.
+	 *
+	 * @return the content presenter associated with this window
+	 */
+	Presenter<?> getContentPresenter();
 
 	/**
 	 * Sets the WindowId associated with this window.
@@ -88,7 +108,7 @@ public interface InternalWindowPresenter extends Presenter<InternalWindowView> {
 	 * @param listener
 	 *                the listener
 	 */
-	void addWindowListener(InternalWindowListener listener);
+	void addWindowListener(WindowListener listener);
 
 	/**
 	 * Removes a listener.
@@ -96,7 +116,7 @@ public interface InternalWindowPresenter extends Presenter<InternalWindowView> {
 	 * @param listener
 	 *                the listener
 	 */
-	void removeWindowListener(InternalWindowListener listener);
+	void removeWindowListener(WindowListener listener);
 
 	/**
 	 * Returns the position of this window in relation to its parent
@@ -142,6 +162,16 @@ public interface InternalWindowPresenter extends Presenter<InternalWindowView> {
 	 *                height of the content pane
 	 */
 	void onWindowResized(int width, int height);
+
+	/**
+	 * Called by the view when the window has been moved.
+	 *
+	 * @param newX
+	 *                new x position
+	 * @param newY
+	 *                new y position
+	 */
+	void onWindowMoved(int newX, int newY);
 
 }
 

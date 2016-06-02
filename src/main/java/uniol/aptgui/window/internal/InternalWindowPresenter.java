@@ -17,23 +17,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.internalwindow;
+package uniol.aptgui.window.internal;
 
-import uniol.aptgui.mainwindow.WindowId;
+import uniol.aptgui.window.WindowPresenter;
 
-public interface InternalWindowListener {
-
-	/**
-	 * Called when a window is resized.
-	 *
-	 * @param id
-	 *                the id of the window that was resized
-	 * @param width
-	 *                new width
-	 * @param height
-	 *                new height
-	 */
-	void windowResized(WindowId id, int width, int height);
+public interface InternalWindowPresenter extends WindowPresenter {
 
 }
 

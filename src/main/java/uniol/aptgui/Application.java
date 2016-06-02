@@ -132,7 +132,7 @@ public interface Application {
 	 *
 	 * @return window id or null if no window is active
 	 */
-	WindowId getActiveInternalWindow();
+	WindowId getActiveWindow();
 
 	/**
 	 * Returns the ids of all windows that are document editors as an

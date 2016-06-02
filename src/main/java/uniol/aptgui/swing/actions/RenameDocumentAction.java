@@ -48,7 +48,7 @@ public class RenameDocumentAction extends DocumentAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		WindowId activeWindow = app.getActiveInternalWindow();
+		WindowId activeWindow = app.getActiveWindow();
 		Document<?> document = app.getDocument(activeWindow);
 		String result = showNameInputDialog(document.getName());
 		if (result != null) {

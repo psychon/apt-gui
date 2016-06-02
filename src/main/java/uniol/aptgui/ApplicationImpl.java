@@ -135,7 +135,7 @@ public class ApplicationImpl implements Application {
 	}
 
 	@Override
-	public WindowId getActiveInternalWindow() {
+	public WindowId getActiveWindow() {
 		return activeWindow;
 	}
 
@@ -187,7 +187,7 @@ public class ApplicationImpl implements Application {
 		documents.put(id, document);
 
 		mainWindow.createDocumentEditorWindow(id, document);
-		mainWindow.showWindow(id);
+		mainWindow.showInternalWindow(id);
 
 		document.applyLayout(new RandomLayout());
 		document.setVisible(true);

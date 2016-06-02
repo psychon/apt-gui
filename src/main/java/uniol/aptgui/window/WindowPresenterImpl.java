@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.internalwindow;
+package uniol.aptgui.window;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -29,51 +29,57 @@ import com.google.inject.Inject;
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Application;
 import uniol.aptgui.Presenter;
+import uniol.aptgui.View;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.DocumentListener;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.events.WindowFocusLostEvent;
 import uniol.aptgui.mainwindow.WindowId;
 
-public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindowPresenter, InternalWindowView>
-		implements InternalWindowPresenter {
+public abstract class WindowPresenterImpl<P extends Presenter<V> & WindowPresenter, V extends View<P> & WindowView>
+		extends AbstractPresenter<P, V> implements WindowPresenter {
 
 	/**
 	 * List of listeners.
 	 */
-	private final List<InternalWindowListener> listeners;
+	protected final List<WindowListener> listeners;
 
 	/**
 	 * Main application reference.
 	 */
-	private final Application application;
+	protected final Application application;
 
 	/**
 	 * EventBus reference.
 	 */
-	private final EventBus eventBus;
+	protected final EventBus eventBus;
 
 	/**
 	 * Title of this window as set programmatically.
 	 */
-	private String title;
+	protected String title;
 
 	/**
 	 * Title of this window as seen by the user.
 	 */
-	private String computedTitle;
+	protected String computedTitle;
 
 	/**
 	 * This window's id.
 	 */
-	private WindowId id;
+	protected WindowId id;
+
+	/**
+	 * Child presenter that is embedded inside this window.
+	 */
+	protected Presenter<?> contentPresenter;
 
 	/**
 	 * Document listener that get's used when this window contains a
 	 * document editor to track document title changes and update the window
 	 * title.
 	 */
-	private DocumentListener titleChangeListener = new DocumentListener() {
+	protected DocumentListener titleChangeListener = new DocumentListener() {
 		@Override public void onSelectionChanged(Document<?> source) {}
 		@Override public void onDocumentDirty(Document<?> source) {}
 		@Override
@@ -82,9 +88,10 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 		}
 	};
 
+	@SuppressWarnings("unchecked")
 	@Inject
-	public InternalWindowPresenterImpl(InternalWindowView view, Application application, EventBus eventBus) {
-		super(view);
+	public WindowPresenterImpl(WindowView view, Application application, EventBus eventBus) {
+		super((V) view);
 		this.listeners = new ArrayList<>();
 		this.application = application;
 		this.eventBus = eventBus;
@@ -94,12 +101,18 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 
 	@Override
 	public void setContentPresenter(Presenter<?> presenter) {
+		contentPresenter = presenter;
 		getView().setContent(presenter.getView());
 	}
 
 	@Override
-	public void onCloseButtonClicked() {
-		application.closeWindow(id);
+	public Presenter<?> getContentPresenter() {
+		return contentPresenter;
+	}
+
+	@Override
+	public void close() {
+		view.dispose();
 	}
 
 	@Override
@@ -180,18 +193,18 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	}
 
 	@Override
-	public void addWindowListener(InternalWindowListener listener) {
+	public void addWindowListener(WindowListener listener) {
 		listeners.add(listener);
 	}
 
 	@Override
-	public void removeWindowListener(InternalWindowListener listener) {
+	public void removeWindowListener(WindowListener listener) {
 		listeners.remove(listener);
 	}
 
 	@Override
 	public void onWindowResized(int width, int height) {
-		for (InternalWindowListener listener : listeners) {
+		for (WindowListener listener : listeners) {
 			listener.windowResized(id, width, height);
 		}
 	}

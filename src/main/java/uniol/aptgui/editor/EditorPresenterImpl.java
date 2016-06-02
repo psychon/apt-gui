@@ -76,7 +76,7 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 
 	@Subscribe
 	public void onToolSelectedEvent(ToolSelectedEvent e) {
-		if (application.getActiveInternalWindow() != windowId) {
+		if (application.getActiveWindow() != windowId) {
 			return;
 		}
 

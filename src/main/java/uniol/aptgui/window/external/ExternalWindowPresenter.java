@@ -17,46 +17,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.mainwindow;
+package uniol.aptgui.window.external;
 
-import java.awt.Rectangle;
+import uniol.aptgui.window.WindowPresenter;
 
-import uniol.aptgui.View;
-import uniol.aptgui.mainwindow.menu.MenuView;
-import uniol.aptgui.mainwindow.toolbar.ToolbarView;
-
-public interface MainWindowView extends View<MainWindowPresenter> {
-
-	void setVisible(boolean visible);
-
-	void close();
-
-	void setTitle(String title);
-
-	void addInternalWindow(View<?> windowView);
-
-	void removeInternalWindow(View<?> windowView);
-
-	void setToolbar(ToolbarView toolbarView);
-
-	void setMenu(MenuView menuView);
-
-	/**
-	 * Arranges the internal windows in a cascade.
-	 */
-	void cascadeInternalWindows();
-
-	/**
-	 * Returns the window bounds.
-	 *
-	 * @return the window bounds
-	 */
-	Rectangle getBounds();
-
-	/**
-	 * Removes focus from all internal windows.
-	 */
-	void unfocusAllInternalWindows();
+public interface ExternalWindowPresenter extends WindowPresenter {
 
 }
 

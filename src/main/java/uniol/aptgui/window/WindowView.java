@@ -17,14 +17,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.internalwindow;
+package uniol.aptgui.window;
 
 import java.awt.Point;
 
 import uniol.aptgui.View;
 import uniol.aptgui.mainwindow.WindowType;
 
-public interface InternalWindowView extends View<InternalWindowPresenter> {
+public interface WindowView {
 
 	/**
 	 * Sets the content view that will be shown inside this window.
@@ -81,6 +81,11 @@ public interface InternalWindowView extends View<InternalWindowPresenter> {
 	 *                y position
 	 */
 	void setPosition(int x, int y);
+
+	/**
+	 * Disposes of this window.
+	 */
+	void dispose();
 
 }
 
