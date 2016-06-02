@@ -19,6 +19,7 @@
 
 package uniol.aptgui.internalwindow;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -198,6 +199,16 @@ public class InternalWindowPresenterImpl extends AbstractPresenter<InternalWindo
 	@Override
 	public void onDeactivated() {
 		eventBus.post(new WindowFocusLostEvent(id));
+	}
+
+	@Override
+	public Point getPosition() {
+		return view.getPosition();
+	}
+
+	@Override
+	public void setPosition(int x, int y) {
+		view.setPosition(x, y);
 	}
 
 }

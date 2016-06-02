@@ -21,6 +21,7 @@ package uniol.aptgui.internalwindow;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyVetoException;
@@ -107,6 +108,16 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public Point getPosition() {
+		return new Point(getX(), getY());
+	}
+
+	@Override
+	public void setPosition(int x, int y) {
+		setBounds(x, y, getWidth(), getHeight());
 	}
 
 }

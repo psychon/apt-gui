@@ -20,6 +20,7 @@
 package uniol.aptgui.mainwindow;
 
 import java.awt.Component;
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,6 +59,12 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	 * Main application title.
 	 */
 	private static final String TITLE = "APT";
+
+	/**
+	 * When a new window is created its starting position is offset from the
+	 * currently active document by this much.
+	 */
+	private static final int WINDOW_CREATION_CASCADE_OFFSET = 30;
 
 	/**
 	 * Reference to the global application instance.
@@ -196,8 +203,19 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	public void showWindow(WindowId id) {
 		InternalWindowPresenter window = internalWindows.get(id);
 		view.addInternalWindow(window.getView());
-		updateWindowMenu();
 
+		// Set window starting position in relation to currently active window.
+		WindowId activeId = application.getActiveInternalWindow();
+		if (activeId != null) {
+			InternalWindowPresenter active = internalWindows.get(activeId);
+			Point activePos = active.getPosition();
+			window.setPosition(
+				activePos.x + WINDOW_CREATION_CASCADE_OFFSET,
+				activePos.y + WINDOW_CREATION_CASCADE_OFFSET
+			);
+		}
+
+		updateWindowMenu();
 		eventBus.post(new WindowOpenedEvent(id));
 	}
 

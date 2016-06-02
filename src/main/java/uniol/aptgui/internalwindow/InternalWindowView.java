@@ -19,6 +19,8 @@
 
 package uniol.aptgui.internalwindow;
 
+import java.awt.Point;
+
 import uniol.aptgui.View;
 import uniol.aptgui.mainwindow.WindowType;
 
@@ -61,6 +63,24 @@ public interface InternalWindowView extends View<InternalWindowPresenter> {
 	 *                type of the window
 	 */
 	void setIcon(WindowType windowType);
+
+	/**
+	 * Returns the position of this window in relation to its parent
+	 * container.
+	 *
+	 * @return position of the window
+	 */
+	Point getPosition();
+
+	/**
+	 * Sets the position of this window in relation to its parent container.
+	 *
+	 * @param x
+	 *                x position
+	 * @param y
+	 *                y position
+	 */
+	void setPosition(int x, int y);
 
 }
 
