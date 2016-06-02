@@ -24,6 +24,7 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
 import java.beans.PropertyVetoException;
 
 import javax.swing.BorderFactory;
@@ -52,10 +53,14 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 		@Override
 		public void internalFrameActivated(InternalFrameEvent e) {
 			getPresenter().onActivated();
+			getGlassPane().setEnabled(false);
+			getGlassPane().setVisible(false);
 		}
 
 		@Override
 		public void internalFrameDeactivated(InternalFrameEvent e) {
+			getGlassPane().setEnabled(true);
+			getGlassPane().setVisible(true);
 			getPresenter().onDeactivated();
 		}
 	};
@@ -75,6 +80,9 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 		initWindowListener();
 		contentPanel = new JPanel();
 		getContentPane().add(contentPanel);
+
+		// This is necessary for the glass pane to intercept mouse events.
+		getGlassPane().addMouseListener(new MouseAdapter() {});
 	}
 
 	private void initWindowListener() {

@@ -24,6 +24,8 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -49,9 +51,15 @@ public class ExternalWindowViewImpl extends JFrameView<ExternalWindowPresenterIm
 		@Override
 		public void windowActivated(WindowEvent e) {
 			getPresenter().onActivated();
+			// Even though the glass pane is re-enabled here in the
+			// InternalWindowPresenter it does not work for JFrames
+			// as the listener order seems to differ. Therefore it
+			// is disabled in its own mouse listener.
 		}
 		@Override
 		public void windowDeactivated(WindowEvent e) {
+			getGlassPane().setEnabled(true);
+			getGlassPane().setVisible(true);
 			getPresenter().onDeactivated();
 		}
 	};
@@ -67,10 +75,19 @@ public class ExternalWindowViewImpl extends JFrameView<ExternalWindowPresenterIm
 		}
 	};
 
+	private final MouseAdapter glassPaneListener = new MouseAdapter() {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			getGlassPane().setEnabled(false);
+			getGlassPane().setVisible(false);
+		}
+	};
+
 	public ExternalWindowViewImpl() {
 		initWindowListener();
 		contentPanel = new JPanel();
 		getContentPane().add(contentPanel);
+		getGlassPane().addMouseListener(glassPaneListener);
 	}
 
 	private void initWindowListener() {
@@ -125,6 +142,7 @@ public class ExternalWindowViewImpl extends JFrameView<ExternalWindowPresenterIm
 
 	@Override
 	public void dispose() {
+		getGlassPane().removeMouseListener(glassPaneListener);
 		removeComponentListener(componentAdapter);
 		removeWindowListener(windowAdapter);
 		super.dispose();

@@ -110,14 +110,9 @@ public abstract class CreateNodeTool<T extends Document<?>, U extends GraphicalN
 
 		Point modelPosition = transform.applyInverse(e.getPoint());
 		node.setCenter(modelPosition);
+		node.setVisible(true);
 		commitNodeCreation(node);
 		initPlace();
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		node.setVisible(true);
-		document.fireDocumentDirty();
 	}
 
 	@Override
