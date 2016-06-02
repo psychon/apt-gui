@@ -34,12 +34,32 @@ public class PropertyTable extends JTable {
 	private WindowRefEditor pnEditor;
 	private WindowRefEditor tsEditor;
 
+	private CompoundWindowRefProvider compoundProvider;
+	private WindowRefProvider pnProvider;
+	private WindowRefProvider tsProvider;
+	private WindowRefEditor pnOrTsEditor;
+
+	public PropertyTable() {
+		compoundProvider = new CompoundWindowRefProvider();
+		pnOrTsEditor = new WindowRefEditor(compoundProvider);
+	}
+
 	public void setPetriNetWindowRefProvider(WindowRefProvider refProvider) {
-		this.pnEditor = new WindowRefEditor(refProvider);
+		if (pnProvider != null) {
+			compoundProvider.removeProvider(pnProvider);
+		}
+		pnProvider = refProvider;
+		pnEditor = new WindowRefEditor(refProvider);
+		compoundProvider.addProvider(refProvider);
 	}
 
 	public void setTransitionSystemWindowRefProvider(WindowRefProvider refProvider) {
-		this.tsEditor = new WindowRefEditor(refProvider);
+		if (tsProvider != null) {
+			compoundProvider.removeProvider(tsProvider);
+		}
+		tsProvider = refProvider;
+		tsEditor = new WindowRefEditor(refProvider);
+		compoundProvider.addProvider(refProvider);
 	}
 
 	public void setModel(PropertyTableModel dataModel) {
@@ -58,6 +78,8 @@ public class PropertyTable extends JTable {
 				return pnEditor;
 			case TRANSITION_SYSTEM:
 				return tsEditor;
+			case PETRI_NET_OR_TRANSITION_SYSTEM:
+				return pnOrTsEditor;
 			default:
 				return getDefaultEditor(type.getProxyType());
 			}

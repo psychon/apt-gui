@@ -30,6 +30,7 @@ import javax.swing.SwingUtilities;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
+import uniol.apt.adt.PetriNetOrTransitionSystem;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.module.Module;
@@ -165,12 +166,27 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 		switch (type) {
 		case PETRI_NET:
 			ref = parameterTableModel.getPropertyValueAt(row);
-			PetriNet pn = (PetriNet) ref.getDocument().getModel();
-			return new PetriNet(pn);
+			if (ref.getDocument() instanceof PnDocument) {
+				PetriNet pn = (PetriNet) ref.getDocument().getModel();
+				return new PetriNet(pn);
+			}
 		case TRANSITION_SYSTEM:
 			ref = parameterTableModel.getPropertyValueAt(row);
-			TransitionSystem ts = (TransitionSystem) ref.getDocument().getModel();
-			return new TransitionSystem(ts);
+			if (ref.getDocument() instanceof TsDocument) {
+				TransitionSystem ts = (TransitionSystem) ref.getDocument().getModel();
+				return new TransitionSystem(ts);
+			}
+		case PETRI_NET_OR_TRANSITION_SYSTEM:
+			ref = parameterTableModel.getPropertyValueAt(row);
+			if (ref.getDocument() instanceof PnDocument) {
+				PetriNet pn = (PetriNet) ref.getDocument().getModel();
+				return new PetriNetOrTransitionSystem(pn);
+			}
+			if (ref.getDocument() instanceof TsDocument) {
+				TransitionSystem ts = (TransitionSystem) ref.getDocument().getModel();
+				return new PetriNetOrTransitionSystem(ts);
+			}
+			throw new AssertionError();
 		default:
 			String value = parameterTableModel.getPropertyValueAt(row);
 			Object modelValue = AptParametersTransformer.INSTANCE.transform(value, allParameters.get(row).getKlass());

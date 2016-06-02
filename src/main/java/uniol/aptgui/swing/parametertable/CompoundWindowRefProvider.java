@@ -19,41 +19,31 @@
 
 package uniol.aptgui.swing.parametertable;
 
-import uniol.apt.adt.PetriNetOrTransitionSystem;
-import uniol.apt.adt.pn.PetriNet;
-import uniol.apt.adt.ts.TransitionSystem;
+import java.util.ArrayList;
+import java.util.List;
 
-public enum PropertyType {
+/**
+ * Allows to group multiple WindowRefProviders into a single one.
+ */
+public class CompoundWindowRefProvider implements WindowRefProvider {
 
-	PETRI_NET(PetriNet.class, WindowRef.class),
-	TRANSITION_SYSTEM(TransitionSystem.class, WindowRef.class),
-	PETRI_NET_OR_TRANSITION_SYSTEM(PetriNetOrTransitionSystem.class, WindowRef.class),
-	BOOLEAN(Boolean.class, Boolean.class),
-	OTHER(Object.class, String.class);
+	private final List<WindowRefProvider> providers = new ArrayList<>();
 
-	private final Class<?> modelType;
-	private final Class<?> proxyType;
-
-	private PropertyType(Class<?> modelType, Class<?> proxyType) {
-		this.modelType = modelType;
-		this.proxyType = proxyType;
+	public void addProvider(WindowRefProvider provider) {
+		providers.add(provider);
 	}
 
-	public Class<?> getModelType() {
-		return modelType;
+	public void removeProvider(WindowRefProvider provider) {
+		providers.remove(provider);
 	}
 
-	public Class<?> getProxyType() {
-		return proxyType;
-	}
-
-	public static PropertyType fromModelType(Class<?> modelClass) {
-		for (PropertyType pt : PropertyType.values()) {
-			if (pt.getModelType().equals(modelClass)) {
-				return pt;
-			}
+	@Override
+	public List<WindowRef> getWindowReferences() {
+		List<WindowRef> refs = new ArrayList<>();
+		for (WindowRefProvider provider : providers) {
+			refs.addAll(provider.getWindowReferences());
 		}
-		return OTHER;
+		return refs;
 	}
 
 }
