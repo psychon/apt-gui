@@ -304,7 +304,7 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 		}
 
 		// Cancel module execution when parent window closes
-		if (e.getWindowId() == windowId) {
+		if (e.getWindowId() == windowId && moduleFuture != null) {
 			moduleFuture.cancel(true);
 		}
 	}
