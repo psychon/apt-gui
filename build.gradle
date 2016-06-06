@@ -9,22 +9,7 @@ repositories {
 
 dependencies {
 	// APT dependencies
-	compile files('../apt/classes/glue')
-	compile files('../apt/classes/io')
-	compile files('../apt/classes/lib')
-	compile files('../apt/classes/main')
-	compile files('../apt/classes/module')
-	
-	// APT library dependencies
-	compile files('../apt/lib/antlr-4.5.1/antlr-4.5.1-complete.jar')
-	compile files('../apt/lib/antlr-4.5.1/antlr-runtime-4.5.1.jar')
-	compile files('../apt/lib/asm-4.1/asm-4.1.jar')
-	compile files('../apt/lib/commons-collections4-4.0/commons-collections4-4.0.jar')
-	compile files('../apt/lib/commons-io-2.4/commons-io-2.4.jar')
-	compile files('../apt/lib/objenesis-1.2/objenesis-1.2.jar')
-	compile files('../apt/lib/sat4j-2.3.2/org.sat4j.core.jar')
-	compile files('../apt/lib/smtinterpol-2.1-219-g60cc1b6/smtinterpol.jar')
-	compile files('../apt/lib/stringtemplate-4.0.8/ST-4.0.8.jar')
+	compile files('../apt/apt.jar')
 
 	// APT-GUI dependencies
 	compile 'com.google.inject:guice:4.0'
