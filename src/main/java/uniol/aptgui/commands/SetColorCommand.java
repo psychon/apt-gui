@@ -54,6 +54,8 @@ public class SetColorCommand extends Command {
 		for (GraphicalElement elem : selection) {
 			oldColors.put(elem, elem.getColor());
 			elem.setColor(newColor);
+			// Make color change immediately visible even if user's cursor is still above the element.
+			elem.setHighlighted(false);
 		}
 		document.fireDocumentChanged(true);
 	}
