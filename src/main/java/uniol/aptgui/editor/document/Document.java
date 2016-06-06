@@ -153,7 +153,7 @@ public abstract class Document<T> {
 		this.width = width;
 		this.height = height;
 		this.visible = false;
-		this.hasUnsavedChanges = true;
+		this.hasUnsavedChanges = false;
 		this.transform = new Transform2D();
 		this.elements = new HashMap<>();
 		this.visualElements = new HashSet<>();
