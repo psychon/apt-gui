@@ -56,19 +56,68 @@ public class History {
 
 			// Only modify history if the command can be undone.
 			if (command.canUndo()) {
-				List<Command> nonRedoneCommandsView = executedCommands.subList(
-					currentCommandIndex + 1,
-					executedCommands.size()
-				);
-				List<Command> nonRedoedCommands = new ArrayList<>(nonRedoneCommandsView);
-				executedCommands.removeAll(nonRedoedCommands);
-				executedCommands.add(command);
+				addToHistory(command);
+				eventBus.post(new HistoryChangedEvent(this));
+			}
+		} catch (Exception ex) {
+			application.getMainWindow().showException("Error", ex);
+		}
+	}
+
+	/**
+	 * Executes the given command and merges the last history entry with the
+	 * current command so that a single undo will undo the current command
+	 * first and then the last one that this command was merged with. Merge
+	 * can be called multiple times to build a big group of commands that
+	 * should behave like a single action to the user.
+	 *
+	 * @param compoundName name of the group
+	 * @param command
+	 *                command to be executed
+	 */
+	public void mergeExecute(String compoundName, Command command) {
+		try {
+			command.execute();
+
+			// Only modify history if the command can be undone.
+			if (command.canUndo()) {
+				addToHistory(command);
+
+				CompoundCommand compoundCmd = null;
+				Command curr = executedCommands.remove(executedCommands.size() - 1);
+				Command prev = executedCommands.remove(executedCommands.size() - 1);
+				if (prev instanceof CompoundCommand) {
+					compoundCmd = (CompoundCommand) prev;
+					compoundCmd.addCommand(curr);
+				} else {
+					compoundCmd = new CompoundCommand(compoundName);
+					compoundCmd.addCommand(prev);
+					compoundCmd.addCommand(curr);
+				}
+				executedCommands.add(compoundCmd);
 				currentCommandIndex = executedCommands.size() - 1;
 				eventBus.post(new HistoryChangedEvent(this));
 			}
 		} catch (Exception ex) {
 			application.getMainWindow().showException("Error", ex);
 		}
+	}
+
+
+	/**
+	 * Adds the given command to the history. All commands that were
+	 * previously undone cannot be redone after this method call.
+	 *
+	 * @param command
+	 *                command to add
+	 */
+	private void addToHistory(Command command) {
+		List<Command> notRedoneCommandsView = executedCommands.subList(currentCommandIndex + 1,
+				executedCommands.size());
+		List<Command> notRedoneCommands = new ArrayList<>(notRedoneCommandsView);
+		executedCommands.removeAll(notRedoneCommands);
+		executedCommands.add(command);
+		currentCommandIndex = executedCommands.size() - 1;
 	}
 
 	/**

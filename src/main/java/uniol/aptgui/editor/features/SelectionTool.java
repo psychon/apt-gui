@@ -114,7 +114,7 @@ public class SelectionTool extends Feature {
 	public void mouseReleased(MouseEvent e) {
 		if (dragType == DragType.BREAKPOINT && !translateBreakpointCommand.isIdentity()) {
 			translateBreakpointCommand.unapplyTranslation();
-			history.execute(translateBreakpointCommand);
+			history.mergeExecute("Create and Move Breakpoint", translateBreakpointCommand);
 		}
 		if (dragType == DragType.SELECTION && !translateElementsCommand.isIdentity()) {
 			translateElementsCommand.unapplyTranslation();
