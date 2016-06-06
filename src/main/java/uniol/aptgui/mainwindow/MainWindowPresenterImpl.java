@@ -51,6 +51,7 @@ import uniol.aptgui.mainwindow.toolbar.ToolbarPresenter;
 import uniol.aptgui.module.ModulePresenter;
 import uniol.aptgui.modulebrowser.ModuleBrowserPresenter;
 import uniol.aptgui.window.WindowListener;
+import uniol.aptgui.window.WindowPresenter;
 import uniol.aptgui.window.external.ExternalWindowPresenter;
 import uniol.aptgui.window.internal.InternalWindowPresenter;
 
@@ -192,27 +193,35 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 
 	@Override
 	public void removeWindow(WindowId id) {
+		WindowPresenter window = null;
 		if (internalWindows.containsKey(id)) {
-			removeInternalWindow(id);
+			window = removeInternalWindow(id);
+		} else if (externalWindows.containsKey(id)) {
+			window = removeExternalWindow(id);
 		}
-		if (externalWindows.containsKey(id)) {
-			transformToInternalWindow(id);
+
+		if (window != null) {
+			updateWindowMenu();
+			Document<?> document = application.getDocument(id);
+			if (document != null) {
+				document.removeListener(documentListener);
+				window.removeWindowListener(windowListener);
+			}
+			eventBus.post(new WindowClosedEvent(id));
 		}
 	}
 
-	private void removeInternalWindow(WindowId id) {
-		InternalWindowPresenter window = internalWindows.remove(id);
-		view.removeInternalWindow(window.getView());
-		window.close();
-		updateWindowMenu();
+	private WindowPresenter removeInternalWindow(WindowId id) {
+		WindowPresenter intWindow = internalWindows.remove(id);
+		view.removeInternalWindow(intWindow.getView());
+		intWindow.close();
+		return intWindow;
+	}
 
-		Document<?> document = application.getDocument(id);
-		if (document != null) {
-			document.removeListener(documentListener);
-			window.removeWindowListener(windowListener);
-		}
-
-		eventBus.post(new WindowClosedEvent(id));
+	private WindowPresenter removeExternalWindow(WindowId id) {
+		WindowPresenter extWindow = externalWindows.remove(id);
+		extWindow.close();
+		return extWindow;
 	}
 
 	@Override

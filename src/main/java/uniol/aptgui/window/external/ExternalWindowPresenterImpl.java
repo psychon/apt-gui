@@ -36,7 +36,7 @@ public class ExternalWindowPresenterImpl
 
 	@Override
 	public void onCloseButtonClicked() {
-		application.getMainWindow().removeWindow(id);
+		application.getMainWindow().transformToInternalWindow(id);
 	}
 
 	@Override
