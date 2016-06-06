@@ -169,17 +169,17 @@ public interface MainWindowPresenter extends Presenter<MainWindowView> {
 	 */
 	Rectangle getMainWindowBounds();
 
+	/**
+	 * Unfocuses all internal windows.
+	 */
+	void unfocusAllInternalWindows();
+
 	/// VIEW EVENTS ///
 
 	/**
 	 * Called by the view when the close button is clicked.
 	 */
 	void onCloseButtonClicked();
-
-	/**
-	 * Called by the view when the main window loses focus.
-	 */
-	void onDeactivated();
 
 }
 

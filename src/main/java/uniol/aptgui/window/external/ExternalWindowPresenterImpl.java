@@ -35,6 +35,12 @@ public class ExternalWindowPresenterImpl
 	}
 
 	@Override
+	public void onActivated() {
+		application.getMainWindow().unfocusAllInternalWindows();
+		super.onActivated();
+	}
+
+	@Override
 	public void onCloseButtonClicked() {
 		application.getMainWindow().transformToInternalWindow(id);
 	}

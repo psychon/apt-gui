@@ -420,7 +420,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	}
 
 	@Override
-	public void onDeactivated() {
+	public void unfocusAllInternalWindows() {
 		view.unfocusAllInternalWindows();
 	}
 

@@ -63,11 +63,6 @@ public class MainWindowViewImpl extends JFrameView<MainWindowPresenter> implemen
 			public void windowClosing(WindowEvent e) {
 				getPresenter().onCloseButtonClicked();
 			}
-
-			@Override
-			public void windowDeactivated(WindowEvent e) {
-				getPresenter().onDeactivated();
-			}
 		});
 	}
 
