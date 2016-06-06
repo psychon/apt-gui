@@ -41,6 +41,7 @@ public class ExternalWindowPresenterImpl
 
 	@Override
 	public void onWindowMoved(int newX, int newY) {
+		// Unnecessary
 	}
 
 }

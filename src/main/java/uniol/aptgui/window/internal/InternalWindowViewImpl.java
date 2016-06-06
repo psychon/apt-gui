@@ -72,9 +72,15 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 		}
 		@Override
 		public void componentMoved(ComponentEvent e) {
-			getPresenter().onWindowMoved(getX(), getY());
+			if (ignoreNextWindowMovedEvent) {
+				ignoreNextWindowMovedEvent = false;
+			} else {
+				getPresenter().onWindowMoved(getX(), getY());
+			}
 		}
 	};
+
+	private boolean ignoreNextWindowMovedEvent = false;
 
 	public InternalWindowViewImpl() {
 		initWindowListener();
@@ -142,6 +148,11 @@ public class InternalWindowViewImpl extends JInternalFrameView<InternalWindowPre
 		removeComponentListener(componentAdapter);
 		removeInternalFrameListener(frameAdapter);
 		super.dispose();
+	}
+
+	@Override
+	public void ignoreNextWindowMovedEvent() {
+		ignoreNextWindowMovedEvent = true;
 	}
 
 }

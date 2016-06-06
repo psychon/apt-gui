@@ -71,7 +71,11 @@ public class ExternalWindowViewImpl extends JFrameView<ExternalWindowPresenterIm
 		}
 		@Override
 		public void componentMoved(ComponentEvent e) {
-			getPresenter().onWindowMoved(getX(), getY());
+			if (ignoreNextWindowMovedEvent) {
+				ignoreNextWindowMovedEvent = false;
+			} else {
+				getPresenter().onWindowMoved(getX(), getY());
+			}
 		}
 	};
 
@@ -82,6 +86,8 @@ public class ExternalWindowViewImpl extends JFrameView<ExternalWindowPresenterIm
 			getGlassPane().setVisible(false);
 		}
 	};
+
+	private boolean ignoreNextWindowMovedEvent = false;
 
 	public ExternalWindowViewImpl() {
 		initWindowListener();
@@ -146,6 +152,11 @@ public class ExternalWindowViewImpl extends JFrameView<ExternalWindowPresenterIm
 		removeComponentListener(componentAdapter);
 		removeWindowListener(windowAdapter);
 		super.dispose();
+	}
+
+	@Override
+	public void ignoreNextWindowMovedEvent() {
+		ignoreNextWindowMovedEvent = true;
 	}
 
 }

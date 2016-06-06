@@ -221,6 +221,7 @@ public abstract class WindowPresenterImpl<P extends Presenter<V> & WindowPresent
 
 	@Override
 	public void setPosition(int x, int y) {
+		view.ignoreNextWindowMovedEvent();
 		view.setPosition(x, y);
 	}
 

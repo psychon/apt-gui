@@ -83,6 +83,12 @@ public interface WindowView {
 	void setPosition(int x, int y);
 
 	/**
+	 * Makes the view implementation ignore the next window moved event so
+	 * that it is not reported to the presenter.
+	 */
+	void ignoreNextWindowMovedEvent();
+
+	/**
 	 * Disposes of this window.
 	 */
 	void dispose();
