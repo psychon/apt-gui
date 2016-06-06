@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -70,10 +71,15 @@ public abstract class Document<T> {
 
 	/**
 	 * Map from GraphicalElements to their model objects of undetermined
-	 * type. The model object may be null if there is no corresponding model
-	 * object.
+	 * type.
 	 */
 	private final Map<GraphicalElement, Object> elements;
+
+	/**
+	 * Set of GraphicalElements that have no associated model object and
+	 * therefore only serve visual purposes.
+	 */
+	private final Set<GraphicalElement> visualElements;
 
 	/**
 	 * Selection object that saves which elements are selected by the user.
@@ -145,6 +151,7 @@ public abstract class Document<T> {
 		this.hasUnsavedChanges = true;
 		this.transform = new Transform2D();
 		this.elements = new HashMap<>();
+		this.visualElements = new HashSet<>();
 		this.selection = new Selection();
 	}
 
@@ -274,7 +281,7 @@ public abstract class Document<T> {
 	 *                graphical element to add
 	 */
 	public void add(GraphicalElement graphicalElem) {
-		add(graphicalElem, null);
+		visualElements.add(graphicalElem);
 	}
 
 	/**
@@ -287,10 +294,10 @@ public abstract class Document<T> {
 	 *                associated model element
 	 */
 	public void add(GraphicalElement graphicalElem, IExtensible modelElem) {
+		assert modelElem != null;
+		visualElements.remove(graphicalElem);
 		elements.put(graphicalElem, modelElem);
-		if (modelElem != null) {
-			modelElem.putExtension(GraphicalElement.EXTENSION_KEY, graphicalElem);
-		}
+		modelElem.putExtension(GraphicalElement.EXTENSION_KEY, graphicalElem);
 	}
 
 	/**
@@ -300,15 +307,16 @@ public abstract class Document<T> {
 	 */
 	public void remove(GraphicalElement graphicalElem) {
 		elements.remove(graphicalElem);
+		visualElements.remove(graphicalElem);
 		removeFromSelection(graphicalElem);
 	}
 
 	/**
-	 * Returns an unmodifiable view of all GraphicalElements in this
-	 * document.
+	 * Returns an unmodifiable view of all GraphicalElements that have
+	 * associated model elements in this document.
 	 *
-	 * @return an unmodifiable view of all GraphicalElements in this
-	 *         document
+	 * @return an unmodifiable view of all GraphicalElements with model
+	 *         elements in this document
 	 */
 	public Set<GraphicalElement> getGraphicalElements() {
 		return Collections.unmodifiableSet(elements.keySet());
@@ -494,6 +502,9 @@ public abstract class Document<T> {
 		for (GraphicalElement elem : elements.keySet()) {
 			elem.draw(graphics, renderingOptions);
 		}
+		for (GraphicalElement elem : visualElements) {
+			elem.draw(graphics, renderingOptions);
+		}
 		// Restore original transform.
 		graphics.setTransform(originalTransform);
 	}
@@ -579,7 +590,7 @@ public abstract class Document<T> {
 	public GraphicalElement getGraphicalElementAt(Point point, boolean preferNodes) {
 		GraphicalElement nonNodeChoice = null;
 		for (GraphicalElement elem : elements.keySet()) {
-			if (elem.coversPoint(point) && elements.get(elem) != null) {
+			if (elem.coversPoint(point)) {
 				if (preferNodes && !(elem instanceof GraphicalNode)) {
 					nonNodeChoice = elem;
 				} else {
