@@ -93,18 +93,19 @@ public class TranslateBreakpointCommand extends Command {
 	}
 
 	/**
-	 * Modifies the translation in x and y direction by the given amount.
+	 * Sets the translation in x and y direction.
+	 * <p>
 	 * This method does not apply any translation to GraphicalElements but
 	 * instead only updates the internal delta x and y variables.
 	 *
 	 * @param dx
-	 *                additional x-axis translation
+	 *                new x axis translation
 	 * @param dy
-	 *                additional y-axis translation
+	 *                new y axis translation
 	 */
 	public void translate(int dx, int dy) {
-		this.deltaX += dx;
-		this.deltaY += dy;
+		this.deltaX = dx;
+		this.deltaY = dy;
 	}
 
 	/**

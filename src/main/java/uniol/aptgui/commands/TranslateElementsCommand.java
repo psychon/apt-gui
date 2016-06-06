@@ -54,16 +54,19 @@ public class TranslateElementsCommand extends Command {
 	}
 
 	/**
-	 * Modifies the translation in x and y direction by the given amount.
+	 * Sets the translation in x and y direction.
+	 * <p>
 	 * This method does not apply any translation to GraphicalElements but
 	 * instead only updates the internal delta x and y variables.
 	 *
 	 * @param dx
+	 *                new x axis translation
 	 * @param dy
+	 *                new y axis translation
 	 */
-	public void translate(int dx, int dy) {
-		this.deltaX += dx;
-		this.deltaY += dy;
+	public void setTranslation(int dx, int dy) {
+		this.deltaX = dx;
+		this.deltaY = dy;
 	}
 
 	/**

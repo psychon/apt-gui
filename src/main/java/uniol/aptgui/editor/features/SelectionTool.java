@@ -132,8 +132,8 @@ public class SelectionTool extends Feature {
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		Point dragTarget = e.getPoint();
-		int dx = (int) ((dragTarget.x - dragSource.x) / transform.getScale());
-		int dy = (int) ((dragTarget.y - dragSource.y) / transform.getScale());
+		int dx = (int) (1.0 * (dragTarget.x - dragSource.x) / transform.getScale());
+		int dy = (int) (1.0 * (dragTarget.y - dragSource.y) / transform.getScale());
 
 		switch (dragType) {
 		case CREATE_BREAKPOINT:
@@ -149,15 +149,13 @@ public class SelectionTool extends Feature {
 			if (!GraphicalEdge.class.isAssignableFrom(document.getSelectionCommonBaseClass())) {
 				// Only translate elements if the selection is not only edges.
 				translateElementsCommand.unapplyTranslation();
-				translateElementsCommand.translate(dx, dy);
+				translateElementsCommand.setTranslation(dx, dy);
 				translateElementsCommand.applyTranslation();
 			}
 			break;
 		default:
 			break;
 		}
-
-		dragSource = dragTarget;
 	}
 
 	/**
