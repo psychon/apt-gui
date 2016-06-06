@@ -34,7 +34,7 @@ public abstract class GraphicalElement {
 	private static final Color HIGHLIGHT_COLOR = Color.BLUE;
 	private static final Color HIGHLIGHT_COLOR_ERROR = Color.RED;
 	private static final Color HIGHLIGHT_COLOR_SUCCESS = Color.GREEN;
-	public static final String EXTENSION_KEY = "uniol_aptgui_editor_document_graphical_GraphicalElement";
+	public static final String EXTENSION_KEY = "uniol.aptgui.editor.document.graphical.GraphicalElement";
 
 	protected Color color;
 	protected boolean highlighted;
