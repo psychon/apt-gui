@@ -237,12 +237,16 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		// Set window starting position in relation to currently active window.
 		WindowId activeId = application.getActiveWindow();
 		if (activeId != null && activeId != id && isInternalWindow(activeId)) {
+			// Offset window from currently active window.
 			InternalWindowPresenter active = internalWindows.get(activeId);
 			Point activePos = active.getPosition();
 			window.setPosition(
 				activePos.x + WINDOW_CREATION_CASCADE_OFFSET,
 				activePos.y + WINDOW_CREATION_CASCADE_OFFSET
 			);
+		} else {
+			// Default starting position
+			window.setPosition(WINDOW_CREATION_CASCADE_OFFSET, WINDOW_CREATION_CASCADE_OFFSET);
 		}
 
 		updateWindowMenu();
