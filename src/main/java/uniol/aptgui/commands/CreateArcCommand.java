@@ -22,7 +22,6 @@ package uniol.aptgui.commands;
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.aptgui.editor.document.TsDocument;
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalArc;
 
 public class CreateArcCommand extends Command {
@@ -52,7 +51,6 @@ public class CreateArcCommand extends Command {
 	@Override
 	public void execute() {
 		tsArc = tsDocument.getModel().createArc(source, target, label);
-		tsArc.putExtension(GraphicalElement.EXTENSION_KEY, graphialArc);
 		tsDocument.add(graphialArc, tsArc);
 		tsDocument.fireDocumentChanged(true);
 	}

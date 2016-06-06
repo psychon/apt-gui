@@ -22,7 +22,6 @@ package uniol.aptgui.commands;
 import uniol.apt.adt.pn.Flow;
 import uniol.apt.adt.pn.Node;
 import uniol.aptgui.editor.document.PnDocument;
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalFlow;
 
 public class CreateFlowCommand extends Command {
@@ -52,7 +51,6 @@ public class CreateFlowCommand extends Command {
 	@Override
 	public void execute() {
 		pnFlow = pnDocument.getModel().createFlow(source, target, multiplicity);
-		pnFlow.putExtension(GraphicalElement.EXTENSION_KEY, graphialFlow);
 		pnDocument.add(graphialFlow, pnFlow);
 		pnDocument.fireDocumentChanged(true);
 	}

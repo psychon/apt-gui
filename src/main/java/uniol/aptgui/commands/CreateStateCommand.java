@@ -22,7 +22,6 @@ package uniol.aptgui.commands;
 import uniol.apt.adt.exception.StructureException;
 import uniol.apt.adt.ts.State;
 import uniol.aptgui.editor.document.TsDocument;
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
 
 public class CreateStateCommand extends Command {
@@ -53,7 +52,6 @@ public class CreateStateCommand extends Command {
 			tsDocument.getModel().setInitialState(tsState);
 		}
 		graphicalState.setId(tsState.getId());
-		tsState.putExtension(GraphicalElement.EXTENSION_KEY, graphicalState);
 		tsDocument.add(graphicalState, tsState);
 		tsDocument.fireDocumentChanged(true);
 	}

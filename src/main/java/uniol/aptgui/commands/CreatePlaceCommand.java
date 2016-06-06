@@ -21,7 +21,6 @@ package uniol.aptgui.commands;
 
 import uniol.apt.adt.pn.Place;
 import uniol.aptgui.editor.document.PnDocument;
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalPlace;
 
 public class CreatePlaceCommand extends Command {
@@ -39,7 +38,6 @@ public class CreatePlaceCommand extends Command {
 	public void execute() {
 		pnPlace = pnDocument.getModel().createPlace();
 		graphicalPlace.setId(pnPlace.getId());
-		pnPlace.putExtension(GraphicalElement.EXTENSION_KEY, graphicalPlace);
 		pnDocument.add(graphicalPlace, pnPlace);
 		pnDocument.fireDocumentChanged(true);
 	}

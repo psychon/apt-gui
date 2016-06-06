@@ -21,7 +21,6 @@ package uniol.aptgui.commands;
 
 import uniol.apt.adt.pn.Transition;
 import uniol.aptgui.editor.document.PnDocument;
-import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalTransition;
 
 public class CreateTransitionCommand extends Command {
@@ -39,7 +38,6 @@ public class CreateTransitionCommand extends Command {
 	public void execute() {
 		pnTransition = pnDocument.getModel().createTransition();
 		graphicalTransition.setId(pnTransition.getId());
-		pnTransition.putExtension(GraphicalElement.EXTENSION_KEY, graphicalTransition);
 		pnDocument.add(graphicalTransition, pnTransition);
 		pnDocument.fireDocumentChanged(true);
 	}
