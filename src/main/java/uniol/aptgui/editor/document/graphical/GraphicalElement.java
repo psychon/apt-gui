@@ -31,10 +31,12 @@ import uniol.aptgui.editor.document.RenderingOptions;
  */
 public abstract class GraphicalElement {
 
+	public static final String EXTENSION_KEY = "uniol.aptgui.editor.document.graphical.GraphicalElement";
+	public static final String EXTENSION_KEY_PERSISTENT = "properties";
+
 	private static final Color HIGHLIGHT_COLOR = Color.BLUE;
 	private static final Color HIGHLIGHT_COLOR_ERROR = Color.RED;
 	private static final Color HIGHLIGHT_COLOR_SUCCESS = Color.GREEN;
-	public static final String EXTENSION_KEY = "uniol.aptgui.editor.document.graphical.GraphicalElement";
 
 	protected Color color;
 	protected boolean highlighted;

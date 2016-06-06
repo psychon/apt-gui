@@ -190,7 +190,10 @@ public class ApplicationImpl implements Application {
 		mainWindow.createDocumentEditorWindow(id, document);
 		mainWindow.showInternalWindow(id);
 
+		// Apply standard layout.
 		document.applyLayout(new RandomLayout());
+		// Recreate layout from persistent extensions if possible.
+		document.parsePersistentModelExtensions();
 		document.setVisible(true);
 
 		mainWindow.focus(id);

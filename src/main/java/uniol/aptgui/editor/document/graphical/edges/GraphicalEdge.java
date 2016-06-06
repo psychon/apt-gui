@@ -19,15 +19,19 @@
 
 package uniol.aptgui.editor.document.graphical.edges;
 
+import static java.lang.Math.PI;
+import static java.lang.Math.acos;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import static java.lang.Math.*;
 
 import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
@@ -144,6 +148,15 @@ public abstract class GraphicalEdge extends GraphicalElement {
 	 */
 	public Point getBreakpoint(int index) {
 		return breakpoints.get(index);
+	}
+
+	/**
+	 * Returns an unmodifiable view of the breakpoint list.
+	 *
+	 * @return an unmodifiable view of the breakpoint list
+	 */
+	public List<Point> getBreakpoints() {
+		return Collections.unmodifiableList(breakpoints);
 	}
 
 	/**
