@@ -20,6 +20,7 @@
 package uniol.aptgui.editor.document;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -38,17 +39,17 @@ public class Viewport {
 	/**
 	 * Translation in x-axis direction.
 	 */
-	private int translationX = 0;
+	private int translationX;
 
 	/**
 	 * Translation in y-axis direction.
 	 */
-	private int translationY = 0;
+	private int translationY;
 
 	/**
 	 * Scale in both the x and y dimension.
 	 */
-	private double scaleXY = 1.0;
+	private double scaleXY;
 
 	/**
 	 * Viewport width.
@@ -59,6 +60,29 @@ public class Viewport {
 	 * Viewport height.
 	 */
 	private int height;
+
+	/**
+	 * Constructor that sets an identity transform.
+	 */
+	public Viewport() {
+		translationX = 0;
+		translationY = 0;
+		scaleXY = 1.0;
+	}
+
+	/**
+	 * Copy constructor.
+	 *
+	 * @param viewport
+	 *                viewport to copy
+	 */
+	public Viewport(Viewport viewport) {
+		this.translationX = viewport.translationX;
+		this.translationY = viewport.translationY;
+		this.scaleXY = viewport.scaleXY;
+		this.width = viewport.width;
+		this.height = viewport.height;
+	}
 
 	/**
 	 * Returns the translation in x-axis direction.
@@ -290,6 +314,39 @@ public class Viewport {
 		AffineTransform tx = getAffineTransform();
 		Point2D res = tx.transform(point, null);
 		return new Point((int) res.getX(), (int) res.getY());
+	}
+
+	/**
+	 * Modifies the viewport translation and scale so that the given
+	 * bounding box fills the viewport except for the given margin around
+	 * the bounding box.
+	 *
+	 * @param bounds
+	 *                bounding box rectangle
+	 * @param margin
+	 *                space between the viewport border and the bounding box
+	 */
+	public void zoomFit(Rectangle bounds, int margin) {
+		if (bounds.isEmpty()) {
+			return;
+		}
+
+		bounds = new Rectangle(bounds);
+		bounds.grow(margin, margin);
+
+		// Scale so that the bounding box fills the whole viewport
+		double scaleX = 1.0 * getWidth() / bounds.getWidth();
+		double scaleY = 1.0 * getHeight() / bounds.getHeight();
+		double scaleFactor = Math.min(scaleX, scaleY);
+		setScale(scaleFactor);
+
+		// Align top-left corner of bounding box with top-left corner of viewport
+		Point viewTopLeft = getTopLeftModel();
+		Point boundsTopLeft = bounds.getLocation();
+		translateView(
+			(int)((viewTopLeft.x - boundsTopLeft.x) * scaleFactor),
+			(int)((viewTopLeft.y - boundsTopLeft.y) * scaleFactor)
+		);
 	}
 
 }

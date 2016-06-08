@@ -121,7 +121,7 @@ public abstract class Document<T> {
 	/**
 	 * Viewport object that saves translation, scaling and viewport dimensions.
 	 */
-	private final Viewport viewport;
+	private Viewport viewport;
 
 	/**
 	 * The position in this document that was last selected by the user
@@ -351,6 +351,16 @@ public abstract class Document<T> {
 	 */
 	public Viewport getViewport() {
 		return viewport;
+	}
+
+	/**
+	 * Sets this document's viewport object.
+	 *
+	 * @param viewport
+	 *                new viewport object
+	 */
+	public void setViewport(Viewport viewport) {
+		this.viewport = viewport;
 	}
 
 	/**

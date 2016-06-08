@@ -20,10 +20,6 @@
 package uniol.aptgui;
 
 import java.awt.Component;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -37,13 +33,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
-
-import org.apache.batik.dom.GenericDOMImplementation;
-import org.apache.batik.svggen.SVGGraphics2D;
-import org.apache.batik.svggen.SVGGraphics2DIOException;
-import org.w3c.dom.DOMImplementation;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -63,7 +53,6 @@ import uniol.aptgui.editor.layout.Layout;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.io.FileType;
 import uniol.aptgui.io.parser.AptParser;
-import uniol.aptgui.io.renderer.DocumentRenderer;
 import uniol.aptgui.io.renderer.DocumentRendererFactory;
 import uniol.aptgui.mainwindow.MainWindowPresenter;
 import uniol.aptgui.mainwindow.WindowId;
@@ -76,6 +65,7 @@ public class ApplicationImpl implements Application {
 	private final History history;
 	private final RenderingOptions renderingOptions;
 	private final EditingOptions editingOptions;
+	private final DocumentRendererFactory documentRendererFactory;
 
 	/**
 	 * Standard layout algorithm that gets applied when no layout information is available.
@@ -105,7 +95,8 @@ public class ApplicationImpl implements Application {
 			History history,
 			RenderingOptions renderingOptions,
 			EditingOptions editingOptions,
-			Layout defaultLayout) {
+			Layout defaultLayout,
+			DocumentRendererFactory documentRendererFactory) {
 		this.mainWindow = mainWindow;
 		this.eventBus = eventBus;
 		this.history = history;
@@ -113,6 +104,7 @@ public class ApplicationImpl implements Application {
 		this.renderingOptions = renderingOptions;
 		this.editingOptions = editingOptions;
 		this.layout = defaultLayout;
+		this.documentRendererFactory = documentRendererFactory;
 		this.executor = new ThreadPoolExecutor(2, Integer.MAX_VALUE, 1, TimeUnit.SECONDS,
 				new LinkedBlockingQueue<Runnable>());
 		eventBus.register(this);
@@ -230,9 +222,8 @@ public class ApplicationImpl implements Application {
 	@Override
 	public void saveToFile(Document<?> document, File file, FileType type) {
 		assert document != null;
-		DocumentRenderer renderer = DocumentRendererFactory.get(type);
 		try {
-			renderer.render(document, file);
+			documentRendererFactory.get(type).render(document, file);
 			document.setFile(file);
 			document.setFileType(type);
 			document.fireDocumentChanged(false);
@@ -328,43 +319,6 @@ public class ApplicationImpl implements Application {
 
 		if (!abortExit) {
 			closeNow();
-		}
-	}
-
-	@Override
-	public void exportSvg(Document<?> document, File exportFile) {
-		// Get a DOMImplementation.
-		DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
-		// Create an instance of org.w3c.dom.Document.
-		String svgNS = "http://www.w3.org/2000/svg";
-		org.w3c.dom.Document xmlDoc = domImpl.createDocument(svgNS, "svg", null);
-		// Create an instance of the SVG Generator.
-		SVGGraphics2D svgGenerator = new SVGGraphics2D(xmlDoc);
-		svgGenerator.setFont(Font.decode("Arial"));
-		// Draw document with SVG generator.
-		document.draw(svgGenerator, renderingOptions);
-
-		// Save to file.
-		try {
-			svgGenerator.stream(exportFile.getAbsolutePath());
-		} catch (SVGGraphics2DIOException e) {
-			mainWindow.showException("Export Error", e);
-		}
-	}
-
-	@Override
-	public void exportPng(Document<?> document, File exportFile) {
-		BufferedImage bufferedImage = new BufferedImage(
-				document.getViewport().getWidth(), document.getViewport().getHeight(),
-				BufferedImage.TYPE_INT_ARGB
-		);
-		Graphics2D imageGraphics = (Graphics2D) bufferedImage.getGraphics();
-		imageGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		document.draw(imageGraphics, renderingOptions);
-		try {
-			ImageIO.write(bufferedImage, "png", exportFile);
-		} catch (IOException e) {
-			mainWindow.showException("Export Error", e);
 		}
 	}
 

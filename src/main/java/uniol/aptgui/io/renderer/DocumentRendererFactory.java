@@ -19,12 +19,22 @@
 
 package uniol.aptgui.io.renderer;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+
 import uniol.aptgui.io.FileType;
 
 /**
  * Factory that returns a document renderer for a given file type.
  */
 public class DocumentRendererFactory {
+
+	private final Injector injector;
+
+	@Inject
+	public DocumentRendererFactory(Injector injector) {
+		this.injector = injector;
+	}
 
 	/**
 	 * Factory method that returns a DocumentRenderer implementation for a
@@ -34,16 +44,20 @@ public class DocumentRendererFactory {
 	 *                file type the document should be saved in
 	 * @return fitting DocumentRenderer implementation
 	 */
-	public static DocumentRenderer get(FileType fileType) {
+	public DocumentRenderer get(FileType fileType) {
 		switch (fileType) {
 		case PETRI_NET:
-			return new PnDocumentRenderer();
+			return injector.getInstance(PnDocumentRenderer.class);
 		case PETRI_NET_ONLY_STRUCTURE:
-			return new PnStructureDocumentRenderer();
+			return injector.getInstance(PnStructureDocumentRenderer.class);
 		case TRANSITION_SYSTEM:
-			return new TsDocumentRenderer();
+			return injector.getInstance(TsDocumentRenderer.class);
 		case TRANSITION_SYSTEM_ONLY_STRUCTURE:
-			return new TsStructureDocumentRenderer();
+			return injector.getInstance(TsStructureDocumentRenderer.class);
+		case PNG:
+			return injector.getInstance(PngDocumentRenderer.class);
+		case SVG:
+			return injector.getInstance(SvgDocumentRenderer.class);
 		default:
 			throw new AssertionError("Requested DocumentRenderer for unsupported file type: " + fileType);
 		}

@@ -58,9 +58,9 @@ public class ExportAction extends DocumentAction {
 		if (res == JFileChooser.APPROVE_OPTION) {
 			File exportFile = fc.getSelectedFileWithExtension();
 			if (fc.getSelectedFileType() == FileType.SVG) {
-				app.exportSvg(document, exportFile);
+				app.saveToFile(document, exportFile, FileType.SVG);
 			} else if (fc.getSelectedFileType() == FileType.PNG) {
-				app.exportPng(document, exportFile);
+				app.saveToFile(document, exportFile, FileType.PNG);
 			} else {
 				assert false;
 			}

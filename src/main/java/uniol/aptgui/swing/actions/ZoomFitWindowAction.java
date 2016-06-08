@@ -19,8 +19,6 @@
 
 package uniol.aptgui.swing.actions;
 
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 
 import javax.swing.KeyStroke;
@@ -30,14 +28,14 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.Viewport;
 import uniol.aptgui.swing.actions.base.DocumentAction;
 
 @SuppressWarnings("serial")
 public class ZoomFitWindowAction extends DocumentAction {
 
 	/**
-	 * Space between the window border and the bounding box after the zoom fit was performed.
+	 * Space between the window border and the bounding box after the zoom
+	 * fit was performed.
 	 */
 	private static final int BUFFER_SIZE = 20;
 
@@ -55,28 +53,7 @@ public class ZoomFitWindowAction extends DocumentAction {
 		Document<?> document = app.getActiveDocument();
 		assert document != null;
 
-		Rectangle bounds = document.getBounds();
-		if (bounds.isEmpty()) {
-			return;
-		}
-
-		bounds.grow(BUFFER_SIZE, BUFFER_SIZE);
-		Viewport viewport = document.getViewport();
-
-		// Scale so that the bounding box fills the whole viewport
-		double scaleX = 1.0 * viewport.getWidth() / bounds.getWidth();
-		double scaleY = 1.0 * viewport.getHeight() / bounds.getHeight();
-		double scaleFactor = Math.min(scaleX, scaleY);
-		viewport.setScale(scaleFactor);
-
-		// Align top-left corner of bounding box with top-left corner of viewport
-		Point viewTopLeft = viewport.getTopLeftModel();
-		Point boundsTopLeft = bounds.getLocation();
-		viewport.translateView(
-			(int)((viewTopLeft.x - boundsTopLeft.x) * scaleFactor),
-			(int)((viewTopLeft.y - boundsTopLeft.y) * scaleFactor)
-		);
-
+		document.getViewport().zoomFit(document.getBounds(), BUFFER_SIZE);
 		document.fireDocumentDirty();
 	}
 
