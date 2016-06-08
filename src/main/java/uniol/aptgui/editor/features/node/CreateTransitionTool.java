@@ -21,6 +21,7 @@ package uniol.aptgui.editor.features.node;
 
 import uniol.aptgui.commands.CreateTransitionCommand;
 import uniol.aptgui.commands.History;
+import uniol.aptgui.editor.document.EditingOptions;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalTransition;
 
@@ -31,8 +32,8 @@ public class CreateTransitionTool extends CreateNodeTool<PnDocument, GraphicalTr
 
 	private final History history;
 
-	public CreateTransitionTool(PnDocument document, History history) {
-		super(document);
+	public CreateTransitionTool(PnDocument document, History history, EditingOptions editingOptions) {
+		super(document, editingOptions);
 		this.history = history;
 	}
 

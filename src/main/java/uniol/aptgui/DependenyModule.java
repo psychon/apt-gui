@@ -30,6 +30,7 @@ import uniol.aptgui.editor.EditorPresenter;
 import uniol.aptgui.editor.EditorPresenterImpl;
 import uniol.aptgui.editor.EditorView;
 import uniol.aptgui.editor.EditorViewImpl;
+import uniol.aptgui.editor.document.EditingOptions;
 import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.mainwindow.MainWindowPresenter;
 import uniol.aptgui.mainwindow.MainWindowPresenterImpl;
@@ -71,6 +72,7 @@ public class DependenyModule extends AbstractModule {
 
 		// Instance bindings
 		bind(RenderingOptions.class).toInstance(getRenderingOptionsInstance());
+		bind(EditingOptions.class).toInstance(getEditingOptionsInstance());
 		bind(ModuleRegistry.class).toInstance(AptModuleRegistry.INSTANCE);
 
 		// Normal bindings
@@ -94,6 +96,10 @@ public class DependenyModule extends AbstractModule {
 
 	private RenderingOptions getRenderingOptionsInstance() {
 		return RenderingOptions.fromUserPreferences();
+	}
+
+	private EditingOptions getEditingOptionsInstance() {
+		return EditingOptions.fromUserPreferences();
 	}
 
 }

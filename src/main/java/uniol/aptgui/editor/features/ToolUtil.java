@@ -17,34 +17,26 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.editor.features.node;
+package uniol.aptgui.editor.features;
 
-import uniol.aptgui.commands.CreateStateCommand;
-import uniol.aptgui.commands.History;
-import uniol.aptgui.editor.document.EditingOptions;
-import uniol.aptgui.editor.document.TsDocument;
-import uniol.aptgui.editor.document.graphical.nodes.GraphicalState;
+import java.awt.Point;
 
-/**
- * Tool that creates states in transition system documents.
- */
-public class CreateStateTool extends CreateNodeTool<TsDocument, GraphicalState> {
+public class ToolUtil {
 
-	private final History history;
-
-	public CreateStateTool(TsDocument document, History history, EditingOptions editingOptions) {
-		super(document, editingOptions);
-		this.history = history;
-	}
-
-	@Override
-	protected GraphicalState createGraphicalNode() {
-		return new GraphicalState();
-	}
-
-	@Override
-	protected void commitNodeCreation(GraphicalState node) {
-		history.execute(new CreateStateCommand(document, node));
+	/**
+	 * Returns a point on the grid as specified by the gridSpacing.
+	 *
+	 * @param original
+	 *                original point
+	 * @param gridSpacing
+	 *                grid spacing
+	 * @return point on grid closest to the original point
+	 */
+	public static Point snapToGrid(Point original, double gridSpacing) {
+		Point result = new Point(original);
+		result.x = (int) (gridSpacing * Math.round(result.x / gridSpacing));
+		result.y = (int) (gridSpacing * Math.round(result.y / gridSpacing));
+		return result;
 	}
 
 }

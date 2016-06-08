@@ -27,6 +27,7 @@ import uniol.aptgui.commands.History;
 import uniol.aptgui.commands.TranslateBreakpointCommand;
 import uniol.aptgui.commands.TranslateElementsCommand;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.EditingOptions;
 import uniol.aptgui.editor.document.Viewport;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
@@ -58,6 +59,11 @@ public class SelectionTool extends Feature {
 	private final Viewport viewport;
 
 	/**
+	 * Reference to the global editing options object.
+	 */
+	private final EditingOptions editingOptions;
+
+	/**
 	 * Differentiates on what element the drag began.
 	 */
 	private DragType dragType;
@@ -84,10 +90,11 @@ public class SelectionTool extends Feature {
 	 *
 	 * @param document
 	 */
-	public SelectionTool(Document<?> document, History history) {
+	public SelectionTool(Document<?> document, History history, EditingOptions editingOptions) {
 		this.document = document;
 		this.viewport = document.getViewport();
 		this.history = history;
+		this.editingOptions = editingOptions;
 		this.dragType = DragType.NONE;
 		this.dragSource = null;
 	}
@@ -100,6 +107,9 @@ public class SelectionTool extends Feature {
 		}
 
 		dragSource = e.getPoint();
+		if (editingOptions.isSnapToGridEnabled()) {
+			dragSource = snapToGridView(dragSource);
+		}
 
 		Point modelPosition = viewport.transformInverse(e.getPoint());
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition, true);
@@ -140,6 +150,10 @@ public class SelectionTool extends Feature {
 		}
 
 		Point dragTarget = e.getPoint();
+		if (editingOptions.isSnapToGridEnabled()) {
+			dragTarget = snapToGridView(dragTarget);
+		}
+
 		int dx = (int) (1.0 * (dragTarget.x - dragSource.x) / viewport.getScale());
 		int dy = (int) (1.0 * (dragTarget.y - dragSource.y) / viewport.getScale());
 
@@ -164,6 +178,20 @@ public class SelectionTool extends Feature {
 		default:
 			assert false;
 		}
+	}
+
+	/**
+	 * Returns a point in view coordinates that was possibly snapped to
+	 * grid.
+	 *
+	 * @param mousePosition
+	 *                mouse position in view coordinates
+	 * @return point in view coordinates that was possibly snapped to grid
+	 */
+	private Point snapToGridView(Point mousePosition) {
+		Point modelPosition = viewport.transformInverse(mousePosition);
+		Point snappedModelPosition = ToolUtil.snapToGrid(modelPosition, editingOptions.getGridSpacing());
+		return viewport.transform(snappedModelPosition);
 	}
 
 	/**
@@ -207,7 +235,6 @@ public class SelectionTool extends Feature {
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition, true);
 
 		if (elem != null) {
-
 			if (toggleModifier) {
 				// If CTRL was pressed, add to/remove from
 				// selection.

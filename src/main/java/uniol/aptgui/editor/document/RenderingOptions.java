@@ -30,7 +30,6 @@ public class RenderingOptions {
 	private static final String PREF_KEY_PLACE = "placeIdLabelVisible";
 	private static final String PREF_KEY_TRANSITION = "transitionIdLabelVisible";
 	private static final String PREF_KEY_GRID = "gridVisible";
-	private static final String PREF_KEY_GRID_SPACING = "gridSpacing";
 
 	/**
 	 * Creates a RenderingOptions object from saved user preferences or
@@ -48,14 +47,12 @@ public class RenderingOptions {
 		boolean p = prefs.getBoolean(PREF_KEY_PLACE, ro.isPlaceIdLabelVisible());
 		boolean t = prefs.getBoolean(PREF_KEY_TRANSITION, ro.isTransitionIdLabelVisible());
 		boolean g = prefs.getBoolean(PREF_KEY_GRID, ro.isGridVisible());
-		int gridSpacing = prefs.getInt(PREF_KEY_GRID_SPACING, ro.getGridSpacing());
 
 		// Configure RenderingOptions object
 		ro.setStateIdLabelVisible(s);
 		ro.setPlaceIdLabelVisible(p);
 		ro.setTransitionIdLabelVisible(t);
 		ro.setGridVisible(g);
-		ro.setGridSpacing(gridSpacing);
 		return ro;
 	}
 
@@ -63,7 +60,6 @@ public class RenderingOptions {
 	private boolean placeIdLabelVisible;
 	private boolean transitionIdLabelVisible;
 	private boolean gridVisible;
-	private int gridSpacing;
 
 	/**
 	 * Creates a RenderingOptions object configured with default values.
@@ -73,7 +69,6 @@ public class RenderingOptions {
 		this.placeIdLabelVisible = true;
 		this.transitionIdLabelVisible = true;
 		this.gridVisible = false;
-		this.gridSpacing = 50;
 	}
 
 	/**
@@ -86,7 +81,6 @@ public class RenderingOptions {
 		prefs.putBoolean(PREF_KEY_PLACE, placeIdLabelVisible);
 		prefs.putBoolean(PREF_KEY_TRANSITION, transitionIdLabelVisible);
 		prefs.putBoolean(PREF_KEY_GRID, gridVisible);
-		prefs.putInt(PREF_KEY_GRID_SPACING, gridSpacing);
 	}
 
 	public boolean isStateIdLabelVisible() {
@@ -139,14 +133,6 @@ public class RenderingOptions {
 	public boolean toggleGridVisible() {
 		gridVisible = !gridVisible;
 		return gridVisible;
-	}
-
-	public int getGridSpacing() {
-		return gridSpacing;
-	}
-
-	public void setGridSpacing(int gridSpacing) {
-		this.gridSpacing = gridSpacing;
 	}
 
 }

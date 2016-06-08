@@ -27,7 +27,7 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.RenderingOptions;
+import uniol.aptgui.editor.document.EditingOptions;
 
 @SuppressWarnings("serial")
 public class SetGridSpacingAction extends AbstractAction {
@@ -44,14 +44,14 @@ public class SetGridSpacingAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		RenderingOptions ro = app.getRenderingOptions();
-		String defaultValue = String.valueOf(ro.getGridSpacing());
+		EditingOptions eo = app.getEditingOptions();
+		String defaultValue = String.valueOf(eo.getGridSpacing());
 		String input = app.getMainWindow().showInputDialog("Set Grid Spacing",
 				"New width and height between grid lines:", defaultValue);
 		try {
 			int newValue = Integer.valueOf(input);
 			if (newValue > 0) {
-				ro.setGridSpacing(newValue);
+				eo.setGridSpacing(newValue);
 				for (Document<?> doc : app.getDocuments()) {
 					doc.fireDocumentDirty();
 				}

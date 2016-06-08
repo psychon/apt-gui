@@ -21,6 +21,7 @@ package uniol.aptgui.editor.features.node;
 
 import uniol.aptgui.commands.CreatePlaceCommand;
 import uniol.aptgui.commands.History;
+import uniol.aptgui.editor.document.EditingOptions;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalPlace;
 
@@ -31,8 +32,8 @@ public class CreatePlaceTool extends CreateNodeTool<PnDocument, GraphicalPlace> 
 
 	private final History history;
 
-	public CreatePlaceTool(PnDocument document, History history) {
-		super(document);
+	public CreatePlaceTool(PnDocument document, History history, EditingOptions editingOptions) {
+		super(document, editingOptions);
 		this.history = history;
 	}
 

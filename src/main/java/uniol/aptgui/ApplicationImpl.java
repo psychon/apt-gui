@@ -55,6 +55,7 @@ import uniol.apt.io.parser.ParseException;
 import uniol.apt.module.Module;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.EditingOptions;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.editor.document.TsDocument;
@@ -74,6 +75,7 @@ public class ApplicationImpl implements Application {
 	private final EventBus eventBus;
 	private final History history;
 	private final RenderingOptions renderingOptions;
+	private final EditingOptions editingOptions;
 
 	/**
 	 * ExecutorService for parallel task such as module executions.
@@ -85,12 +87,14 @@ public class ApplicationImpl implements Application {
 	private WindowId activeWindow;
 
 	@Inject
-	public ApplicationImpl(MainWindowPresenter mainWindow, EventBus eventBus, History history, RenderingOptions renderingOptions) {
+	public ApplicationImpl(MainWindowPresenter mainWindow, EventBus eventBus, History history,
+			RenderingOptions renderingOptions, EditingOptions editingOptions) {
 		this.mainWindow = mainWindow;
 		this.eventBus = eventBus;
 		this.history = history;
 		this.documents = new HashMap<>();
 		this.renderingOptions = renderingOptions;
+		this.editingOptions = editingOptions;
 		this.executor = new ThreadPoolExecutor(2, Integer.MAX_VALUE, 1, TimeUnit.SECONDS,
 				new LinkedBlockingQueue<Runnable>());
 
@@ -284,6 +288,7 @@ public class ApplicationImpl implements Application {
 	@Override
 	public void closeNow() {
 		renderingOptions.saveToUserPreferences();
+		editingOptions.saveToUserPreferences();
 		mainWindow.close();
 		executor.shutdownNow();
 	}
@@ -354,6 +359,11 @@ public class ApplicationImpl implements Application {
 	@Override
 	public ExecutorService getExecutorService() {
 		return executor;
+	}
+
+	@Override
+	public EditingOptions getEditingOptions() {
+		return editingOptions;
 	}
 
 }

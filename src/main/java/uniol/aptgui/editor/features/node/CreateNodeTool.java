@@ -23,8 +23,10 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.EditingOptions;
 import uniol.aptgui.editor.document.Viewport;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
+import uniol.aptgui.editor.features.ToolUtil;
 import uniol.aptgui.editor.features.base.Feature;
 
 /**
@@ -48,6 +50,11 @@ public abstract class CreateNodeTool<T extends Document<?>, U extends GraphicalN
 	protected final Viewport viewport;
 
 	/**
+	 * Reference to the global editing options object.
+	 */
+	protected final EditingOptions editingOptions;
+
+	/**
 	 * The visual representation of the node to be created.
 	 */
 	protected U node;
@@ -56,10 +63,12 @@ public abstract class CreateNodeTool<T extends Document<?>, U extends GraphicalN
 	 * Creates a a new CreateNodeTool for the given document.
 	 *
 	 * @param document
+	 * @param editingOptions
 	 */
-	public CreateNodeTool(T document) {
+	public CreateNodeTool(T document, EditingOptions editingOptions) {
 		this.document = document;
 		this.viewport = document.getViewport();
+		this.editingOptions = editingOptions;
 		initPlace();
 	}
 
@@ -96,7 +105,7 @@ public abstract class CreateNodeTool<T extends Document<?>, U extends GraphicalN
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		Point modelPosition = viewport.transformInverse(e.getPoint());
+		Point modelPosition = getModelPosition(e.getPoint());
 		node.setCenter(modelPosition);
 		node.setVisible(true);
 		document.fireDocumentDirty();
@@ -108,7 +117,7 @@ public abstract class CreateNodeTool<T extends Document<?>, U extends GraphicalN
 			return;
 		}
 
-		Point modelPosition = viewport.transformInverse(e.getPoint());
+		Point modelPosition = getModelPosition(e.getPoint());
 		node.setCenter(modelPosition);
 		node.setVisible(true);
 		commitNodeCreation(node);
@@ -119,6 +128,23 @@ public abstract class CreateNodeTool<T extends Document<?>, U extends GraphicalN
 	public void mouseExited(MouseEvent e) {
 		node.setVisible(false);
 		document.fireDocumentDirty();
+	}
+
+	/**
+	 * Transforms a position in view coordinates into model coordinates.
+	 * Also applies snap-to-grid effects if necessary.
+	 *
+	 * @param viewPosition
+	 *                view position
+	 * @return model position
+	 */
+	protected Point getModelPosition(Point viewPosition) {
+		Point modelPosition = viewport.transformInverse(viewPosition);
+		if (editingOptions.isSnapToGridEnabled()) {
+			return ToolUtil.snapToGrid(modelPosition, editingOptions.getGridSpacing());
+		} else {
+			return modelPosition;
+		}
 	}
 
 }

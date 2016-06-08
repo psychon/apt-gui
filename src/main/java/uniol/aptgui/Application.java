@@ -29,6 +29,7 @@ import com.google.common.eventbus.EventBus;
 import uniol.apt.module.Module;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.EditingOptions;
 import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.io.FileType;
 import uniol.aptgui.mainwindow.MainWindowPresenter;
@@ -64,9 +65,17 @@ public interface Application {
 
 	/**
 	 * Returns the application-wide rendering options object.
+	 *
 	 * @return the application-wide rendering options object
 	 */
 	RenderingOptions getRenderingOptions();
+
+	/**
+	 * Returns the application-wide editing options object.
+	 *
+	 * @return the application-wide editing options object
+	 */
+	EditingOptions getEditingOptions();
 
 	/**
 	 * Returns the application-wide executor service that allows to submit

@@ -34,6 +34,7 @@ import uniol.aptgui.Application;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.DocumentListener;
+import uniol.aptgui.editor.document.EditingOptions;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.editor.document.TsDocument;
@@ -143,18 +144,19 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 		features.setListening(true);
 
 		History hist = application.getHistory();
+		EditingOptions eo = application.getEditingOptions();
 		tools.clear();
 		if (document instanceof PnDocument) {
 			PnDocument pnDocument = (PnDocument) document;
-			tools.put(FeatureId.PN_SELECTION, new SelectionTool(document, hist));
-			tools.put(FeatureId.PN_CREATE_PLACE, new CreatePlaceTool(pnDocument, hist));
-			tools.put(FeatureId.PN_CREATE_TRANSITION, new CreateTransitionTool(pnDocument, hist));
+			tools.put(FeatureId.PN_SELECTION, new SelectionTool(document, hist, eo));
+			tools.put(FeatureId.PN_CREATE_PLACE, new CreatePlaceTool(pnDocument, hist, eo));
+			tools.put(FeatureId.PN_CREATE_TRANSITION, new CreateTransitionTool(pnDocument, hist, eo));
 			tools.put(FeatureId.PN_CREATE_FLOW, new CreateFlowTool(pnDocument, hist));
 			tools.put(FeatureId.PN_FIRE_TRANSITION, new FireTransitionTool(pnDocument, hist));
 		} else if (document instanceof TsDocument) {
 			TsDocument tsDocument = (TsDocument) document;
-			tools.put(FeatureId.TS_SELECTION, new SelectionTool(document, hist));
-			tools.put(FeatureId.TS_CREATE_STATE, new CreateStateTool(tsDocument, hist));
+			tools.put(FeatureId.TS_SELECTION, new SelectionTool(document, hist, eo));
+			tools.put(FeatureId.TS_CREATE_STATE, new CreateStateTool(tsDocument, hist, eo));
 			tools.put(FeatureId.TS_CREATE_ARC, new CreateArcTool(tsDocument, hist, view));
 		}
 		tools.setListening(true);
@@ -163,17 +165,22 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 	@Override
 	public void onPaint(Graphics2D graphics) {
 		if (document.isVisible()) {
+			EditingOptions eo = application.getEditingOptions();
 			RenderingOptions ro = application.getRenderingOptions();
 			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			if (ro.isGridVisible()) {
-				drawGrid(graphics, ro.getGridSpacing());
+				drawGrid(graphics, eo.getGridSpacing());
 			}
-			Rectangle bounds = document.getBounds();
-			Point tl = document.getViewport().transform(new Point(bounds.x, bounds.y));
-			double scale = document.getViewport().getScale();
-			graphics.drawRect(tl.x, tl.y, (int)(bounds.width * scale), (int)(bounds.height * scale));
 			document.draw(graphics, ro);
 		}
+	}
+
+	@SuppressWarnings("unused")
+	private void drawBoundingBox(Graphics2D graphics) {
+		Rectangle bounds = document.getBounds();
+		Point tl = document.getViewport().transform(new Point(bounds.x, bounds.y));
+		double scale = document.getViewport().getScale();
+		graphics.drawRect(tl.x, tl.y, (int)(bounds.width * scale), (int)(bounds.height * scale));
 	}
 
 	private void drawGrid(Graphics2D graphics, int gridSpacing) {
