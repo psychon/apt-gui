@@ -117,9 +117,8 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 			view.setModuleRunning(true);
 			// Invoke new thread that blocks until results are available.
 			displayResultsWhenFinished();
-		} catch (ModuleException e) {
-			view.showErrorModuleException(e.getMessage());
-			e.printStackTrace();
+		} catch (Exception e) {
+			application.getMainWindow().showException("Module exception", e);
 		}
 	}
 
@@ -221,8 +220,7 @@ public class ModulePresenterImpl extends AbstractPresenter<ModulePresenter, Modu
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					view.showErrorModuleException(ex.getMessage());
-					ex.printStackTrace();
+					application.getMainWindow().showException("Module Execution Exception", ex);
 				}
 			});
 		} finally {

@@ -177,11 +177,6 @@ public class ModuleViewImpl extends JPanelView<ModulePresenter> implements Modul
 	}
 
 	@Override
-	public void showErrorModuleException(String message) {
-		JOptionPane.showMessageDialog(this, message, "Module exception", JOptionPane.ERROR_MESSAGE);
-	}
-
-	@Override
 	public void setResultTableModel(PropertyTableModel resultTableModel) {
 		resultsTable.setModel(resultTableModel);
 	}

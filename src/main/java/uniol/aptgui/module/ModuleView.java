@@ -43,8 +43,6 @@ public interface ModuleView extends View<ModulePresenter> {
 
 	void showErrorTooFewParameters();
 
-	void showErrorModuleException(String message);
-
 	void showResultsPane();
 
 	/**
