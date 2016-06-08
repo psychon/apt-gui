@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.prefs.Preferences;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -32,6 +33,7 @@ import com.google.inject.Inject;
 
 import uniol.apt.module.Category;
 import uniol.apt.module.Module;
+import uniol.apt.module.ModuleRegistry;
 import uniol.aptgui.AbstractPresenter;
 import uniol.aptgui.Application;
 import uniol.aptgui.events.ModuleExecutedEvent;
@@ -39,22 +41,41 @@ import uniol.aptgui.mainwindow.WindowId;
 
 public class MenuPresenterImpl extends AbstractPresenter<MenuPresenter, MenuView> implements MenuPresenter {
 
+	private static final String PREF_KEY_RECENT_MODULES = "recentlyUsedModules";
+	private static final String PREF_DELIMITER = ";";
 	private static final int MAX_RECENTLY_USED = 5;
 
 	private final Application app;
+	private final ModuleRegistry moduleRegistry;
 	private final Set<Category> categoriesFilter;
 	private final List<Module> recentlyUsedModules;
 
 	@Inject
-	public MenuPresenterImpl(Application app, EventBus eventBus, MenuView view) {
+	public MenuPresenterImpl(Application app, EventBus eventBus, ModuleRegistry moduleRegistry, MenuView view) {
 		super(view);
 		this.app = app;
+		this.moduleRegistry = moduleRegistry;
 		eventBus.register(this);
 		recentlyUsedModules = new ArrayList<>();
 		categoriesFilter = new HashSet<>();
 		categoriesFilter.add(Category.PN);
 		categoriesFilter.add(Category.LTS);
 		categoriesFilter.add(Category.GENERATOR);
+		restoreRecentlyUsedModules();
+	}
+
+	private void restoreRecentlyUsedModules() {
+		// Load from preferences
+		Preferences prefs = Preferences.userNodeForPackage(MenuPresenterImpl.class);
+		String value = prefs.get(PREF_KEY_RECENT_MODULES, "");
+		String[] names = value.split(PREF_DELIMITER);
+		for (String name : names) {
+			Module module = moduleRegistry.findModule(name);
+			if (module != null && recentlyUsedModules.size() < MAX_RECENTLY_USED) {
+				recentlyUsedModules.add(module);
+			}
+		}
+		view.setRecentlyUsedModule(app, recentlyUsedModules);
 	}
 
 	@Subscribe
@@ -72,6 +93,20 @@ public class MenuPresenterImpl extends AbstractPresenter<MenuPresenter, MenuView
 		recentlyUsedModules.add(0, module);
 		// Show new module list.
 		view.setRecentlyUsedModule(app, recentlyUsedModules);
+		// Save list to preferences.
+		saveRecentlyUsedModules();
+	}
+
+	private void saveRecentlyUsedModules() {
+		// Create string representation of module list
+		List<String> names = new ArrayList<>();
+		for (Module module : recentlyUsedModules) {
+			names.add(module.getName());
+		}
+		String value = String.join(PREF_DELIMITER, names);
+		// Save to preferences
+		Preferences prefs = Preferences.userNodeForPackage(MenuPresenterImpl.class);
+		prefs.put(PREF_KEY_RECENT_MODULES, value);
 	}
 
 	@Override
