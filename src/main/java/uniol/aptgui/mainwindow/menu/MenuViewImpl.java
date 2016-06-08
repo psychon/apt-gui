@@ -31,6 +31,7 @@ import com.google.inject.Injector;
 
 import uniol.apt.module.Module;
 import uniol.aptgui.Application;
+import uniol.aptgui.editor.document.EditingOptions;
 import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.JMenuBarView;
@@ -56,6 +57,7 @@ import uniol.aptgui.swing.actions.SetGridVisibleAction;
 import uniol.aptgui.swing.actions.SetInitialStateAction;
 import uniol.aptgui.swing.actions.SetLabelAction;
 import uniol.aptgui.swing.actions.SetPlaceIdLabelVisibleAction;
+import uniol.aptgui.swing.actions.SetSnapToGridAction;
 import uniol.aptgui.swing.actions.SetStateIdLabelVisibleAction;
 import uniol.aptgui.swing.actions.SetTokensAction;
 import uniol.aptgui.swing.actions.SetTransitionIdLabelVisibleAction;
@@ -82,6 +84,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private final JMenu editMenu;
 	private final JMenuItem undo;
 	private final JMenuItem redo;
+	private final JMenuItem snapToGrid;
 	private final JMenuItem setColor;
 	private final JMenuItem setLabel;
 	private final JMenuItem setTokens;
@@ -113,7 +116,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private final List<JMenuItem> openWindowsMenuItems;
 
 	@Inject
-	public MenuViewImpl(Injector injector, RenderingOptions renderingOptions) {
+	public MenuViewImpl(Injector injector, RenderingOptions renderingOptions, EditingOptions editingOptions) {
 		// File
 		fileMenu = new JMenu("File");
 		newPn = new JMenuItem(injector.getInstance(NewPetriNetAction.class));
@@ -130,11 +133,14 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		editMenu = new JMenu("Edit");
 		undo = new JMenuItem(injector.getInstance(UndoAction.class));
 		redo = new JMenuItem(injector.getInstance(RedoAction.class));
+		snapToGrid = new JCheckBoxMenuItem(injector.getInstance(SetSnapToGridAction.class));
 		setColor = new JMenuItem(injector.getInstance(SetColorAction.class));
 		setLabel = new JMenuItem(injector.getInstance(SetLabelAction.class));
 		setTokens = new JMenuItem(injector.getInstance(SetTokensAction.class));
 		setInitialState = new JMenuItem(injector.getInstance(SetInitialStateAction.class));
 		delete = new JMenuItem(injector.getInstance(DeleteElementsAction.class));
+
+		snapToGrid.setSelected(editingOptions.isSnapToGridEnabled());
 
 		// Document
 		documentMenu = new JMenu("Document");
@@ -201,6 +207,8 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 
 		editMenu.add(undo);
 		editMenu.add(redo);
+		editMenu.addSeparator();
+		editMenu.add(snapToGrid);
 		editMenu.addSeparator();
 		editMenu.add(setColor);
 		editMenu.add(setLabel);
