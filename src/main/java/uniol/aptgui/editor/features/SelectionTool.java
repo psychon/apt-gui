@@ -112,6 +112,10 @@ public class SelectionTool extends Feature {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		if (dragType == DragType.NONE) {
+			return;
+		}
+
 		if (dragType == DragType.BREAKPOINT && !translateBreakpointCommand.isIdentity()) {
 			translateBreakpointCommand.unapplyTranslation();
 			history.mergeExecute("Create and Move Breakpoint", translateBreakpointCommand);
@@ -131,6 +135,10 @@ public class SelectionTool extends Feature {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		if (dragType == DragType.NONE) {
+			return;
+		}
+
 		Point dragTarget = e.getPoint();
 		int dx = (int) (1.0 * (dragTarget.x - dragSource.x) / transform.getScale());
 		int dy = (int) (1.0 * (dragTarget.y - dragSource.y) / transform.getScale());
@@ -154,7 +162,7 @@ public class SelectionTool extends Feature {
 			}
 			break;
 		default:
-			break;
+			assert false;
 		}
 	}
 
