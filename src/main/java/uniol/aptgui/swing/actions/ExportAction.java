@@ -30,6 +30,7 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.io.FileType;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.Resource;
 import uniol.aptgui.swing.actions.base.DocumentAction;
@@ -56,10 +57,12 @@ public class ExportAction extends DocumentAction {
 		int res = fc.showSaveDialog((Component) app.getMainWindow().getView());
 		if (res == JFileChooser.APPROVE_OPTION) {
 			File exportFile = fc.getSelectedFileWithExtension();
-			if (fc.isSvgFilterSelected()) {
+			if (fc.getSelectedFileType() == FileType.SVG) {
 				app.exportSvg(document, exportFile);
-			} else if (fc.isPngFilterSelected()) {
+			} else if (fc.getSelectedFileType() == FileType.PNG) {
 				app.exportPng(document, exportFile);
+			} else {
+				assert false;
 			}
 		}
 	}

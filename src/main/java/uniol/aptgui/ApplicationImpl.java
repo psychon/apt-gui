@@ -60,9 +60,10 @@ import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.layout.RandomLayout;
 import uniol.aptgui.events.WindowFocusGainedEvent;
-import uniol.aptgui.io.AptDocumentRenderer;
-import uniol.aptgui.io.AptParser;
-import uniol.aptgui.io.DocumentRenderer;
+import uniol.aptgui.io.FileType;
+import uniol.aptgui.io.parser.AptParser;
+import uniol.aptgui.io.renderer.DocumentRenderer;
+import uniol.aptgui.io.renderer.DocumentRendererFactory;
 import uniol.aptgui.mainwindow.MainWindowPresenter;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.actions.SaveAction;
@@ -206,12 +207,13 @@ public class ApplicationImpl implements Application {
 	}
 
 	@Override
-	public void saveToFile(Document<?> document, File file) {
+	public void saveToFile(Document<?> document, File file, FileType type) {
 		assert document != null;
-		DocumentRenderer renderer = new AptDocumentRenderer();
+		DocumentRenderer renderer = DocumentRendererFactory.get(type);
 		try {
 			renderer.render(document, file);
 			document.setFile(file);
+			document.setFileType(type);
 			document.fireDocumentChanged(false);
 		} catch (Exception e) {
 			mainWindow.showException("Save Error", e);

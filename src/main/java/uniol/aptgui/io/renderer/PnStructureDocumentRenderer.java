@@ -17,19 +17,30 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.io;
+package uniol.aptgui.io.renderer;
 
 import java.io.File;
 import java.io.IOException;
 
 import uniol.apt.io.renderer.RenderException;
+import uniol.apt.io.renderer.impl.AptPNRenderer;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.PnDocument;
 
-public interface DocumentRenderer {
+/**
+ * Renders Petri nets but excludes any non-structural information from the file.
+ */
+public class PnStructureDocumentRenderer implements DocumentRenderer {
 
-	public void render(Document<?> document, File file) throws RenderException, IOException;
+	@Override
+	public void render(Document<?> document, File file) throws RenderException, IOException {
+		assert document instanceof PnDocument;
+		document.removePersistentModelExtensions();
+		PnDocument pnDocument = (PnDocument) document;
+		AptPNRenderer renderer = new AptPNRenderer();
+		renderer.renderFile(pnDocument.getModel(), file);
+	}
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

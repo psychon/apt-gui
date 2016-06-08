@@ -32,6 +32,7 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.io.FileType;
 import uniol.aptgui.mainwindow.WindowId;
 import uniol.aptgui.swing.Resource;
 import uniol.aptgui.swing.actions.base.DocumentAction;
@@ -60,10 +61,11 @@ public class SaveAction extends DocumentAction {
 			int res = fc.showSaveDialog((Component) app.getMainWindow().getView());
 			if (res == JFileChooser.APPROVE_OPTION) {
 				File file = fc.getSelectedFileWithExtension();
-				app.saveToFile(document, file);
+				FileType type = fc.getSelectedFileType();
+				app.saveToFile(document, file, type);
 			}
 		} else {
-			app.saveToFile(document, document.getFile());
+			app.saveToFile(document, document.getFile(), document.getFileType());
 		}
 	}
 

@@ -17,19 +17,19 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.io;
+package uniol.aptgui.io.renderer;
 
-@SuppressWarnings("serial")
-public class MalformedPersistentPropertyException extends RuntimeException {
+import java.io.File;
+import java.io.IOException;
 
-	public MalformedPersistentPropertyException(String message, Throwable cause) {
-		super(message, cause);
-	}
+import uniol.apt.io.renderer.RenderException;
+import uniol.aptgui.editor.document.Document;
 
-	public MalformedPersistentPropertyException(String message) {
-		super(message);
-	}
+public interface DocumentRenderer {
+
+	public void render(Document<?> document, File file) throws RenderException, IOException;
 
 }
+
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

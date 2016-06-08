@@ -39,7 +39,8 @@ import uniol.apt.adt.extension.IExtensible;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 import uniol.aptgui.editor.layout.Layout;
-import uniol.aptgui.io.PersistentProperties;
+import uniol.aptgui.io.FileType;
+import uniol.aptgui.io.properties.PersistentProperties;
 
 /**
  * <p>
@@ -100,6 +101,11 @@ public abstract class Document<T> {
 	 * File location of this document. The document will be saved there.
 	 */
 	protected File file;
+
+	/**
+	 * File format (type) the document is saved in.
+	 */
+	protected FileType fileType;
 
 	/**
 	 * Flag that indicates if this document has unsaved changes.
@@ -257,6 +263,25 @@ public abstract class Document<T> {
 	 */
 	public void setFile(File file) {
 		this.file = file;
+	}
+
+	/**
+	 * Returns the file type this document is saved in.
+	 *
+	 * @return the file type this document is saved in
+	 */
+	public FileType getFileType() {
+		return fileType;
+	}
+
+	/**
+	 * Sets the file type this document is saved in.
+	 *
+	 * @param fileType
+	 *                new file type
+	 */
+	public void setFileType(FileType fileType) {
+		this.fileType = fileType;
 	}
 
 	/**

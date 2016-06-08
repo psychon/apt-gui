@@ -17,85 +17,51 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.aptgui.io;
+package uniol.aptgui.io.properties;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Function;
 
-import uniol.apt.io.renderer.RenderException;
-import uniol.apt.io.renderer.impl.AptLTSRenderer;
-import uniol.apt.io.renderer.impl.AptPNRenderer;
-import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.PnDocument;
-import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 
 /**
- * Class that handles writing a Document to a file.
+ * Function implementation that transforms GraphicalElement properties to their
+ * text representation.
  */
-public class AptDocumentRenderer implements DocumentRenderer {
-
-	@Override
-	public void render(Document<?> document, File file) throws RenderException, IOException {
-		// TODO re-enable rendering of persistent model extensions
-		// document.renderPersistentModelExtensions(transformer);
-		if (document instanceof PnDocument) {
-			renderPetriNet((PnDocument) document, file);
-		} else if (document instanceof TsDocument) {
-			renderTransitionSystem((TsDocument) document, file);
-		} else {
-			assert false;
-		}
-	}
-
-	private void renderPetriNet(PnDocument document, File file) throws RenderException, IOException {
-		AptPNRenderer renderer = new AptPNRenderer();
-		renderer.renderFile(document.getModel(), file);
-	}
-
-	private void renderTransitionSystem(TsDocument document, File file) throws RenderException, IOException {
-		AptLTSRenderer renderer = new AptLTSRenderer();
-		renderer.renderFile(document.getModel(), file);
-	}
+public class GraphicalElementTransformer implements Function<GraphicalElement, String> {
 
 	/**
 	 * Creates a string-representation of a GraphicalElement that can be
 	 * saved to the APT file. When the file is re-openend this string can be
 	 * parsed to restore all properties of this GraphicalElement.
 	 */
-	private final Function<GraphicalElement, String> transformer = new Function<GraphicalElement, String>() {
+	@Override
+	public String apply(GraphicalElement input) {
+		List<String> properties = new ArrayList<>();
+		String repr;
 
-		@Override
-		public String apply(GraphicalElement input) {
-			List<String> properties = new ArrayList<>();
-			String repr;
-
-			if (input instanceof GraphicalNode) {
-				properties.add(getPositionRepresentation((GraphicalNode) input));
-			} else if (input instanceof GraphicalEdge) {
-				repr = getBreakpointsRepresentation((GraphicalEdge) input);
-				if (repr != null) {
-					properties.add(repr);
-				}
-			}
-
-			repr = getColorRepresentation(input);
+		if (input instanceof GraphicalNode) {
+			properties.add(getPositionRepresentation((GraphicalNode) input));
+		} else if (input instanceof GraphicalEdge) {
+			repr = getBreakpointsRepresentation((GraphicalEdge) input);
 			if (repr != null) {
 				properties.add(repr);
 			}
-
-			return String.join("; ", properties);
 		}
 
-	};
+		repr = getColorRepresentation(input);
+		if (repr != null) {
+			properties.add(repr);
+		}
+
+		return String.join("; ", properties);
+	}
 
 	/**
 	 * Returns a string representation of the breakpoint attribute of a

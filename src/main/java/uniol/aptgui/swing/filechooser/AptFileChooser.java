@@ -20,6 +20,8 @@
 package uniol.aptgui.swing.filechooser;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -30,14 +32,30 @@ import uniol.apt.io.parser.impl.AptPNParser;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.TsDocument;
+import uniol.aptgui.io.FileType;
 
 @SuppressWarnings("serial")
 public class AptFileChooser extends JFileChooser {
 
 	private static FileFilter filterPn = new ParserFileFilter("Petri Net", new AptPNParser());
+	private static FileFilter filterPnNoLayout = new ParserFileFilter("Petri Net, only structure", new AptPNParser());
 	private static FileFilter filterTs = new ParserFileFilter("Transition system", new AptLTSParser());
+	private static FileFilter filterTsNoLayout = new ParserFileFilter("Transition system, only structure",
+			new AptLTSParser());
 	private static FileFilter filterSvg = new FileNameExtensionFilter("SVG vector image", "svg");
 	private static FileFilter filterPng = new FileNameExtensionFilter("PNG raster image", "png");
+
+	private static Map<FileFilter, FileType> fileTypeMapping;
+
+	static {
+		fileTypeMapping = new HashMap<>();
+		fileTypeMapping.put(filterPn, FileType.PETRI_NET);
+		fileTypeMapping.put(filterPnNoLayout, FileType.PETRI_NET_ONLY_STRUCTURE);
+		fileTypeMapping.put(filterTs, FileType.TRANSITION_SYSTEM);
+		fileTypeMapping.put(filterTsNoLayout, FileType.TRANSITION_SYSTEM_ONLY_STRUCTURE);
+		fileTypeMapping.put(filterSvg, FileType.SVG);
+		fileTypeMapping.put(filterPng, FileType.PNG);
+	}
 
 	/**
 	 * Creates a new file chooser that allows the user to save the given
@@ -49,11 +67,14 @@ public class AptFileChooser extends JFileChooser {
 	 */
 	public static AptFileChooser saveChooser(Document<?> document) {
 		AptFileChooser fc = new AptFileChooser();
+		fc.setAcceptAllFileFilterUsed(false);
 		if (document instanceof PnDocument) {
 			fc.addChoosableFileFilter(filterPn);
+			fc.addChoosableFileFilter(filterPnNoLayout);
 			fc.setFileFilter(filterPn);
 		} else if (document instanceof TsDocument) {
 			fc.addChoosableFileFilter(filterTs);
+			fc.addChoosableFileFilter(filterTsNoLayout);
 			fc.setFileFilter(filterTs);
 		}
 		File defaultSave = new File(toValidFileName(document.getName()));
@@ -111,6 +132,7 @@ public class AptFileChooser extends JFileChooser {
 	 * Force creation through static factory methods.
 	 */
 	private AptFileChooser() {
+		// Empty
 	}
 
 	/**
@@ -140,25 +162,16 @@ public class AptFileChooser extends JFileChooser {
 	}
 
 	/**
-	 * Returns if the currently selected file filter is the SVG extension
-	 * filter.
+	 * Returns the file type that was selected by the user.
 	 *
-	 * @return if the currently selected file filter is the SVG extension
-	 *         filter
+	 * @return the file type that was selected by the user
 	 */
-	public boolean isSvgFilterSelected() {
-		return getFileFilter() == filterSvg;
-	}
-
-	/**
-	 * Returns if the currently selected file filter is the PNG extension
-	 * filter.
-	 *
-	 * @return if the currently selected file filter is the PNG extension
-	 *         filter
-	 */
-	public boolean isPngFilterSelected() {
-		return getFileFilter() == filterPng;
+	public FileType getSelectedFileType() {
+		if (fileTypeMapping.containsKey(getFileFilter())) {
+			return fileTypeMapping.get(getFileFilter());
+		} else {
+			return FileType.ANY;
+		}
 	}
 
 }
