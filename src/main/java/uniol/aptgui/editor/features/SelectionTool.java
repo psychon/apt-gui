@@ -31,6 +31,7 @@ import uniol.aptgui.editor.document.EditingOptions;
 import uniol.aptgui.editor.document.Viewport;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
+import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 import uniol.aptgui.editor.features.base.Feature;
 
 /**
@@ -106,13 +107,15 @@ public class SelectionTool extends Feature {
 			return;
 		}
 
-		dragSource = e.getPoint();
-		if (editingOptions.isSnapToGridEnabled()) {
-			dragSource = snapToGridView(dragSource);
-		}
-
 		Point modelPosition = viewport.transformInverse(e.getPoint());
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition, true);
+
+		dragSource = e.getPoint();
+		if (elem instanceof GraphicalNode && editingOptions.isSnapToGridEnabled()) {
+			GraphicalNode node = (GraphicalNode) elem;
+			dragSource = new Point(node.getCenter());
+		}
+
 		if (elem instanceof GraphicalEdge) {
 			dragType = DragType.CREATE_BREAKPOINT;
 		} else {
