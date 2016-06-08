@@ -59,7 +59,7 @@ import uniol.aptgui.editor.document.EditingOptions;
 import uniol.aptgui.editor.document.PnDocument;
 import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.editor.document.TsDocument;
-import uniol.aptgui.editor.layout.RandomLayout;
+import uniol.aptgui.editor.layout.Layout;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.io.FileType;
 import uniol.aptgui.io.parser.AptParser;
@@ -78,6 +78,11 @@ public class ApplicationImpl implements Application {
 	private final EditingOptions editingOptions;
 
 	/**
+	 * Standard layout algorithm that gets applied when no layout information is available.
+	 */
+	private final Layout layout;
+
+	/**
 	 * ExecutorService for parallel task such as module executions.
 	 */
 	private final ExecutorService executor;
@@ -87,17 +92,22 @@ public class ApplicationImpl implements Application {
 	private WindowId activeWindow;
 
 	@Inject
-	public ApplicationImpl(MainWindowPresenter mainWindow, EventBus eventBus, History history,
-			RenderingOptions renderingOptions, EditingOptions editingOptions) {
+	public ApplicationImpl(
+			MainWindowPresenter mainWindow,
+			EventBus eventBus,
+			History history,
+			RenderingOptions renderingOptions,
+			EditingOptions editingOptions,
+			Layout defaultLayout) {
 		this.mainWindow = mainWindow;
 		this.eventBus = eventBus;
 		this.history = history;
 		this.documents = new HashMap<>();
 		this.renderingOptions = renderingOptions;
 		this.editingOptions = editingOptions;
+		this.layout = defaultLayout;
 		this.executor = new ThreadPoolExecutor(2, Integer.MAX_VALUE, 1, TimeUnit.SECONDS,
 				new LinkedBlockingQueue<Runnable>());
-
 		eventBus.register(this);
 	}
 
@@ -196,7 +206,7 @@ public class ApplicationImpl implements Application {
 		mainWindow.showInternalWindow(id);
 
 		// Apply standard layout.
-		document.applyLayout(new RandomLayout());
+		document.applyLayout(layout);
 		// Recreate layout from persistent extensions if possible.
 		document.parsePersistentModelExtensions();
 		document.setVisible(true);

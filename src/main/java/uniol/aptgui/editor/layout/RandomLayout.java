@@ -21,14 +21,25 @@ package uniol.aptgui.editor.layout;
 
 import java.awt.Point;
 
+import com.google.inject.Inject;
+
 import uniol.aptgui.editor.document.Document;
+import uniol.aptgui.editor.document.EditingOptions;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
+import uniol.aptgui.editor.features.ToolUtil;
 
 /**
  * Simple layout algorithm that randomly scatters nodes across the layout area.
  */
 public class RandomLayout implements Layout {
+
+	private final EditingOptions editingOptions;
+
+	@Inject
+	public RandomLayout(EditingOptions editingOptions) {
+		this.editingOptions = editingOptions;
+	}
 
 	/**
 	 * Returns a random integer between min and max (both inclusive).
@@ -51,8 +62,27 @@ public class RandomLayout implements Layout {
 				GraphicalNode node = (GraphicalNode) elem;
 				int x = randomInt(x0, x1);
 				int y = randomInt(y0, y1);
-				node.setCenter(new Point(x, y));
+				node.setCenter(getCenter(x, y));
 			}
+		}
+	}
+
+	/**
+	 * Returns a point either at the given x,y coordinates or the nearest
+	 * grid point depending on snap to grid status.
+	 *
+	 * @param x
+	 *                x coordinate
+	 * @param y
+	 *                y coordinate
+	 * @return center point
+	 */
+	private Point getCenter(int x, int y) {
+		Point p = new Point(x, y);
+		if (editingOptions.isSnapToGridEnabled()) {
+			return ToolUtil.snapToGrid(p, editingOptions.getGridSpacing());
+		} else {
+			return p;
 		}
 	}
 

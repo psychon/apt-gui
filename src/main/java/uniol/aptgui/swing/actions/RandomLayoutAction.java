@@ -35,9 +35,12 @@ import uniol.aptgui.swing.actions.base.DocumentAction;
 @SuppressWarnings("serial")
 public class RandomLayoutAction extends DocumentAction {
 
+	private final RandomLayout randomLayout;
+
 	@Inject
-	public RandomLayoutAction(Application app, EventBus eventBus) {
+	public RandomLayoutAction(Application app, EventBus eventBus, RandomLayout randomLayout) {
 		super(app, eventBus);
+		this.randomLayout = randomLayout;
 		String name = "Random Layout";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
@@ -51,7 +54,7 @@ public class RandomLayoutAction extends DocumentAction {
 	public void actionPerformed(ActionEvent e) {
 		Document<?> document = app.getActiveDocument();
 		if (document != null) {
-			app.getHistory().execute(new ApplyLayoutCommand(document, new RandomLayout()));
+			app.getHistory().execute(new ApplyLayoutCommand(document, randomLayout));
 		}
 	}
 
