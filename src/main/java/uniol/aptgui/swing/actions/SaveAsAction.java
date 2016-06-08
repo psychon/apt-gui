@@ -47,6 +47,11 @@ public class SaveAsAction extends SaveAction {
 		return true;
 	}
 
+	@Override
+	protected boolean checkEnabled(Document<?> document, Class<?> commonBaseTestClass) {
+		return true;
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120
