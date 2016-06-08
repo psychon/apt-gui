@@ -87,8 +87,15 @@ public class ApplicationImpl implements Application {
 	 */
 	private final ExecutorService executor;
 
+	/**
+	 * Map from WindowIds to document objects. Each editor window should be
+	 * in this map. Other windows must not be in this map.
+	 */
 	private final Map<WindowId, Document<?>> documents;
 
+	/**
+	 * Currently focused window id.
+	 */
 	private WindowId activeWindow;
 
 	@Inject
