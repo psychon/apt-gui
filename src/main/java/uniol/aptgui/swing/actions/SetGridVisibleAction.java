@@ -21,44 +21,32 @@ package uniol.aptgui.swing.actions;
 
 import java.awt.event.ActionEvent;
 
-import com.google.common.eventbus.EventBus;
+import javax.swing.AbstractAction;
+
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
-import uniol.aptgui.commands.Command;
-import uniol.aptgui.commands.RenameDocumentCommand;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.mainwindow.WindowId;
-import uniol.aptgui.swing.Resource;
-import uniol.aptgui.swing.actions.base.DocumentAction;
 
 @SuppressWarnings("serial")
-public class RenameDocumentAction extends DocumentAction {
+public class SetGridVisibleAction extends AbstractAction {
+
+	private final Application app;
 
 	@Inject
-	public RenameDocumentAction(Application app, EventBus eventBus) {
-		super(app, eventBus);
-		String name = "Rename Document...";
+	public SetGridVisibleAction(Application app) {
+		this.app = app;
+		String name = "Show Grid";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
-		putValue(SMALL_ICON, Resource.getIconLabel());
-		setEnabled(false);
-		eventBus.register(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		WindowId activeWindow = app.getActiveWindow();
-		Document<?> document = app.getDocument(activeWindow);
-		String result = showNameInputDialog(document.getName());
-		if (result != null) {
-			Command cmd = new RenameDocumentCommand(document, result);
-			app.getHistory().execute(cmd);
+		app.getRenderingOptions().toggleGridVisible();
+		for (Document<?> doc : app.getDocuments()) {
+			doc.fireDocumentDirty();
 		}
-	}
-
-	public String showNameInputDialog(String currentName) {
-		return app.getMainWindow().showInputDialog("Rename Document", "New document name:", currentName);
 	}
 
 }

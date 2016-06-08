@@ -321,8 +321,8 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 	}
 
 	@Override
-	public String showDocumentNameInputDialog(String title, String defaultValue) {
-		return (String) JOptionPane.showInputDialog((Component) view, "Document name:", title,
+	public String showInputDialog(String title, String prompt, String defaultValue) {
+		return (String) JOptionPane.showInputDialog((Component) view, prompt, title,
 				JOptionPane.QUESTION_MESSAGE, null, null, defaultValue);
 	}
 
@@ -389,9 +389,19 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 
 	@Override
 	public void showException(String title, Exception exception) {
-		JOptionPane.showMessageDialog((Component) view, exception.getMessage(), title,
+		JOptionPane.showMessageDialog((Component) view,
+				exception.getClass().getName() + System.lineSeparator() + exception.getMessage(),
+				title,
 				JOptionPane.ERROR_MESSAGE);
 		exception.printStackTrace();
+	}
+
+	@Override
+	public void showMessage(String title, String message) {
+		JOptionPane.showMessageDialog((Component) view,
+				message,
+				title,
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	@Override

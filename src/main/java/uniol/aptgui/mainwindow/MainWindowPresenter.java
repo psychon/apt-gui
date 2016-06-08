@@ -113,11 +113,23 @@ public interface MainWindowPresenter extends Presenter<MainWindowView> {
 	 *
 	 * @param title
 	 *                the dialog's title
+	 * @param prompt
+	 *                the prompt text
 	 * @param defaultValue
 	 *                the default value of the input text field
 	 * @return the user input or null if the dialog was cancelled
 	 */
-	String showDocumentNameInputDialog(String title, String defaultValue);
+	String showInputDialog(String title, String prompt, String defaultValue);
+
+	/**
+	 * Displays a message box with the given title and message.
+	 *
+	 * @param title
+	 *                dialog title
+	 * @param message
+	 *                message contents
+	 */
+	void showMessage(String title, String message);
 
 	/**
 	 * Shows a dialog containing the exception message.

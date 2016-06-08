@@ -19,8 +19,11 @@
 
 package uniol.aptgui.editor;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -31,6 +34,7 @@ import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.Document;
 import uniol.aptgui.editor.document.DocumentListener;
 import uniol.aptgui.editor.document.PnDocument;
+import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.editor.document.TsDocument;
 import uniol.aptgui.editor.features.ContextMenuFeature;
 import uniol.aptgui.editor.features.FireTransitionTool;
@@ -148,9 +152,38 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 	@Override
 	public void onPaint(Graphics2D graphics) {
 		if (document.isVisible()) {
+			RenderingOptions ro = application.getRenderingOptions();
 			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			document.draw(graphics, application.getRenderingOptions());
+			if (ro.isGridVisible()) {
+				drawGrid(graphics, ro.getGridSpacing());
+			}
+			document.draw(graphics, ro);
 		}
+	}
+
+	private void drawGrid(Graphics2D graphics, int gridSpacing) {
+		// Compute area where grid lines need to be drawn
+		Point topLeft = document.getTransform().applyInverse(new Point(0, 0));
+		topLeft.x = topLeft.x - gridSpacing - topLeft.x % gridSpacing;
+		topLeft.y = topLeft.y - gridSpacing - topLeft.y % gridSpacing;
+		Point bottomRight = document.getTransform().applyInverse(new Point(document.getWidth(), document.getHeight()));
+		bottomRight.x = bottomRight.x + gridSpacing - bottomRight.x % gridSpacing;
+		bottomRight.y = bottomRight.y + gridSpacing - bottomRight.y % gridSpacing;
+		// Set graphics transform
+		AffineTransform original = graphics.getTransform();
+		graphics.transform(document.getTransform().getAffineTransform());
+		// Set grid color
+		graphics.setColor(Color.GRAY);
+		// Draw vertical grid lines
+		for (int x = topLeft.x; x < bottomRight.x; x += gridSpacing) {
+			graphics.drawLine(x, topLeft.y, x, bottomRight.y);
+		}
+		// Draw horizontal grid lines
+		for (int y = topLeft.y; y < bottomRight.y; y += gridSpacing) {
+			graphics.drawLine(topLeft.x, y, bottomRight.x, y);
+		}
+		// Reset graphics transform
+		graphics.setTransform(original);
 	}
 
 	@Override

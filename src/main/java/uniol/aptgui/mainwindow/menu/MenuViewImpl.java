@@ -51,6 +51,8 @@ import uniol.aptgui.swing.actions.SaveAction;
 import uniol.aptgui.swing.actions.SaveAllAction;
 import uniol.aptgui.swing.actions.SaveAsAction;
 import uniol.aptgui.swing.actions.SetColorAction;
+import uniol.aptgui.swing.actions.SetGridSpacingAction;
+import uniol.aptgui.swing.actions.SetGridVisibleAction;
 import uniol.aptgui.swing.actions.SetInitialStateAction;
 import uniol.aptgui.swing.actions.SetLabelAction;
 import uniol.aptgui.swing.actions.SetPlaceIdLabelVisibleAction;
@@ -100,6 +102,8 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private final JMenuItem showIdLabelsState;
 	private final JMenuItem showIdLabelsPlace;
 	private final JMenuItem showIdLabelsTransition;
+	private final JMenuItem showGrid;
+	private final JMenuItem setGridSpacing;
 
 	private final JMenu windowMenu;
 	private final JMenuItem cascadeEditorWindows;
@@ -149,9 +153,13 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		showIdLabelsState = new JCheckBoxMenuItem(injector.getInstance(SetStateIdLabelVisibleAction.class));
 		showIdLabelsPlace = new JCheckBoxMenuItem(injector.getInstance(SetPlaceIdLabelVisibleAction.class));
 		showIdLabelsTransition = new JCheckBoxMenuItem(injector.getInstance(SetTransitionIdLabelVisibleAction.class));
+		showGrid = new JCheckBoxMenuItem(injector.getInstance(SetGridVisibleAction.class));
+		setGridSpacing = new JMenuItem(injector.getInstance(SetGridSpacingAction.class));
+
 		showIdLabelsState.setSelected(renderingOptions.isStateIdLabelVisible());
 		showIdLabelsPlace.setSelected(renderingOptions.isPlaceIdLabelVisible());
 		showIdLabelsTransition.setSelected(renderingOptions.isTransitionIdLabelVisible());
+		showGrid.setSelected(renderingOptions.isGridVisible());
 
 		// Windows
 		windowMenu = new JMenu("Windows");
@@ -223,6 +231,9 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		viewMenu.add(showIdLabelsState);
 		viewMenu.add(showIdLabelsPlace);
 		viewMenu.add(showIdLabelsTransition);
+		viewMenu.addSeparator();
+		viewMenu.add(showGrid);
+		viewMenu.add(setGridSpacing);
 	}
 
 	private void setupWindowMenu() {

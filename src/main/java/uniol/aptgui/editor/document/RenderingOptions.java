@@ -29,6 +29,8 @@ public class RenderingOptions {
 	private static final String PREF_KEY_STATE = "stateIdLabelVisible";
 	private static final String PREF_KEY_PLACE = "placeIdLabelVisible";
 	private static final String PREF_KEY_TRANSITION = "transitionIdLabelVisible";
+	private static final String PREF_KEY_GRID = "gridVisible";
+	private static final String PREF_KEY_GRID_SPACING = "gridSpacing";
 
 	/**
 	 * Creates a RenderingOptions object from saved user preferences or
@@ -37,17 +39,31 @@ public class RenderingOptions {
 	 * @return configured RenderingOptions object
 	 */
 	public static RenderingOptions fromUserPreferences() {
+		// Create RenderingOptions with default values
+		RenderingOptions ro = new RenderingOptions();
+
+		// Retrieve preferences
 		Preferences prefs = Preferences.userNodeForPackage(RenderingOptions.class);
-		RenderingOptions defaultRo = new RenderingOptions();
-		boolean s = prefs.getBoolean(PREF_KEY_STATE, defaultRo.isStateIdLabelVisible());
-		boolean p = prefs.getBoolean(PREF_KEY_PLACE, defaultRo.isPlaceIdLabelVisible());
-		boolean t = prefs.getBoolean(PREF_KEY_TRANSITION, defaultRo.isTransitionIdLabelVisible());
-		return new RenderingOptions(s, p, t);
+		boolean s = prefs.getBoolean(PREF_KEY_STATE, ro.isStateIdLabelVisible());
+		boolean p = prefs.getBoolean(PREF_KEY_PLACE, ro.isPlaceIdLabelVisible());
+		boolean t = prefs.getBoolean(PREF_KEY_TRANSITION, ro.isTransitionIdLabelVisible());
+		boolean g = prefs.getBoolean(PREF_KEY_GRID, ro.isGridVisible());
+		int gridSpacing = prefs.getInt(PREF_KEY_GRID_SPACING, ro.getGridSpacing());
+
+		// Configure RenderingOptions object
+		ro.setStateIdLabelVisible(s);
+		ro.setPlaceIdLabelVisible(p);
+		ro.setTransitionIdLabelVisible(t);
+		ro.setGridVisible(g);
+		ro.setGridSpacing(gridSpacing);
+		return ro;
 	}
 
 	private boolean stateIdLabelVisible;
 	private boolean placeIdLabelVisible;
 	private boolean transitionIdLabelVisible;
+	private boolean gridVisible;
+	private int gridSpacing;
 
 	/**
 	 * Creates a RenderingOptions object configured with default values.
@@ -56,23 +72,8 @@ public class RenderingOptions {
 		this.stateIdLabelVisible = true;
 		this.placeIdLabelVisible = true;
 		this.transitionIdLabelVisible = true;
-	}
-
-	/**
-	 * Creates a RenderingOptions object configure with the given values.
-	 *
-	 * @param stateIdLabelVisible
-	 *                show id labels on states?
-	 * @param placeIdLabelVisible
-	 *                show id labels on places?
-	 * @param transitionIdLabelVisible
-	 *                show id labels on transitions?
-	 */
-	public RenderingOptions(boolean stateIdLabelVisible, boolean placeIdLabelVisible,
-			boolean transitionIdLabelVisible) {
-		this.stateIdLabelVisible = stateIdLabelVisible;
-		this.placeIdLabelVisible = placeIdLabelVisible;
-		this.transitionIdLabelVisible = transitionIdLabelVisible;
+		this.gridVisible = false;
+		this.gridSpacing = 50;
 	}
 
 	/**
@@ -84,6 +85,8 @@ public class RenderingOptions {
 		prefs.putBoolean(PREF_KEY_STATE, stateIdLabelVisible);
 		prefs.putBoolean(PREF_KEY_PLACE, placeIdLabelVisible);
 		prefs.putBoolean(PREF_KEY_TRANSITION, transitionIdLabelVisible);
+		prefs.putBoolean(PREF_KEY_GRID, gridVisible);
+		prefs.putInt(PREF_KEY_GRID_SPACING, gridSpacing);
 	}
 
 	public boolean isStateIdLabelVisible() {
@@ -123,6 +126,27 @@ public class RenderingOptions {
 	public boolean toggleTransitionIdLabelVisible() {
 		transitionIdLabelVisible = !transitionIdLabelVisible;
 		return transitionIdLabelVisible;
+	}
+
+	public boolean isGridVisible() {
+		return gridVisible;
+	}
+
+	public void setGridVisible(boolean gridVisible) {
+		this.gridVisible = gridVisible;
+	}
+
+	public boolean toggleGridVisible() {
+		gridVisible = !gridVisible;
+		return gridVisible;
+	}
+
+	public int getGridSpacing() {
+		return gridSpacing;
+	}
+
+	public void setGridSpacing(int gridSpacing) {
+		this.gridSpacing = gridSpacing;
 	}
 
 }

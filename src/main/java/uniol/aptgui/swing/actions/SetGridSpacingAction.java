@@ -21,44 +21,50 @@ package uniol.aptgui.swing.actions;
 
 import java.awt.event.ActionEvent;
 
-import com.google.common.eventbus.EventBus;
+import javax.swing.AbstractAction;
+
 import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
-import uniol.aptgui.commands.Command;
-import uniol.aptgui.commands.RenameDocumentCommand;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.mainwindow.WindowId;
-import uniol.aptgui.swing.Resource;
-import uniol.aptgui.swing.actions.base.DocumentAction;
+import uniol.aptgui.editor.document.RenderingOptions;
 
 @SuppressWarnings("serial")
-public class RenameDocumentAction extends DocumentAction {
+public class SetGridSpacingAction extends AbstractAction {
+
+	private final Application app;
 
 	@Inject
-	public RenameDocumentAction(Application app, EventBus eventBus) {
-		super(app, eventBus);
-		String name = "Rename Document...";
+	public SetGridSpacingAction(Application app) {
+		this.app = app;
+		String name = "Set Grid Spacing";
 		putValue(NAME, name);
 		putValue(SHORT_DESCRIPTION, name);
-		putValue(SMALL_ICON, Resource.getIconLabel());
-		setEnabled(false);
-		eventBus.register(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		WindowId activeWindow = app.getActiveWindow();
-		Document<?> document = app.getDocument(activeWindow);
-		String result = showNameInputDialog(document.getName());
-		if (result != null) {
-			Command cmd = new RenameDocumentCommand(document, result);
-			app.getHistory().execute(cmd);
+		RenderingOptions ro = app.getRenderingOptions();
+		String defaultValue = String.valueOf(ro.getGridSpacing());
+		String input = app.getMainWindow().showInputDialog("Set Grid Spacing",
+				"New width and height between grid lines:", defaultValue);
+		try {
+			int newValue = Integer.valueOf(input);
+			if (newValue > 0) {
+				ro.setGridSpacing(newValue);
+				for (Document<?> doc : app.getDocuments()) {
+					doc.fireDocumentDirty();
+				}
+			} else {
+				showInvalidInputMessage();
+			}
+		} catch (NumberFormatException e1) {
+			showInvalidInputMessage();
 		}
 	}
 
-	public String showNameInputDialog(String currentName) {
-		return app.getMainWindow().showInputDialog("Rename Document", "New document name:", currentName);
+	private void showInvalidInputMessage() {
+		app.getMainWindow().showMessage("Invalid Input", "Grid spacing must be a positive integer value.");
 	}
 
 }
