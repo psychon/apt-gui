@@ -19,16 +19,72 @@
 
 package uniol.aptgui.editor.document;
 
+import java.util.prefs.Preferences;
+
 /**
  * Saves additional information used during the document drawing process.
  */
 public class RenderingOptions {
 
-	public static final RenderingOptions DEFAULT = new RenderingOptions();
+	private static final String PREF_KEY_STATE = "stateIdLabelVisible";
+	private static final String PREF_KEY_PLACE = "placeIdLabelVisible";
+	private static final String PREF_KEY_TRANSITION = "transitionIdLabelVisible";
 
-	private boolean stateIdLabelVisible = true;
-	private boolean placeIdLabelVisible = true;
-	private boolean transitionIdLabelVisible = true;
+	/**
+	 * Creates a RenderingOptions object from saved user preferences or
+	 * default values if no user preferences exist.
+	 *
+	 * @return configured RenderingOptions object
+	 */
+	public static RenderingOptions fromUserPreferences() {
+		Preferences prefs = Preferences.userNodeForPackage(RenderingOptions.class);
+		RenderingOptions defaultRo = new RenderingOptions();
+		boolean s = prefs.getBoolean(PREF_KEY_STATE, defaultRo.isStateIdLabelVisible());
+		boolean p = prefs.getBoolean(PREF_KEY_PLACE, defaultRo.isPlaceIdLabelVisible());
+		boolean t = prefs.getBoolean(PREF_KEY_TRANSITION, defaultRo.isTransitionIdLabelVisible());
+		return new RenderingOptions(s, p, t);
+	}
+
+	private boolean stateIdLabelVisible;
+	private boolean placeIdLabelVisible;
+	private boolean transitionIdLabelVisible;
+
+	/**
+	 * Creates a RenderingOptions object configured with default values.
+	 */
+	public RenderingOptions() {
+		this.stateIdLabelVisible = true;
+		this.placeIdLabelVisible = true;
+		this.transitionIdLabelVisible = true;
+	}
+
+	/**
+	 * Creates a RenderingOptions object configure with the given values.
+	 *
+	 * @param stateIdLabelVisible
+	 *                show id labels on states?
+	 * @param placeIdLabelVisible
+	 *                show id labels on places?
+	 * @param transitionIdLabelVisible
+	 *                show id labels on transitions?
+	 */
+	public RenderingOptions(boolean stateIdLabelVisible, boolean placeIdLabelVisible,
+			boolean transitionIdLabelVisible) {
+		this.stateIdLabelVisible = stateIdLabelVisible;
+		this.placeIdLabelVisible = placeIdLabelVisible;
+		this.transitionIdLabelVisible = transitionIdLabelVisible;
+	}
+
+	/**
+	 * Saves the attributes of this RenderingOptions object to the user
+	 * preferences store.
+	 */
+	public void saveToUserPreferences() {
+		Preferences prefs = Preferences.userNodeForPackage(RenderingOptions.class);
+		prefs.putBoolean(PREF_KEY_STATE, stateIdLabelVisible);
+		prefs.putBoolean(PREF_KEY_PLACE, placeIdLabelVisible);
+		prefs.putBoolean(PREF_KEY_TRANSITION, transitionIdLabelVisible);
+	}
 
 	public boolean isStateIdLabelVisible() {
 		return stateIdLabelVisible;

@@ -283,6 +283,7 @@ public class ApplicationImpl implements Application {
 
 	@Override
 	public void closeNow() {
+		renderingOptions.saveToUserPreferences();
 		mainWindow.close();
 		executor.shutdownNow();
 	}

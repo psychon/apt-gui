@@ -498,18 +498,6 @@ public abstract class Document<T> {
 	}
 
 	/**
-	 * Draws this document by calling
-	 * {@link Document#draw(Graphics2D, RenderingOptions)} with default
-	 * rendering options.
-	 *
-	 * @param graphics
-	 *                graphics object to use for drawing
-	 */
-	public void draw(Graphics2D graphics) {
-		draw(graphics, RenderingOptions.DEFAULT);
-	}
-
-	/**
 	 * Draws this document with the given Graphics2D object and rendering
 	 * options. Before any GraphicalElements are called to draw themselves
 	 * the transform is applied to the graphics object.

@@ -64,7 +64,16 @@ public class DependenyModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+		// Singletons
 		bind(Application.class).to(ApplicationImpl.class).in(Singleton.class);
+		bind(History.class).in(Singleton.class);
+		bind(EventBus.class).in(Singleton.class);
+
+		// Instance bindings
+		bind(RenderingOptions.class).toInstance(getRenderingOptionsInstance());
+		bind(ModuleRegistry.class).toInstance(AptModuleRegistry.INSTANCE);
+
+		// Normal bindings
 		bind(MainWindowPresenter.class).to(MainWindowPresenterImpl.class);
 		bind(MainWindowView.class).to(MainWindowViewImpl.class);
 		bind(MenuPresenter.class).to(MenuPresenterImpl.class);
@@ -77,14 +86,14 @@ public class DependenyModule extends AbstractModule {
 		bind(EditorView.class).to(EditorViewImpl.class);
 		bind(ToolbarPresenter.class).to(ToolbarPresenterImpl.class);
 		bind(ToolbarView.class).to(ToolbarViewImpl.class);
-		bind(History.class).in(Singleton.class);
-		bind(EventBus.class).in(Singleton.class);
-		bind(ModuleRegistry.class).toInstance(AptModuleRegistry.INSTANCE);
 		bind(ModuleBrowserPresenter.class).to(ModuleBrowserPresenterImpl.class);
 		bind(ModuleBrowserView.class).to(ModuleBrowserViewImpl.class);
 		bind(ModulePresenter.class).to(ModulePresenterImpl.class);
 		bind(ModuleView.class).to(ModuleViewImpl.class);
-		bind(RenderingOptions.class).in(Singleton.class);
+	}
+
+	private RenderingOptions getRenderingOptionsInstance() {
+		return RenderingOptions.fromUserPreferences();
 	}
 
 }

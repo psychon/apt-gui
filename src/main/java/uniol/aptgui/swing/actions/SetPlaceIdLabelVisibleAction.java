@@ -27,7 +27,6 @@ import com.google.inject.Inject;
 
 import uniol.aptgui.Application;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.swing.Resource;
 
 /**
@@ -39,7 +38,7 @@ public class SetPlaceIdLabelVisibleAction extends AbstractAction {
 	private final Application app;
 
 	@Inject
-	public SetPlaceIdLabelVisibleAction(Application app, RenderingOptions renderingOptions) {
+	public SetPlaceIdLabelVisibleAction(Application app) {
 		this.app = app;
 		String name = "Show Place Identifiers";
 		putValue(NAME, name);
