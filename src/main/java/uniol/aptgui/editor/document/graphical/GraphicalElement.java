@@ -22,6 +22,7 @@ package uniol.aptgui.editor.document.graphical;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 import uniol.aptgui.editor.document.RenderingOptions;
 
@@ -154,6 +155,15 @@ public abstract class GraphicalElement {
 		graphics.drawLine(bottomRight.x, bottomRight.y, bottomRight.x - len, bottomRight.y);
 		graphics.drawLine(bottomRight.x, bottomRight.y, bottomRight.x, bottomRight.y - len);
 	}
+
+	/**
+	 * Returns an axis-aligned minimum bounding box that contains this
+	 * element.
+	 *
+	 * @return an axis-aligned minimum bounding box that contains this
+	 *         element
+	 */
+	public abstract Rectangle getBounds();
 
 }
 

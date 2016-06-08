@@ -62,6 +62,7 @@ import uniol.aptgui.swing.actions.SetTransitionIdLabelVisibleAction;
 import uniol.aptgui.swing.actions.ShowWindowAction;
 import uniol.aptgui.swing.actions.UndoAction;
 import uniol.aptgui.swing.actions.ZoomDecreaseAction;
+import uniol.aptgui.swing.actions.ZoomFitWindowAction;
 import uniol.aptgui.swing.actions.ZoomIncreaseAction;
 
 @SuppressWarnings("serial")
@@ -99,6 +100,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 	private final JMenu viewMenu;
 	private final JMenuItem zoomIn;
 	private final JMenuItem zoomOut;
+	private final JMenuItem zoomFitWindow;
 	private final JMenuItem showIdLabelsState;
 	private final JMenuItem showIdLabelsPlace;
 	private final JMenuItem showIdLabelsTransition;
@@ -150,6 +152,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 		viewMenu = new JMenu("View");
 		zoomIn = new JMenuItem(injector.getInstance(ZoomIncreaseAction.class));
 		zoomOut = new JMenuItem(injector.getInstance(ZoomDecreaseAction.class));
+		zoomFitWindow = new JMenuItem(injector.getInstance(ZoomFitWindowAction.class));
 		showIdLabelsState = new JCheckBoxMenuItem(injector.getInstance(SetStateIdLabelVisibleAction.class));
 		showIdLabelsPlace = new JCheckBoxMenuItem(injector.getInstance(SetPlaceIdLabelVisibleAction.class));
 		showIdLabelsTransition = new JCheckBoxMenuItem(injector.getInstance(SetTransitionIdLabelVisibleAction.class));
@@ -227,6 +230,7 @@ public class MenuViewImpl extends JMenuBarView<MenuPresenter> implements MenuVie
 
 		viewMenu.add(zoomIn);
 		viewMenu.add(zoomOut);
+		viewMenu.add(zoomFitWindow);
 		viewMenu.addSeparator();
 		viewMenu.add(showIdLabelsState);
 		viewMenu.add(showIdLabelsPlace);

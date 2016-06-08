@@ -21,6 +21,7 @@ package uniol.aptgui.editor.document;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.util.ArrayList;
@@ -515,6 +516,29 @@ public abstract class Document<T> {
 	@SuppressWarnings("unchecked")
 	public static <T> T getGraphicalExtension(IExtensible obj) {
 		return (T) obj.getExtension(GraphicalElement.EXTENSION_KEY);
+	}
+
+	/**
+	 * Returns an axis-aligned minimum bounding box that contains all
+	 * objects in this document. If there are no objects in this Document an
+	 * empty rectangle is returned (width and height are 0).
+	 *
+	 * @return an axis-aligned minimum bounding box
+	 */
+	public Rectangle getBounds() {
+		Rectangle bounds = null;
+		for (GraphicalElement elem : elements.keySet()) {
+			if (bounds == null) {
+				bounds = elem.getBounds();
+			} else {
+				bounds = bounds.union(elem.getBounds());
+			}
+		}
+		if (bounds == null) {
+			return new Rectangle();
+		} else {
+			return bounds;
+		}
 	}
 
 	/**

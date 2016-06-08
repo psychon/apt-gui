@@ -204,24 +204,46 @@ public class Viewport {
 
 	/**
 	 * Returns a point that is positioned at the top left of the
-	 * viewport.
+	 * viewport in view coordinates.
 	 *
 	 * @return a point that is positioned at the top left of the
-	 *         viewport
+	 *         viewport in view coordinates
 	 */
 	public Point getTopLeft() {
 		return new Point(0, 0);
 	}
 
 	/**
+	 * Returns a point that is positioned at the top left of the
+	 * viewport in model coordinates.
+	 *
+	 * @return a point that is positioned at the top left of the
+	 *         viewport in model coordinates
+	 */
+	public Point getTopLeftModel() {
+		return transformInverse(getTopLeft());
+	}
+
+	/**
 	 * Returns a point that is positioned at the bottom right of the
-	 * viewport.
+	 * viewport in view coordinates.
 	 *
 	 * @return a point that is positioned at the bottom right of the
-	 *         viewport
+	 *         viewport in view coordinates
 	 */
 	public Point getBottomRight() {
 		return new Point(width, height);
+	}
+
+	/**
+	 * Returns a point that is positioned at the bottom right of the
+	 * viewport in model coordinates.
+	 *
+	 * @return a point that is positioned at the bottom right of the
+	 *         viewport in model coordinates
+	 */
+	public Point getBottomRightModel() {
+		return transformInverse(getBottomRight());
 	}
 
 	/**

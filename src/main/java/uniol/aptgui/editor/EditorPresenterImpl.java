@@ -22,6 +22,7 @@ package uniol.aptgui.editor;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 
@@ -167,6 +168,10 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 			if (ro.isGridVisible()) {
 				drawGrid(graphics, ro.getGridSpacing());
 			}
+			Rectangle bounds = document.getBounds();
+			Point tl = document.getViewport().transform(new Point(bounds.x, bounds.y));
+			double scale = document.getViewport().getScale();
+			graphics.drawRect(tl.x, tl.y, (int)(bounds.width * scale), (int)(bounds.height * scale));
 			document.draw(graphics, ro);
 		}
 	}

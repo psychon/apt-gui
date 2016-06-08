@@ -21,6 +21,7 @@ package uniol.aptgui.editor.document.graphical.nodes;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,8 @@ import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 public class GraphicalState extends GraphicalNode {
 
 	private static final int RADIUS = 20;
+	private static final int INITIAL_STATE_ARROW_LENGTH = 30;
+
 	protected boolean isInitialState;
 
 	/**
@@ -68,7 +71,7 @@ public class GraphicalState extends GraphicalNode {
 	protected void drawShape(Graphics2D graphics, RenderingOptions renderingOptions) {
 		drawCircle(graphics, center, RADIUS);
 		if (isInitialState) {
-			Point outside = new Point(center.x - RADIUS - 30, center.y);
+			Point outside = new Point(center.x - RADIUS - INITIAL_STATE_ARROW_LENGTH, center.y);
 			Point onBoundary = getBoundaryIntersection(outside);
 			List<Point> path = new ArrayList<>();
 			path.add(outside);
@@ -87,6 +90,25 @@ public class GraphicalState extends GraphicalNode {
 	@Override
 	protected void drawSelectionMarkers(Graphics2D graphics, RenderingOptions renderingOptions) {
 		drawSelectionMarkers(graphics, center, RADIUS + 2);
+	}
+
+	@Override
+	public Rectangle getBounds() {
+		if (isInitialState) {
+			return new Rectangle(
+				center.x - RADIUS - INITIAL_STATE_ARROW_LENGTH,
+				center.y - RADIUS,
+				2 * RADIUS + INITIAL_STATE_ARROW_LENGTH,
+				2 * RADIUS
+			);
+		} else {
+			return new Rectangle(
+				center.x - RADIUS,
+				center.y - RADIUS,
+				2 * RADIUS,
+				2 * RADIUS
+			);
+		}
 	}
 
 }

@@ -28,6 +28,7 @@ import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,6 +46,7 @@ import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 public abstract class GraphicalEdge extends GraphicalElement {
 
 	private static final double SELECTION_DISTANCE = 10;
+
 	protected GraphicalNode source;
 	protected GraphicalNode target;
 	protected List<Point> breakpoints;
@@ -135,6 +137,15 @@ public abstract class GraphicalEdge extends GraphicalElement {
 	@Override
 	public boolean coversPoint(Point point) {
 		return getSegmentIndexAt(point) != -1;
+	}
+
+	@Override
+	public Rectangle getBounds() {
+		Rectangle bounds = new Rectangle(source.getCenter());
+		for (Point bp : breakpoints) {
+			bounds = bounds.union(new Rectangle(bp));
+		}
+		return bounds.union(new Rectangle(target.getCenter()));
 	}
 
 	/**

@@ -22,6 +22,7 @@ package uniol.aptgui.editor.document.graphical.special;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
@@ -54,6 +55,12 @@ public class BreakpointHandle extends GraphicalNode {
 
 	@Override
 	protected void drawSelectionMarkers(Graphics2D graphics, RenderingOptions renderingOptions) {
+	}
+
+	@Override
+	public Rectangle getBounds() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

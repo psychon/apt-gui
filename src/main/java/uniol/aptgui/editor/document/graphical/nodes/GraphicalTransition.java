@@ -21,6 +21,7 @@ package uniol.aptgui.editor.document.graphical.nodes;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 import uniol.aptgui.editor.document.RenderingOptions;
 import uniol.aptgui.editor.document.graphical.traits.HasLabel;
@@ -28,6 +29,7 @@ import uniol.aptgui.editor.document.graphical.traits.HasLabel;
 public class GraphicalTransition extends GraphicalNode implements HasLabel {
 
 	private static final int RADIUS = 20;
+	private static final int ID_OFFSET = 7;
 
 	protected String label;
 
@@ -67,7 +69,7 @@ public class GraphicalTransition extends GraphicalNode implements HasLabel {
 	@Override
 	protected void drawId(Graphics2D graphics, RenderingOptions renderingOptions) {
 		if (renderingOptions.isTransitionIdLabelVisible()) {
-			Point idLabelPosition = new Point(center.x + RADIUS + 7, center.y - RADIUS - 7);
+			Point idLabelPosition = new Point(center.x + RADIUS + ID_OFFSET, center.y - RADIUS - ID_OFFSET);
 			drawCenteredString(graphics, idLabelPosition, id);
 		}
 	}
@@ -75,6 +77,16 @@ public class GraphicalTransition extends GraphicalNode implements HasLabel {
 	@Override
 	protected void drawSelectionMarkers(Graphics2D graphics, RenderingOptions renderingOptions) {
 		drawSelectionMarkers(graphics, center, RADIUS + 2);
+	}
+
+	@Override
+	public Rectangle getBounds() {
+		return new Rectangle(
+			center.x - RADIUS,
+			center.y - RADIUS - ID_OFFSET,
+			2 * RADIUS + ID_OFFSET,
+			2 * RADIUS + ID_OFFSET
+		);
 	}
 
 }
