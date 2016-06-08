@@ -20,7 +20,6 @@
 package uniol.aptgui.swing.actions;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
@@ -57,7 +56,7 @@ public class SetColorAction extends DocumentAction {
 		Document<?> document = app.getActiveDocument();
 		Set<GraphicalElement> selection = document.getSelection();
 		Color result = JColorChooser.showDialog(
-				(Component)app.getMainWindow().getView(),
+				app.getMainWindow().getDialogParent(),
 				"Set Color", getInitialValue(selection));
 		if (result != null) {
 			Command cmd = new SetColorCommand(document, selection, result);

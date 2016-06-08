@@ -320,12 +320,6 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		}
 	}
 
-	@Override
-	public String showInputDialog(String title, String prompt, String defaultValue) {
-		return (String) JOptionPane.showInputDialog((Component) view, prompt, title,
-				JOptionPane.QUESTION_MESSAGE, null, null, defaultValue);
-	}
-
 	/**
 	 * Creates a new InternalWindowPresenter with the given Presenter as its
 	 * content presenter.
@@ -389,7 +383,7 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 
 	@Override
 	public void showException(String title, Exception exception) {
-		JOptionPane.showMessageDialog((Component) view,
+		JOptionPane.showMessageDialog(getDialogParent(),
 				exception.getClass().getName() + System.lineSeparator() + exception.getMessage(),
 				title,
 				JOptionPane.ERROR_MESSAGE);
@@ -398,10 +392,28 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 
 	@Override
 	public void showMessage(String title, String message) {
-		JOptionPane.showMessageDialog((Component) view,
+		JOptionPane.showMessageDialog(getDialogParent(),
 				message,
 				title,
 				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	@Override
+	public String showInputDialog(String title, String prompt, String defaultValue) {
+		return (String) JOptionPane.showInputDialog(getDialogParent(), prompt, title,
+				JOptionPane.QUESTION_MESSAGE, null, null, defaultValue);
+	}
+
+	@Override
+	public Component getDialogParent() {
+		WindowId active = application.getActiveWindow();
+		if (externalWindows.containsKey(active)) {
+			return (Component) externalWindows.get(active).getView();
+		} else if (internalWindows.containsKey(active)) {
+			return (Component) internalWindows.get(active).getView();
+		} else {
+			return (Component) view;
+		}
 	}
 
 	@Override

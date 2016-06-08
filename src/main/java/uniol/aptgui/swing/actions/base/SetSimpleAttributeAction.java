@@ -19,13 +19,10 @@
 
 package uniol.aptgui.swing.actions.base;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import javax.swing.JOptionPane;
 
 import com.google.common.eventbus.EventBus;
 
@@ -101,9 +98,7 @@ public abstract class SetSimpleAttributeAction<T, U> extends DocumentAction {
 	protected abstract Command createCommand(Document<?> document, List<T> selection, String userInput);
 
 	protected String showInputDialog(String initialValue) {
-		Component parentComponent = (Component) app.getMainWindow().getView();
-		return (String) JOptionPane.showInputDialog(parentComponent, inputMessage, name,
-				JOptionPane.QUESTION_MESSAGE, null, null, initialValue);
+		return app.getMainWindow().showInputDialog(name, inputMessage, initialValue);
 	}
 
 	private String getInitialValue(List<T> selection) {

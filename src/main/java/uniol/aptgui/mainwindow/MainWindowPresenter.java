@@ -19,6 +19,7 @@
 
 package uniol.aptgui.mainwindow;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.Rectangle;
 
@@ -140,6 +141,14 @@ public interface MainWindowPresenter extends Presenter<MainWindowView> {
 	 *                exception that will be shown to the user
 	 */
 	void showException(String title, Exception exception);
+
+	/**
+	 * Returns a suitable dialog parent component depending on the active
+	 * window.
+	 *
+	 * @return a suitable dialog parent component
+	 */
+	Component getDialogParent();
 
 	/**
 	 * Cascades the internal windows.
