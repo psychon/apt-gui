@@ -66,7 +66,7 @@ public class ViewportFeature extends Feature {
 			return;
 		}
 
-		Point modelPosition = document.getTransform().applyInverse(e.getPoint());
+		Point modelPosition = document.getViewport().transformInverse(e.getPoint());
 		if (document.getGraphicalElementAt(modelPosition) != null) {
 			return;
 		}
@@ -97,15 +97,15 @@ public class ViewportFeature extends Feature {
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		if (e.getWheelRotation() > 0) {
-			document.getTransform().decreaseScale(e.getWheelRotation());
+			document.getViewport().decreaseScale(e.getWheelRotation());
 		} else {
-			document.getTransform().increaseScale(-e.getWheelRotation());
+			document.getViewport().increaseScale(-e.getWheelRotation());
 		}
 		document.fireDocumentDirty();
 	}
 
 	private void translateView(int dx, int dy) {
-		document.getTransform().translateView(dx, dy);
+		document.getViewport().translateView(dx, dy);
 		document.fireDocumentDirty();
 	}
 

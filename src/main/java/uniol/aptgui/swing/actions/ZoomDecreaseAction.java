@@ -50,7 +50,7 @@ public class ZoomDecreaseAction extends DocumentAction {
 	public void actionPerformed(ActionEvent e) {
 		Document<?> document = app.getActiveDocument();
 		assert document != null;
-		document.getTransform().decreaseScale(1);
+		document.getViewport().decreaseScale(1);
 		document.fireDocumentDirty();
 	}
 

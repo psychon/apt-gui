@@ -27,7 +27,7 @@ import uniol.aptgui.commands.History;
 import uniol.aptgui.commands.TranslateBreakpointCommand;
 import uniol.aptgui.commands.TranslateElementsCommand;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.Transform2D;
+import uniol.aptgui.editor.document.Viewport;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 import uniol.aptgui.editor.features.base.Feature;
@@ -53,9 +53,9 @@ public class SelectionTool extends Feature {
 	private final Document<?> document;
 
 	/**
-	 * Reference to the Document's transform object.
+	 * Reference to the Document's viewport object.
 	 */
-	private final Transform2D transform;
+	private final Viewport viewport;
 
 	/**
 	 * Differentiates on what element the drag began.
@@ -86,7 +86,7 @@ public class SelectionTool extends Feature {
 	 */
 	public SelectionTool(Document<?> document, History history) {
 		this.document = document;
-		this.transform = document.getTransform();
+		this.viewport = document.getViewport();
 		this.history = history;
 		this.dragType = DragType.NONE;
 		this.dragSource = null;
@@ -101,7 +101,7 @@ public class SelectionTool extends Feature {
 
 		dragSource = e.getPoint();
 
-		Point modelPosition = transform.applyInverse(e.getPoint());
+		Point modelPosition = viewport.transformInverse(e.getPoint());
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition, true);
 		if (elem instanceof GraphicalEdge) {
 			dragType = DragType.CREATE_BREAKPOINT;
@@ -126,7 +126,7 @@ public class SelectionTool extends Feature {
 		}
 		// If the mouse was not dragged since CREATE_BREAKPOINT was set, simply select the edge.
 		if (dragType == DragType.CREATE_BREAKPOINT) {
-			Point modelPosition = transform.applyInverse(e.getPoint());
+			Point modelPosition = viewport.transformInverse(e.getPoint());
 			selectElementAt(modelPosition, e.isControlDown());
 		}
 
@@ -140,12 +140,12 @@ public class SelectionTool extends Feature {
 		}
 
 		Point dragTarget = e.getPoint();
-		int dx = (int) (1.0 * (dragTarget.x - dragSource.x) / transform.getScale());
-		int dy = (int) (1.0 * (dragTarget.y - dragSource.y) / transform.getScale());
+		int dx = (int) (1.0 * (dragTarget.x - dragSource.x) / viewport.getScale());
+		int dy = (int) (1.0 * (dragTarget.y - dragSource.y) / viewport.getScale());
 
 		switch (dragType) {
 		case CREATE_BREAKPOINT:
-			Point modelPosition = transform.applyInverse(dragSource);
+			Point modelPosition = viewport.transformInverse(dragSource);
 			dragCreateBreakpoint(modelPosition);
 			// Fall-through!
 		case BREAKPOINT:

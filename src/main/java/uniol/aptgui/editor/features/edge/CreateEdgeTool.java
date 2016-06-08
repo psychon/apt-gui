@@ -23,7 +23,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.Transform2D;
+import uniol.aptgui.editor.document.Viewport;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
@@ -31,15 +31,12 @@ import uniol.aptgui.editor.document.graphical.special.InvisibleNode;
 import uniol.aptgui.editor.features.base.HoverEffectFeature;
 
 /**
- * <p>
  * Base class for tools that allow the creation of edges.
- * </p>
  * <p>
  * The edge creation process goes as follows: The user first clicks a node. This
  * starts the creation process. Subsequent clicks on the canvas create break
  * points in the edge. If the user clicks another valid node, the creation
  * process is finalized.
- * </p>
  *
  * @param <T> document type
  * @param <U> edge type that gets created
@@ -52,9 +49,9 @@ public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalE
 	protected final T document;
 
 	/**
-	 * Reference to the Document's transform object.
+	 * Reference to the Document's viewport object.
 	 */
-	protected final Transform2D transform;
+	protected final Viewport viewport;
 
 	/**
 	 * True, while the creation is in progress, i.e. the user did not finish
@@ -79,7 +76,7 @@ public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalE
 
 	public CreateEdgeTool(T document) {
 		this.document = document;
-		this.transform = document.getTransform();
+		this.viewport = document.getViewport();
 		this.creating = false;
 	}
 
@@ -130,7 +127,7 @@ public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalE
 			return;
 		}
 
-		Point modelPosition = transform.applyInverse(e.getPoint());
+		Point modelPosition = viewport.transformInverse(e.getPoint());
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
 
 		if (!creating && elem instanceof GraphicalNode) {
@@ -164,7 +161,7 @@ public abstract class CreateEdgeTool<T extends Document<?>, U extends GraphicalE
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		if (creating) {
-			Point modelPosition = transform.applyInverse(e.getPoint());
+			Point modelPosition = viewport.transformInverse(e.getPoint());
 			// Move invisible target.
 			graphicalTarget.setCenter(modelPosition);
 			// Highlight elements based on validity.

@@ -333,7 +333,7 @@ public class ApplicationImpl implements Application {
 	@Override
 	public void exportPng(Document<?> document, File exportFile) {
 		BufferedImage bufferedImage = new BufferedImage(
-				document.getWidth(), document.getHeight(),
+				document.getViewport().getWidth(), document.getViewport().getHeight(),
 				BufferedImage.TYPE_INT_ARGB
 		);
 		Graphics2D imageGraphics = (Graphics2D) bufferedImage.getGraphics();

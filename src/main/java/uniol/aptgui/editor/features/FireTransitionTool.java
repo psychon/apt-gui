@@ -28,7 +28,7 @@ import uniol.aptgui.commands.Command;
 import uniol.aptgui.commands.FireTransitionCommand;
 import uniol.aptgui.commands.History;
 import uniol.aptgui.editor.document.PnDocument;
-import uniol.aptgui.editor.document.Transform2D;
+import uniol.aptgui.editor.document.Viewport;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalTransition;
 import uniol.aptgui.editor.features.base.HoverEffectFeature;
@@ -44,9 +44,9 @@ public class FireTransitionTool extends HoverEffectFeature {
 	protected final PnDocument document;
 
 	/**
-	 * Reference to the Document's transform object.
+	 * Reference to the Document's viewport object.
 	 */
-	protected final Transform2D transform;
+	protected final Viewport viewport;
 
 	/**
 	 * History object for command execution.
@@ -55,7 +55,7 @@ public class FireTransitionTool extends HoverEffectFeature {
 
 	public FireTransitionTool(PnDocument document, History history) {
 		this.document = document;
-		this.transform = document.getTransform();
+		this.viewport = document.getViewport();
 		this.history = history;
 	}
 
@@ -65,7 +65,7 @@ public class FireTransitionTool extends HoverEffectFeature {
 			return;
 		}
 
-		Point modelPoint = transform.applyInverse(e.getPoint());
+		Point modelPoint = viewport.transformInverse(e.getPoint());
 		GraphicalElement element = document.getGraphicalElementAt(modelPoint);
 		if (element instanceof GraphicalTransition && isTransitionFireable(element)) {
 			Command cmd = new FireTransitionCommand(document, (GraphicalTransition) element);
@@ -79,7 +79,7 @@ public class FireTransitionTool extends HoverEffectFeature {
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		Point modelPoint = transform.applyInverse(e.getPoint());
+		Point modelPoint = viewport.transformInverse(e.getPoint());
 		GraphicalElement element = document.getGraphicalElementAt(modelPoint);
 		setHoverEffects(element);
 		document.fireDocumentDirty();

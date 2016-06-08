@@ -24,7 +24,7 @@ import java.awt.event.MouseEvent;
 
 import uniol.aptgui.editor.EditorView;
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.Transform2D;
+import uniol.aptgui.editor.document.Viewport;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.features.base.Feature;
 
@@ -40,9 +40,9 @@ public class ContextMenuFeature extends Feature {
 	private final Document<?> document;
 
 	/**
-	 * Reference to the Document's transform object.
+	 * Reference to the Document's viewport object.
 	 */
-	private final Transform2D transform;
+	private final Viewport viewport;
 
 	/**
 	 * Reference to the editor view this feature belongs to.
@@ -51,7 +51,7 @@ public class ContextMenuFeature extends Feature {
 
 	public ContextMenuFeature(Document<?> document, EditorView view) {
 		this.document = document;
-		this.transform = document.getTransform();
+		this.viewport = document.getViewport();
 		this.view = view;
 	}
 
@@ -62,7 +62,7 @@ public class ContextMenuFeature extends Feature {
 			return;
 		}
 
-		Point modelPosition = transform.applyInverse(e.getPoint());
+		Point modelPosition = viewport.transformInverse(e.getPoint());
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition);
 		if (elem instanceof GraphicalElement) {
 			if (!document.getSelection().contains(elem)) {

@@ -25,10 +25,10 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
 /**
- * Transform2D encapsulates translation and scaling operations and allows to
- * easily apply them to points.
+ * Viewport encapsulates translation and scaling operations and allows to
+ * easily apply them to points. It also saves the viewport dimension.
  */
-public class Transform2D {
+public class Viewport {
 
 	/**
 	 * Scale factor that gets used for increase/decrease scale methods.
@@ -49,6 +49,16 @@ public class Transform2D {
 	 * Scale in both the x and y dimension.
 	 */
 	private double scaleXY = 1.0;
+
+	/**
+	 * Viewport width.
+	 */
+	private int width;
+
+	/**
+	 * Viewport height.
+	 */
+	private int height;
 
 	/**
 	 * Returns the translation in x-axis direction.
@@ -155,6 +165,66 @@ public class Transform2D {
 	}
 
 	/**
+	 * Returns the viewport width.
+	 *
+	 * @return the viewport width
+	 */
+	public int getWidth() {
+		return width;
+	}
+
+	/**
+	 * Sets the viewport width.
+	 *
+	 * @param width
+	 *                the viewport width to set
+	 */
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	/**
+	 * Returns the viewport height
+	 *
+	 * @return the viewport height
+	 */
+	public int getHeight() {
+		return height;
+	}
+
+	/**
+	 * Sets the viewport height.
+	 *
+	 * @param height
+	 *                the viewport height to set
+	 */
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	/**
+	 * Returns a point that is positioned at the top left of the
+	 * viewport.
+	 *
+	 * @return a point that is positioned at the top left of the
+	 *         viewport
+	 */
+	public Point getTopLeft() {
+		return new Point(0, 0);
+	}
+
+	/**
+	 * Returns a point that is positioned at the bottom right of the
+	 * viewport.
+	 *
+	 * @return a point that is positioned at the bottom right of the
+	 *         viewport
+	 */
+	public Point getBottomRight() {
+		return new Point(width, height);
+	}
+
+	/**
 	 * Returns an AffineTransform object that specifies the same transform
 	 * as this object.
 	 *
@@ -176,7 +246,7 @@ public class Transform2D {
 	 *                the point to transform
 	 * @return a transformed point
 	 */
-	public Point applyInverse(Point2D point) {
+	public Point transformInverse(Point2D point) {
 		try {
 			AffineTransform tx = getAffineTransform();
 			Point2D res = tx.inverseTransform(point, null);
@@ -194,7 +264,7 @@ public class Transform2D {
 	 *                the point to transform
 	 * @return a transformed point
 	 */
-	public Point apply(Point2D point) {
+	public Point transform(Point2D point) {
 		AffineTransform tx = getAffineTransform();
 		Point2D res = tx.transform(point, null);
 		return new Point((int) res.getX(), (int) res.getY());

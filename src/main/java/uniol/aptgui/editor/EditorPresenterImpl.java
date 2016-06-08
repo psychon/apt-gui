@@ -53,6 +53,7 @@ import uniol.aptgui.editor.features.node.CreateTransitionTool;
 import uniol.aptgui.events.ToolSelectedEvent;
 import uniol.aptgui.events.WindowFocusGainedEvent;
 import uniol.aptgui.events.WindowFocusLostEvent;
+import uniol.aptgui.events.WindowOpenedEvent;
 import uniol.aptgui.mainwindow.WindowId;
 
 public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, EditorView>
@@ -92,6 +93,15 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 		Feature tool = tools.getActiveFeature();
 		view.setCursor(tool.getCursor());
 		view.repaint();
+	}
+
+	@Subscribe
+	public void onWindowOpenedEvent(WindowOpenedEvent e) {
+		if (e.getWindowId() != windowId) {
+			return;
+		}
+		document.getViewport().setWidth(view.getCanvasWidth());
+		document.getViewport().setHeight(view.getCanvasHeight());
 	}
 
 	@Subscribe
@@ -163,17 +173,22 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 
 	private void drawGrid(Graphics2D graphics, int gridSpacing) {
 		// Compute area where grid lines need to be drawn
-		Point topLeft = document.getTransform().applyInverse(new Point(0, 0));
+		Point viewportTopLeft = document.getViewport().getTopLeft();
+		Point topLeft = document.getViewport().transformInverse(viewportTopLeft);
 		topLeft.x = topLeft.x - gridSpacing - topLeft.x % gridSpacing;
 		topLeft.y = topLeft.y - gridSpacing - topLeft.y % gridSpacing;
-		Point bottomRight = document.getTransform().applyInverse(new Point(document.getWidth(), document.getHeight()));
+
+		Point viewportBottomRight = document.getViewport().getBottomRight();
+		Point bottomRight = document.getViewport().transformInverse(viewportBottomRight);
 		bottomRight.x = bottomRight.x + gridSpacing - bottomRight.x % gridSpacing;
 		bottomRight.y = bottomRight.y + gridSpacing - bottomRight.y % gridSpacing;
+
 		// Set graphics transform
 		AffineTransform original = graphics.getTransform();
-		graphics.transform(document.getTransform().getAffineTransform());
+		graphics.transform(document.getViewport().getAffineTransform());
 		// Set grid color
 		graphics.setColor(Color.GRAY);
+
 		// Draw vertical grid lines
 		for (int x = topLeft.x; x < bottomRight.x; x += gridSpacing) {
 			graphics.drawLine(x, topLeft.y, x, bottomRight.y);
@@ -182,6 +197,7 @@ public class EditorPresenterImpl extends AbstractPresenter<EditorPresenter, Edit
 		for (int y = topLeft.y; y < bottomRight.y; y += gridSpacing) {
 			graphics.drawLine(topLeft.x, y, bottomRight.x, y);
 		}
+
 		// Reset graphics transform
 		graphics.setTransform(original);
 	}

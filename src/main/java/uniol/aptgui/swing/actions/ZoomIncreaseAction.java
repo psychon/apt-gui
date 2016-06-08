@@ -48,7 +48,7 @@ public class ZoomIncreaseAction extends DocumentAction {
 	public void actionPerformed(ActionEvent e) {
 		Document<?> document = app.getActiveDocument();
 		assert document != null;
-		document.getTransform().increaseScale(1);
+		document.getViewport().increaseScale(1);
 		document.fireDocumentDirty();
 	}
 

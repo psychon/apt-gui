@@ -23,7 +23,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.Transform2D;
+import uniol.aptgui.editor.document.Viewport;
 import uniol.aptgui.editor.document.graphical.nodes.GraphicalNode;
 import uniol.aptgui.editor.features.base.Feature;
 
@@ -43,9 +43,9 @@ public abstract class CreateNodeTool<T extends Document<?>, U extends GraphicalN
 	protected final T document;
 
 	/**
-	 * Reference to the Document's transform object.
+	 * Reference to the Document's viewport object.
 	 */
-	protected final Transform2D transform;
+	protected final Viewport viewport;
 
 	/**
 	 * The visual representation of the node to be created.
@@ -59,7 +59,7 @@ public abstract class CreateNodeTool<T extends Document<?>, U extends GraphicalN
 	 */
 	public CreateNodeTool(T document) {
 		this.document = document;
-		this.transform = document.getTransform();
+		this.viewport = document.getViewport();
 		initPlace();
 	}
 
@@ -96,7 +96,7 @@ public abstract class CreateNodeTool<T extends Document<?>, U extends GraphicalN
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		Point modelPosition = transform.applyInverse(e.getPoint());
+		Point modelPosition = viewport.transformInverse(e.getPoint());
 		node.setCenter(modelPosition);
 		node.setVisible(true);
 		document.fireDocumentDirty();
@@ -108,7 +108,7 @@ public abstract class CreateNodeTool<T extends Document<?>, U extends GraphicalN
 			return;
 		}
 
-		Point modelPosition = transform.applyInverse(e.getPoint());
+		Point modelPosition = viewport.transformInverse(e.getPoint());
 		node.setCenter(modelPosition);
 		node.setVisible(true);
 		commitNodeCreation(node);

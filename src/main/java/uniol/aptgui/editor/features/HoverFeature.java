@@ -23,7 +23,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import uniol.aptgui.editor.document.Document;
-import uniol.aptgui.editor.document.Transform2D;
+import uniol.aptgui.editor.document.Viewport;
 import uniol.aptgui.editor.document.graphical.GraphicalElement;
 import uniol.aptgui.editor.document.graphical.edges.GraphicalEdge;
 import uniol.aptgui.editor.document.graphical.special.BreakpointHandle;
@@ -41,9 +41,9 @@ public class HoverFeature extends HoverEffectFeature {
 	private final Document<?> document;
 
 	/**
-	 * Reference to the Document's transform object.
+	 * Reference to the Document's viewport object.
 	 */
-	private final Transform2D transform;
+	private final Viewport viewport;
 
 	/**
 	 * Graphical representation for edge corners.
@@ -52,7 +52,7 @@ public class HoverFeature extends HoverEffectFeature {
 
 	public HoverFeature(Document<?> document) {
 		this.document = document;
-		this.transform = document.getTransform();
+		this.viewport = document.getViewport();
 		this.breakpointHandle = new BreakpointHandle();
 	}
 
@@ -68,7 +68,7 @@ public class HoverFeature extends HoverEffectFeature {
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		Point modelPosition = transform.applyInverse(e.getPoint());
+		Point modelPosition = viewport.transformInverse(e.getPoint());
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition, true);
 
 		// Display breakpoint handle if necessary.

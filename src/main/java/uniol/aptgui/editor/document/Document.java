@@ -113,24 +113,14 @@ public abstract class Document<T> {
 	protected boolean hasUnsavedChanges;
 
 	/**
-	 * Width of the document area.
-	 */
-	protected int width;
-
-	/**
-	 * Height of the document area.
-	 */
-	protected int height;
-
-	/**
 	 * Flag that indicates visibility of the document to the user.
 	 */
 	protected boolean visible;
 
 	/**
-	 * Transform object that saves translation and scaling.
+	 * Viewport object that saves translation, scaling and viewport dimensions.
 	 */
-	private final Transform2D transform;
+	private final Viewport viewport;
 
 	/**
 	 * The position in this document that was last selected by the user
@@ -140,27 +130,13 @@ public abstract class Document<T> {
 	private Point lastSelectionPosition;
 
 	/**
-	 * Creates a document with a default size.
+	 * Creates a document.
 	 */
 	public Document() {
-		this(400, 300);
-	}
-
-	/**
-	 * Creates a document.
-	 *
-	 * @param width
-	 *                width of the new document
-	 * @param height
-	 *                height of the new document
-	 */
-	public Document(int width, int height) {
 		this.listeners = new ArrayList<>();
-		this.width = width;
-		this.height = height;
 		this.visible = false;
 		this.hasUnsavedChanges = false;
-		this.transform = new Transform2D();
+		this.viewport = new Viewport();
 		this.elements = new HashMap<>();
 		this.visualElements = new HashSet<>();
 		this.selection = new Selection();
@@ -368,12 +344,12 @@ public abstract class Document<T> {
 	}
 
 	/**
-	 * Returns this document's transform object.
+	 * Returns this document's viewport object.
 	 *
-	 * @return this document's transform object
+	 * @return this document's viewport object
 	 */
-	public Transform2D getTransform() {
-		return transform;
+	public Viewport getViewport() {
+		return viewport;
 	}
 
 	/**
@@ -492,8 +468,8 @@ public abstract class Document<T> {
 	 *                layout to apply
 	 */
 	public void applyLayout(Layout layout) {
-		Point min = transform.applyInverse(new Point(0, 0));
-		Point max = transform.applyInverse(new Point(width, height));
+		Point min = viewport.transformInverse(viewport.getTopLeft());
+		Point max = viewport.transformInverse(viewport.getBottomRight());
 		layout.applyTo(this, min.x, min.y, max.x, max.y);
 	}
 
@@ -515,7 +491,7 @@ public abstract class Document<T> {
 		// Save original transform.
 		AffineTransform originalTransform = graphics.getTransform();
 		// Apply document transform.
-		graphics.transform(transform.getAffineTransform());
+		graphics.transform(viewport.getAffineTransform());
 		// Draw document.
 		for (GraphicalElement elem : elements.keySet()) {
 			elem.draw(graphics, renderingOptions);
@@ -539,44 +515,6 @@ public abstract class Document<T> {
 	@SuppressWarnings("unchecked")
 	public static <T> T getGraphicalExtension(IExtensible obj) {
 		return (T) obj.getExtension(GraphicalElement.EXTENSION_KEY);
-	}
-
-	/**
-	 * Returns this document's width.
-	 *
-	 * @return this document's width
-	 */
-	public int getWidth() {
-		return width;
-	}
-
-	/**
-	 * Sets this document's width.
-	 *
-	 * @param width
-	 *                new width
-	 */
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	/**
-	 * Returns this document's height.
-	 *
-	 * @return this document's height
-	 */
-	public int getHeight() {
-		return height;
-	}
-
-	/**
-	 * Sets this document's height.
-	 *
-	 * @param height
-	 *                new height
-	 */
-	public void setHeight(int height) {
-		this.height = height;
 	}
 
 	/**

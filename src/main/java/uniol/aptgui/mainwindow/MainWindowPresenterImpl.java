@@ -138,8 +138,8 @@ public class MainWindowPresenterImpl extends AbstractPresenter<MainWindowPresent
 		public void windowResized(WindowId id, int width, int height) {
 			Document<?> document = application.getDocument(id);
 			assert document != null;
-			document.setWidth(width);
-			document.setHeight(height);
+			document.getViewport().setWidth(width);
+			document.getViewport().setHeight(height);
 		}
 	};
 
