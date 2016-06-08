@@ -34,7 +34,7 @@ public class AddBreakpointCommand extends Command {
 	public AddBreakpointCommand(Document<?> document, GraphicalEdge edge, Point newBreakpointPosition) {
 		this.document = document;
 		this.edge = edge;
-		this.newBreakpointPosition = newBreakpointPosition;
+		this.newBreakpointPosition = new Point(newBreakpointPosition);
 	}
 
 	public int getNewBreakpointIndex() {

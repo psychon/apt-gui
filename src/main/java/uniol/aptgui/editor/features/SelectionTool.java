@@ -70,7 +70,7 @@ public class SelectionTool extends Feature {
 	private DragType dragType;
 
 	/**
-	 * Cursor position when a drag started.
+	 * Model position when a drag started.
 	 */
 	private Point dragSource;
 
@@ -110,10 +110,11 @@ public class SelectionTool extends Feature {
 		Point modelPosition = viewport.transformInverse(e.getPoint());
 		GraphicalElement elem = document.getGraphicalElementAt(modelPosition, true);
 
-		dragSource = e.getPoint();
 		if (elem instanceof GraphicalNode && editingOptions.isSnapToGridEnabled()) {
 			GraphicalNode node = (GraphicalNode) elem;
 			dragSource = new Point(node.getCenter());
+		} else {
+			dragSource = viewport.transformInverse(e.getPoint());
 		}
 
 		if (elem instanceof GraphicalEdge) {
@@ -152,18 +153,19 @@ public class SelectionTool extends Feature {
 			return;
 		}
 
-		Point dragTarget = e.getPoint();
+		Point dragTarget;
 		if (editingOptions.isSnapToGridEnabled()) {
-			dragTarget = snapToGridView(dragTarget);
+			dragTarget = snapToGridView(e.getPoint());
+		} else {
+			dragTarget = viewport.transformInverse(e.getPoint());
 		}
 
-		int dx = (int) (1.0 * (dragTarget.x - dragSource.x) / viewport.getScale());
-		int dy = (int) (1.0 * (dragTarget.y - dragSource.y) / viewport.getScale());
+		int dx = dragTarget.x - dragSource.x;
+		int dy = dragTarget.y - dragSource.y;
 
 		switch (dragType) {
 		case CREATE_BREAKPOINT:
-			Point modelPosition = viewport.transformInverse(dragSource);
-			dragCreateBreakpoint(modelPosition);
+			dragCreateBreakpoint(dragSource);
 			// Fall-through!
 		case BREAKPOINT:
 			translateBreakpointCommand.unapplyTranslation();
@@ -184,17 +186,17 @@ public class SelectionTool extends Feature {
 	}
 
 	/**
-	 * Returns a point in view coordinates that was possibly snapped to
+	 * Returns a point in model coordinates that was possibly snapped to
 	 * grid.
 	 *
 	 * @param mousePosition
 	 *                mouse position in view coordinates
-	 * @return point in view coordinates that was possibly snapped to grid
+	 * @return point in model coordinates that was possibly snapped to grid
 	 */
 	private Point snapToGridView(Point mousePosition) {
 		Point modelPosition = viewport.transformInverse(mousePosition);
 		Point snappedModelPosition = ToolUtil.snapToGrid(modelPosition, editingOptions.getGridSpacing());
-		return viewport.transform(snappedModelPosition);
+		return snappedModelPosition;
 	}
 
 	/**
@@ -221,6 +223,7 @@ public class SelectionTool extends Feature {
 			// dragging.
 			if (bpIndex != -1) {
 				dragType = DragType.BREAKPOINT;
+				dragSource = new Point(edge.getBreakpoint(bpIndex));
 				translateBreakpointCommand = new TranslateBreakpointCommand(document, edge, bpIndex);
 			}
 		}
